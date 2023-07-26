@@ -18,7 +18,7 @@ def main():
     dataset.set_format(type='torch', columns=['id', 'title', 'text'])
 
     # Step 3: Preprocess the data
-    tokenizer = AutoTokenizer.from_pretrained("roberta-base")
+    tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
 
     def tokenize_function(example):
         return tokenizer(example["text"], padding="max_length", truncation=True)
@@ -27,21 +27,23 @@ def main():
     tokenized_dataset = dataset.map(tokenize_function, batched=True)
 
     # Step 5: Create the model for masked language modeling (MLM)
-    model = AutoModelForMaskedLM.from_pretrained("roberta-base")
+    model = AutoModelForMaskedLM.from_pretrained("bert-base-uncased")
 
     training_args = TrainingArguments(
         per_device_train_batch_size=32,
+        gradient_accumulation_steps=4,  # Use gradient accumulation to simulate larger batch size
         num_train_epochs=3,
         output_dir="model",
         logging_dir="logs",
         logging_steps=100,
+        fp16=True,  # Use mixed precision training
     )
 
     data_collator = DataCollatorForLanguageModeling(
         tokenizer=tokenizer, 
         mlm_probability=0.15,
         padding=True,
-        max_length=128,  # Set your desired maximum length for the model input
+        max_length=64,  # Reduce maximum sequence length to speed up training
         return_tensors="pt"  # Return PyTorch tensors
     )
 
