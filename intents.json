@@ -175,7 +175,9 @@
       "tag": "opinion",
       "patterns": [
         "what is your opinion on",
-        "what are your views on"
+        "what are your views on",
+        "jarvis, tell me your opinion on",
+        "jarvis whats your opinion on"
       ],
       "responses": []
     },
