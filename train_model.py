@@ -37,14 +37,13 @@ def main():
     model = AutoModelForMaskedLM.from_pretrained("bert-base-uncased")
 
     training_args = TrainingArguments(
-        per_device_train_batch_size=16,  # Reduce batch size
-        gradient_accumulation_steps=4,
+        per_device_train_batch_size=8,  # Reduce batch size further
+        gradient_accumulation_steps=8,  # Increase gradient accumulation steps
         num_train_epochs=3,
         output_dir="model",
         logging_dir="logs",
         logging_steps=100,
         fp16=True,
-        deepspeed="ds_config.json",  # Optional: Use DeepSpeed for more memory optimization
     )
 
     # Step 6: Initialize the data collator
