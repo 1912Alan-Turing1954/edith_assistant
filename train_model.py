@@ -37,19 +37,21 @@ def main():
     model = AutoModelForMaskedLM.from_pretrained("bert-base-uncased")
 
     training_args = TrainingArguments(
-        per_device_train_batch_size=32,
-        gradient_accumulation_steps=4,  # Use gradient accumulation to simulate larger batch size
+        per_device_train_batch_size=16,  # Reduce batch size
+        gradient_accumulation_steps=4,
         num_train_epochs=3,
         output_dir="model",
         logging_dir="logs",
         logging_steps=100,
-        fp16=True,  # Use mixed precision training
+        fp16=True,
+        deepspeed="ds_config.json",  # Optional: Use DeepSpeed for more memory optimization
     )
 
+    # Step 6: Initialize the data collator
     data_collator = DataCollatorForLanguageModeling(
-        tokenizer=tokenizer,
+        tokenizer=tokenizer, 
         mlm_probability=0.15,
-        max_length=64,  # Reduce maximum sequence length to speed up training
+        # No need to pass max_length here, as it was already handled during tokenization
         return_tensors="pt"  # Return PyTorch tensors
     )
 
@@ -58,7 +60,6 @@ def main():
         args=training_args,
         train_dataset=tokenized_dataset,  # Use the tokenized dataset directly
         data_collator=data_collator,
-        device=device,  # Specify the device to use (GPU or CPU)
     )
 
     # Step 6: Train the model on the masked text
