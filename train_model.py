@@ -1,6 +1,7 @@
 import datasets
 import torch
-from transformers import AutoTokenizer, AutoModelForMaskedLM, Trainer, TrainingArguments, DataCollatorForLanguageModeling
+from transformers import AutoTokenizer, AutoModelForMaskedLM, Trainer, TrainingArguments
+from transformers import DataCollatorForLanguageModeling
 
 print(torch.cuda.is_available())
 
@@ -46,9 +47,8 @@ def main():
     )
 
     data_collator = DataCollatorForLanguageModeling(
-        tokenizer=tokenizer, 
+        tokenizer=tokenizer,
         mlm_probability=0.15,
-        padding=True,
         max_length=64,  # Reduce maximum sequence length to speed up training
         return_tensors="pt"  # Return PyTorch tensors
     )
