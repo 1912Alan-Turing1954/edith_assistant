@@ -4,7 +4,7 @@ import json
 import torch
 from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
-# from TTS_.tts import text_to_speech
+from tts_.tts import text_to_speech
 from functions.opinion import opinion
 from functions.is_question import is_question
 from functions.wiki_info import wiki
@@ -68,26 +68,26 @@ while True:
                         
                         if intent["tag"] == "repeat_string":
                             response = random.choice(intent["responses"])
-                            print(response.replace("sir", "Mr Stark"))
+                            text_to_speech(response.replace("sir", "Mr Stark"))
                             print(intent["tag"])
 
                         elif intent["tag"] == "system_info":
                             response = random.choice(intent["responses"])
-                            print(response.replace("{string}", info_system))
+                            text_to_speech(response.replace("{string}", info_system))
                             print(intent["tag"])
                             
                         elif intent['tag'] == 'opinion':
-                            print(opinion(user_input))
+                            text_to_speech(opinion(user_input))
                             prev_tag = intent['tag']
                         
                         elif intent["tag"] == "time":
                             res_time = random.choice(intent['responses']).replace("{time}", get_time())
-                            print(f"{res_time}")
+                            text_to_speech(f"{res_time}")
                             print(intent['tag'])
                             prev_tag = intent['tag']
                         
                         else:
-                            print(f"{random.choice(intent['responses'])}")
+                            text_to_speech(f"{random.choice(intent['responses'])}")
                             print(intent['tag'])
                             prev_tag = intent['tag']
 
@@ -96,7 +96,7 @@ while True:
             else:
                 for intent in intents['intents']:
                     if intent["tag"] == 'technical':
-                        print(f"{random.choice(intent['responses'])}")
+                        text_to_speech(f"{random.choice(intent['responses'])}")
                         print(intent['tag'])
                         
     else:
