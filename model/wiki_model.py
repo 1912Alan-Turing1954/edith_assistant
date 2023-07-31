@@ -38,7 +38,13 @@ def preprocess_text(text):
     lemmatizer = WordNetLemmatizer()
     lemmatized_tokens = [lemmatizer.lemmatize(token) for token in filtered_tokens]
 
-    return " ".join(lemmatized_tokens)
+    # Join the tokens into a single string with proper spacing
+    preprocessed_text = " ".join(lemmatized_tokens)
+
+    # Clean up any extra spaces between words
+    preprocessed_text = re.sub(r'\s+', ' ', preprocessed_text).strip()
+
+    return preprocessed_text
 
 def save_preprocessed_content_to_pickle(file_path, content):
     with open(file_path, 'wb') as file:
@@ -62,8 +68,14 @@ def main():
         "Python_(programming_language)",
         "Artificial_intelligence",
         "Machine_learning",
-        "History",  # Add your PDF file path here
-        "model/oxford-english-dictionary.pdf"   # Add more PDF file paths here
+        "History",
+        "Mathematics",
+        "Science",
+        "Physics",
+        "Middle Ages",
+        "Vikings",
+        "Dark Ages (historiography)"
+        # Add your PDF file path here
         # Add more page titles and PDF file paths here
     ]
 
