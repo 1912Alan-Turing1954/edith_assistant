@@ -74,7 +74,8 @@ def main():
         "Physics",
         "Middle Ages",
         "Vikings",
-        "Dark Ages (historiography)"
+        "Dark Ages (historiography)",
+        "War"
         # Add your PDF file path here
         # Add more page titles and PDF file paths here
     ]
