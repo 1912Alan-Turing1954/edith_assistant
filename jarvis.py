@@ -9,7 +9,9 @@ from functions.opinion import opinion
 from functions.is_question import is_question
 from functions.wiki_info import wiki
 from functions.system_info import info_system
+# import pywhatkit
 
+# pywhatkit.playonyt('Claire de lune')
 
 # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
