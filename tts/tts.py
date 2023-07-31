@@ -39,23 +39,30 @@
             
 #         engine.runAndWait()
 
-import torchaudio
-from speechbrain.pretrained import Tacotron2
-from speechbrain.pretrained import HIFIGAN
-
-# Intialize TTS (tacotron2) and Vocoder (HiFIGAN)
-tacotron2 = Tacotron2.from_hparams(source="speechbrain/tts-tacotron2-ljspeech", savedir="tmpdir_tts")
-hifi_gan = HIFIGAN.from_hparams(source="speechbrain/tts-hifigan-ljspeech", savedir="tmpdir_vocoder")
-
-# Running the TTS
-mel_output, mel_length, alignment = tacotron2.encode_text("Mary had a little lamb")
-
-# Running Vocoder (spectrogram-to-waveform)
-waveforms = hifi_gan.decode_batch(mel_output)
-
-# Save the waverform
-torchaudio.save('example_TTS.wav',waveforms.squeeze(1), 22050)
+# from TTS.api import TTS
 
 
 
+# Example usage:
 
+
+from TTS.utils.manage import ModelManager
+from TTS.utils.synthesizer import Synthesizer
+
+model_manager = ModelManager("C:/Users/1912a/Jarvis/.venv/Lib/site-packages/TTS/.models.json")
+
+model_path, config_path, model_item = model_manager.download_model("tts_models/en/ljspeech/tacotron2-DDC")
+
+voc_path, voc_config_path, _ = model_manager.download_model(model_item["default_vocoder"])
+
+syn = Synthesizer(
+    tts_checkpoint=model_path,
+    tts_config_path=config_path,
+    vocoder_checkpoint=voc_path,
+    vocoder_config=voc_config_path
+)
+
+text = ""
+
+outputs = syn.tts(text)
+syn.save_wav(outputs, "audio-1.wav")
