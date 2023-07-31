@@ -8,6 +8,7 @@ from brain.nltk_utils import bag_of_words, tokenize
 from functions.opinion import opinion
 from functions.is_question import is_question
 from functions.wiki_info import wiki
+from functions.system_info import info_system
 
 
 # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -47,9 +48,6 @@ while True:
             if user_input.lower() == prev_input.lower():
                 tag = "repeat_string"
             
-            elif is_question(user_input) == True:
-                wiki.get_info(user_input)
-            
             elif prev_tag == 'technical':
                 pass
 
@@ -71,6 +69,11 @@ while True:
                         if intent["tag"] == "repeat_string":
                             response = random.choice(intent["responses"])
                             print(response.replace("sir", "Mr Stark"))
+                            print(intent["tag"])
+
+                        elif intent["tag"] == "system_info":
+                            response = random.choice(intent["responses"])
+                            print(response.replace("{string}", info_system))
                             print(intent["tag"])
                             
                         elif intent['tag'] == 'opinion':
