@@ -2,14 +2,16 @@ import random
 import datetime
 import json
 import torch
-from brain.model import NeuralNet
-from brain.nltk_utils import bag_of_words, tokenize
+from model import NeuralNet
+from nltk_utils import bag_of_words, tokenize
 from TTS_.tts import text_to_speech
 from functions.opinion import opinion
+from functions.is_question import is_question
+from functions.wiki_info import wiki
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-with open('intents.json', 'r') as json_data:
+with open('./intents.json', 'r') as json_data:
     intents = json.load(json_data)
 
 FILE = "data/data.pth"
@@ -45,7 +47,13 @@ while True:
             
             elif prev_tag == 'technical':
                 pass
-                
+
+            elif is_question(user_input) == False:
+                pass
+            
+            elif is_question(user_input) == True:
+                print(wiki.get_info(user_input))
+
             else:
                 sentence = tokenize(user_input)
                 X = bag_of_words(sentence, all_words)
