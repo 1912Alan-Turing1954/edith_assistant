@@ -19,8 +19,8 @@
       "patterns": [
         "good morning",
         "good afternoon",
-        "jarvis, it's me",
-        "morning, jarvis"
+        "friday, it's me",
+        "morning, friday"
       ],
       "responses": [
         "Greetings, sir. How may I assist you today?",
@@ -28,7 +28,7 @@
         "Hello, sir. Your presence is most welcome. How may I be of assistance?",
         "Good morning, sir. I trust you are prepared for a productive day.",
         "Good afternoon, sir. How may I assist you in achieving your goals?",
-        "Jarvis at your service, sir. It's a pleasure to interact with you.",
+        "friday at your service, sir. It's a pleasure to interact with you.",
         "Good morning, sir. The world awaits your guidance.",
         "Good day, sir. I am here and fully operational to assist you.",
         "Sir, it is always an honor to engage with you. How may I be of service today?"
@@ -47,10 +47,10 @@
       ]
     },
     {
-      "tag": "jarvis_you_there",
+      "tag": "friday_you_there",
       "patterns": [
-        "jarvis, you there?",
-        "jarvis, you up?"
+        "friday, you there?",
+        "friday, you up?"
       ],
       "responses": [
         "Affirmative, sir.",
@@ -67,7 +67,7 @@
         "bye",
         "see you later",
         "take care",
-        "jarvis, stand down"
+        "friday, stand down"
       ],
       "responses": [
         "Farewell, sir. May your endeavors yield great success.",
@@ -86,9 +86,9 @@
         "thank you",
         "thanks",
         "appreciate it",
-        "jarvis, you're the best",
-        "thanks for your help, jarvis",
-        "thanks, jarvis"
+        "friday, you're the best",
+        "thanks for your help, friday",
+        "thanks, friday"
       ],
       "responses": [
         "You're most welcome, sir. It is my duty and pleasure to assist you.",
@@ -105,8 +105,8 @@
       "patterns": [
         "how are you?",
         "how's it going?",
-        "jarvis, status report",
-        "jarvis, how are we doing?"
+        "friday, status report",
+        "friday, how are we doing?"
       ],
       "responses": [
         "As an AI construct, I lack emotions, but my systems are functioning optimally.",
@@ -123,15 +123,15 @@
         "can you help me?",
         "i need assistance",
         "please help",
-        "jarvis, i need you",
-        "jarvis, lend me a hand",
-        "jarvis, give me a hand",
-        "jarvis, what's your take on this?",
-        "jarvis, any ideas?",
-        "jarvis, help me out here",
-        "jarvis, analyze this for me",
-        "jarvis, what do you think?",
-        "jarvis, need some guidance"
+        "friday, i need you",
+        "friday, lend me a hand",
+        "friday, give me a hand",
+        "friday, what's your take on this?",
+        "friday, any ideas?",
+        "friday, help me out here",
+        "friday, analyze this for me",
+        "friday, what do you think?",
+        "friday, need some guidance"
       ],
       "responses": [
         "I'm here to assist, sir.",
@@ -154,8 +154,8 @@
         "what's up?",
         "yo",
         "hey, how's it going?",
-        "jarvis, my man",
-        "jarvis, long time no see"
+        "friday, my man",
+        "friday, long time no see"
       ],
       "responses": [
         "Greetings! How may I assist you today, sir?",
@@ -190,8 +190,8 @@
       "patterns": [
         "what is your opinion on",
         "what are your views on",
-        "jarvis, tell me your opinion on",
-        "jarvis whats your opinion on"
+        "friday, tell me your opinion on",
+        "friday whats your opinion on"
       ],
       "responses": []
     },
@@ -256,22 +256,22 @@
     {
       "tag": "conversation_weather",
       "patterns": [
-        "Jarvis, what's the weather like today?",
-        "Hey Jarvis, give me the forecast.",
-        "Do me a favor, Jarvis. Check the weather for me."
+        "friday, what's the weather like today?",
+        "Hey friday, give me the forecast.",
+        "Do me a favor, friday. Check the weather for me."
       ],
       "responses": [
         "Certainly, sir! Let me gather the latest weather information for you.",
         "Right away, sir! Fetching the current weather report.",
-        "Jarvis, prepare to get weather data. Fetching it now."
+        "friday, prepare to get weather data. Fetching it now."
       ]
     },
     {
       "tag": "conversation_song",
       "patterns": [
-        "Jarvis, how about playing some tunes?",
-        "Jarvis, let's get some music going.",
-        "Hey Jarvis, time for some rocking beats!"
+        "friday, how about playing some tunes?",
+        "friday, let's get some music going.",
+        "Hey friday, time for some rocking beats!"
       ],
       "responses": [
         "Excellent choice, sir! Cranking up the music for you.",
@@ -282,9 +282,9 @@
     {
       "tag": "conversation_color",
       "patterns": [
-        "Jarvis, what's your favorite color?",
-        "Tell me, Jarvis. What color do you like?",
-        "Hey Jarvis, let's talk about colors."
+        "friday, what's your favorite color?",
+        "Tell me, friday. What color do you like?",
+        "Hey friday, let's talk about colors."
       ],
       "responses": [
         "As an AI, I don't experience colors like humans do. However, I can assist you with any color preferences you have.",
@@ -295,9 +295,9 @@
     {
       "tag": "conversation_movie",
       "patterns": [
-        "Jarvis, suggest a good movie to watch.",
-        "Hey Jarvis, what are some great movies?",
-        "Jarvis, time for a movie night. Any recommendations?"
+        "friday, suggest a good movie to watch.",
+        "Hey friday, what are some great movies?",
+        "friday, time for a movie night. Any recommendations?"
       ],
       "responses": [
         "Certainly, sir! Here are some top movie picks: The Shawshank Redemption, Inception, The Godfather, The Dark Knight, and Interstellar.",
@@ -308,9 +308,9 @@
     {
       "tag": "conversation_compliment",
       "patterns": [
-        "Jarvis, you're doing a great job!",
-        "Impressive work, Jarvis!",
-        "Nice work, Jarvis!"
+        "friday, you're doing a great job!",
+        "Impressive work, friday!",
+        "Nice work, friday!"
       ],
       "responses": [
         "Thank you, sir! Your approval means a lot. I'm here to make your life easier.",
@@ -321,9 +321,9 @@
     {
       "tag": "conversation_recipe",
       "patterns": [
-        "Jarvis, give me a recipe to try.",
-        "Hey Jarvis, share a delicious recipe.",
-        "Jarvis, let's cook something amazing."
+        "friday, give me a recipe to try.",
+        "Hey friday, share a delicious recipe.",
+        "friday, let's cook something amazing."
       ],
       "responses": [
         "Certainly, sir! How about a classic spaghetti carbonara recipe? It's quick and delicious. Enjoy your cooking!",
@@ -334,9 +334,9 @@
     {
       "tag": "conversation_book",
       "patterns": [
-        "Jarvis, recommend a good book to read.",
-        "Hey Jarvis, what are some great books?",
-        "Jarvis, time for a new reading adventure. Any suggestions?"
+        "friday, recommend a good book to read.",
+        "Hey friday, what are some great books?",
+        "friday, time for a new reading adventure. Any suggestions?"
       ],
       "responses": [
         "Absolutely, sir! I suggest reading 'The Alchemist' by Paulo Coelho. It's a captivating tale of self-discovery and following your dreams.",
@@ -347,9 +347,9 @@
     {
       "tag": "conversation_joke",
       "patterns": [
-        "Jarvis, tell me a joke to lighten the mood.",
-        "Hey Jarvis, share something funny.",
-        "Jarvis, I need a good laugh. Tell me a joke."
+        "friday, tell me a joke to lighten the mood.",
+        "Hey friday, share something funny.",
+        "friday, I need a good laugh. Tell me a joke."
       ],
       "responses": [
         "Why don't scientists trust atoms? Because they make up everything!",
@@ -360,9 +360,9 @@
     {
       "tag": "conversation_news",
       "patterns": [
-        "Jarvis, update me with the latest news.",
-        "Hey Jarvis, what's happening in the world?",
-        "Jarvis, let's catch up on the news."
+        "friday, update me with the latest news.",
+        "Hey friday, what's happening in the world?",
+        "friday, let's catch up on the news."
       ],
       "responses": [
         "I apologize, sir, but I don't have real-time access to news. However, I can provide valuable information on various topics!",

@@ -40,12 +40,12 @@ prev_input = ""
 
 while True:
     
-    wake_up = input("jarvis sleeping: ")
+    wake_up = input("friday is inactive: ")
 
-    if 'jarvis' == wake_up.lower():
+    if 'friday' == wake_up.lower():
 
         while True:
-            user_input = input("jarvis awake: ")
+            user_input = input("friday is active: ")
             
             if user_input.lower() == prev_input.lower():
                 tag = "repeat_string"
