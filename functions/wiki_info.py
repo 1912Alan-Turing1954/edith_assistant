@@ -19,8 +19,16 @@ class WikiInfo:
             r'what are the benefits of (.+)': 'benefits',  # Question about the benefits of something
             r'what are the uses of (.+)': 'uses',  # Question about the uses of something
             r'what are the symptoms of (.+)': 'symptoms',  # Question about the symptoms of a condition
+            r'what would happen if (.+)': 'consequences',
+            r'what would be the outcome of (.+)': 'consequences',
+            r'what happens if (.+)': 'consequences',
+            r'what are the results of (.+)': 'consequences',
+            r'what are the repercussions of (.+)': 'consequences',
+            r'what are the effects of (.+)': 'consequences',
+            r'what would occur if (.+)': 'consequences',
             # Add more question patterns as needed
         }
+
     def _fetch_info_from_wikipedia(self, subject, query_type, action=None):
         try:
             if query_type == 'summary':
@@ -56,6 +64,11 @@ class WikiInfo:
                 content = page.content
                 quantity_match = re.search(r'how many (\w+)', content, re.IGNORECASE)
                 return f"There are no specific details available about how many {quantity_match.group(1)} {subject} has." if quantity_match else None
+            elif query_type == 'consequences':
+                page = wikipedia.page(subject)
+                content = page.content
+                match = re.search(rf'\b{action}\b(?:.*?)(consequences[\w\s,.]+)', content, re.IGNORECASE)
+                return f"The consequences of {action} are {match.group(1)}." if match else None
         except wikipedia.exceptions.DisambiguationError as e:
             return f"There are multiple results for '{subject}'. Please specify the subject more precisely."
         except wikipedia.exceptions.PageError as e:
@@ -81,8 +94,7 @@ class WikiInfo:
         if not found_question:
             print("I'm sorry, I couldn't understand the question.")
 
-# Example usage:
-if __name__ == "__main__":
-    wiki = WikiInfo()
-    command = input("Ask me something: ")
-    wiki.get_info(command)
+wiki = WikiInfo()
+
+wiki.get_info('when did ww1 happen')
+
