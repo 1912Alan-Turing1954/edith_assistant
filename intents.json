@@ -51,7 +51,11 @@
         "give me memory usage",
         "give me memory status",
         "memory status",
-        "memory status update"
+        "memory status update",
+        "memory usage",
+        "ram usage",
+        "ram status",
+        "ram status update"
       ],
       "responses": [
         "{string}"
@@ -191,24 +195,6 @@
         "Tell me what you need, sir.",
         "How may I be of assistance, sir?"
       ]
-    },
-    {
-      "tag": "mute",
-      "patterns": [
-        "mute", 
-        "quiet", 
-        "shush"
-      ],
-      "responses": [
-        "Okay, I'll stay quiet.", 
-        "Muting myself.", 
-        "Silent mode activated."
-      ]
-    },
-    {
-      "tag": "unmute",
-      "patterns": ["unmute", "speak", "talk"],
-      "responses": ["Okay, I'll speak now.", "Unmuting myself.", "Speaking mode activated."]
     },
     {
       "tag": "casual_greeting",
