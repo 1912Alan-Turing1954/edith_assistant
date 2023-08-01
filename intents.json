@@ -230,6 +230,33 @@
       ]
     },
     {
+      "tag": "repeat",
+      "patterns": [
+        "Can you repeat that?",
+        "Hey Friday, say that again.",
+        "Friday, one more time, please.",
+        "Friday, give me a playback.",
+        "Repeat that, Friday.",
+        "Say it again, Friday.",
+        "Come again, Friday?",
+        "Friday, rewind and replay.",
+        "Friday, I need a playback.",
+        "One more time, Friday, for good measure.",
+        "Hey Friday, let's try that one more time.",
+        "Friday, I wasn't paying attention. Say it again.",
+        "Give me a rerun, Friday.",
+        "Hey Friday, rewind and repeat.",
+        "Hey Friday, how about a second take?"
+      ],
+      "responses": [
+        "Apologies, Sir. Reiterating.",
+        "Certainly, Sir.",
+        "My apologies, Sir. I said",
+        "Of course, Sir.",
+        "Repeating, Sir."
+      ]
+    },
+    {
       "tag": "opinion",
       "patterns": [
         "what is your opinion on",

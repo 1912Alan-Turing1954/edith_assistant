@@ -30,6 +30,7 @@ def get_time():
 
 prev_tag = ""
 prev_input = ""
+prev_response = ""
 
 while True:
     
@@ -61,9 +62,14 @@ while True:
                 for intent in intents['intents']:
                     if tag == intent["tag"]:
                         
+                        if intent["tag"] == "repeat":
+                            response = random.choice(intent["responses"])
+                            text_to_speech(response)
+                            print(intent["tag"])
+
                         if intent["tag"] == "repeat_string":
                             response = random.choice(intent["responses"])
-                            text_to_speech(response.replace("sir", "Mr Stark"))
+                            text_to_speech(response)
                             print(intent["tag"])
 
                         elif intent["tag"] == "system_info":
