@@ -97,15 +97,15 @@ def generate_storage_status_response(system_info):
         response += "Your PC's storage is functioning optimally. However, to maintain its peak performance, consider organizing your files and folders through defragmentation or rearranging data based on usage frequency."
 
     if overall_wellbeing == "healthy":
-        response += f"At the moment, your PC has {free_disk_space} of free space, and your storage usage is at {disk_usage}%."
+        response += f"At the moment, your PC has {free_disk_space} of free space, and your storage usage is at {str(disk_usage)}%."
     else:
         response += "I am a tad concerned about your PC's storage health. It would be prudent to follow the aforementioned recommendations to enhance its overall storage performance."
 
     return response
 
 # Get live system information
-system_info = get_system_info()
+info_system = get_system_info()
 
-info_system = generate_system_status_response(system_info)
-storage_info = generate_storage_status_response(system_info)
+system_info = generate_system_status_response(info_system)
+storage_info = generate_storage_status_response(info_system)
 
