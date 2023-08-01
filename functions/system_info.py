@@ -1,6 +1,7 @@
 import psutil
 import platform
 import socket
+import time
 
 def get_system_info():
     system_info = {}
@@ -56,71 +57,73 @@ def get_system_info():
 
     return system_info
 
-def generate_system_status_response(system_info):
-    response = "I have extracted your machine details, "
-    cpu_usage = max(system_info['CPU Info']['CPU Usage'])
-    memory_usage = float(system_info['Memory Usage'][:-1])
-    overall_wellbeing = "good"
+# def generate_system_status_response(system_info):
+#     response = "I have extracted your machine details, "
+#     cpu_usage = max(system_info['CPU Info']['CPU Usage'])
+#     memory_usage = float(system_info['Memory Usage'][:-1])
+#     overall_wellbeing = "good"
 
-    if cpu_usage > 80:
-        overall_wellbeing = "concerned"
-        response += "I must inform you that your CPU usage is quite high at the moment. "
-        response += "It would be advisable to close some unnecessary programs or tasks to improve performance."
+#     if cpu_usage > 80:
+#         overall_wellbeing = "concerned"
+#         response += "I must inform you that your CPU usage is quite high at the moment. "
+#         response += "It would be advisable to close some unnecessary programs or tasks to improve performance."
 
-    if memory_usage < 30:
-        overall_wellbeing = "concerned"
-        response += "Additionally, your available memory is running low. "
-        response += "I suggest closing unused applications or considering an upgrade to your RAM for better multitasking."
+#     if memory_usage < 30:
+#         overall_wellbeing = "concerned"
+#         response += "Additionally, your available memory is running low. "
+#         response += "I suggest closing unused applications or considering an upgrade to your RAM for better multitasking."
 
-    if overall_wellbeing == "good":
-        response += "Overall, your PC is performing optimally, Should you require any further assistance or have inquiries, feel free to ask."
-    else:
-        response += "I am a tad concerned about your PC's performance. It would be prudent to follow the aforementioned recommendations to enhance its overall health and performance."
+#     if overall_wellbeing == "good":
+#         response += "Overall, your PC is performing optimally, Should you require any further assistance or have inquiries, feel free to ask."
+#     else:
+#         response += "I am a tad concerned about your PC's performance. It would be prudent to follow the aforementioned recommendations to enhance its overall health and performance."
 
-    return response
+#     return response
 
-def generate_storage_status_response(system_info):
-    response = "I have obtained your storage details. "
-    free_disk_space = (system_info['Disk Info'][0]['Free Space'])
-    free_disk_space = free_disk_space.replace("GB", "gigabytes")
-    disk_usage = float(system_info['Disk Info'][0]['Disk Usage'][:-1])
-    overall_wellbeing = "healthy"
+# def generate_storage_status_response(system_info):
+#     response = "I have obtained your storage details. "
+#     free_disk_space = (system_info['Disk Info'][0]['Free Space'])
+#     free_disk_space = free_disk_space.replace("GB", "gigabytes")
+#     disk_usage = float(system_info['Disk Info'][0]['Disk Usage'][:-1])
+#     overall_wellbeing = "healthy"
     
-    if disk_usage > 75:
-        overall_wellbeing = "concerned"
-        response += "I must express my concern as your PC's storage is currently under considerable strain."
-        response += "To ensure optimal performance, it is highly advisable to uninstall any unnecessary programs or games that are taking up excessive space."
+#     if disk_usage > 75:
+#         overall_wellbeing = "concerned"
+#         response += "I must express my concern as your PC's storage is currently under considerable strain."
+#         response += "To ensure optimal performance, it is highly advisable to uninstall any unnecessary programs or games that are taking up excessive space."
 
-    # New recommendation
-    if disk_usage < 50:
-        overall_wellbeing = "healthy"
-        response += "your PC's storage exhibits an exemplary state of operation"
+#     # New recommendation
+#     if disk_usage < 50:
+#         overall_wellbeing = "healthy"
+#         response += "your PC's storage exhibits an exemplary state of operation"
 
-    if overall_wellbeing == "healthy":
-        response += f"At the moment, your PC has {free_disk_space} of free space, and your storage usage is at {str(disk_usage)}%."
-    else:
-        response += "I am a tad concerned about your PC's storage health. It would be prudent to follow the aforementioned recommendations to enhance its overall storage performance."
+#     if overall_wellbeing == "healthy":
+#         response += f"At the moment, your PC has {free_disk_space} of free space, and your storage usage is at {str(disk_usage)}%."
+#     else:
+#         response += "I am a tad concerned about your PC's storage health. It would be prudent to follow the aforementioned recommendations to enhance its overall storage performance."
 
-    return response
+#     return response
 
-def generate_cpu_usage_response(info_system):
-    cpu_usage = max(info_system['CPU Info']['CPU Usage'])
-    cpu_usage = round(cpu_usage, 2)
-    return f"Your C P U usage is at {cpu_usage}%"
+# def generate_cpu_usage_response(info_system):
+#     cpu_usage = max(info_system['CPU Info']['CPU Usage'])
+#     cpu_usage = round(cpu_usage, 2)
+#     return f"Your C P U usage is at {cpu_usage}%"
 
-def generate_memory_usage_response(info_system):
-    memory_usage = float(info_system['Memory Usage'][:-1])
-    memory_usage = round(memory_usage, 2)
-    return f"Your memory usage is at {memory_usage}%"
+# def generate_memory_usage_response(info_system):
+#     memory_usage = float(info_system['Memory Usage'][:-1])
+#     memory_usage = round(memory_usage, 2)
+#     return f"Your memory usage is at {memory_usage}%"
 
 # Get live system information
-info_system = get_system_info()
+while True:
+    info_system = get_system_info()
 
-system_info = generate_system_status_response(info_system)
-storage_info = generate_storage_status_response(info_system)
+# system_info = generate_system_status_response(info_system)
+# storage_info = generate_storage_status_response(info_system)
 
-cpu_usage = generate_cpu_usage_response(info_system)
-memory_usage = generate_memory_usage_response(info_system)
+# cpu_usage = generate_cpu_usage_response(info_system)
+# memory_usage = generate_memory_usage_response(info_system)
 
-# specs = generate_specs_response(info_system)
+
+
 
