@@ -57,19 +57,6 @@
       ]
     },
     {
-      "tag": "specs",
-      "patterns": [
-        "give me specs",
-        "give me the specs",
-        "system specs",
-        "machine specs",
-        "pc specs"
-      ],
-      "responses": [
-        "{string}"
-      ]
-    },
-    {
       "tag": "greeting",
       "patterns": [
         "good morning",
