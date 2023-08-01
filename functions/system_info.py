@@ -88,13 +88,13 @@ def generate_storage_status_response(system_info):
     
     if disk_usage > 75:
         overall_wellbeing = "concerned"
-        response += "I must express my concern as your PC's storage is currently under considerable strain. "
+        response += "I must express my concern as your PC's storage is currently under considerable strain."
         response += "To ensure optimal performance, it is highly advisable to uninstall any unnecessary programs or games that are taking up excessive space."
 
     # New recommendation
     if disk_usage < 50:
         overall_wellbeing = "healthy"
-        response += "Your PC's storage is functioning optimally. However, to maintain its peak performance, consider organizing your files and folders through defragmentation or rearranging data based on usage frequency."
+        response += "your PC's storage exhibits an exemplary state of operation"
 
     if overall_wellbeing == "healthy":
         response += f"At the moment, your PC has {free_disk_space} of free space, and your storage usage is at {str(disk_usage)}%."
@@ -103,9 +103,24 @@ def generate_storage_status_response(system_info):
 
     return response
 
+def generate_cpu_usage_response(info_system):
+    cpu_usage = max(info_system['CPU Info']['CPU Usage'])
+    cpu_usage = round(cpu_usage, 2)
+    return f"Your CPU usage is at {cpu_usage}%"
+
+def generate_memory_usage_response(info_system):
+    memory_usage = float(info_system['Memory Usage'][:-1])
+    memory_usage = round(memory_usage, 2)
+    return f"Your memory usage is at {memory_usage}%"
+
 # Get live system information
 info_system = get_system_info()
 
 system_info = generate_system_status_response(info_system)
 storage_info = generate_storage_status_response(info_system)
+
+cpu_usage = generate_cpu_usage_response(info_system)
+memory_usage = generate_memory_usage_response(info_system)
+
+# specs = generate_specs_response(info_system)
 

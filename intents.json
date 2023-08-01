@@ -33,6 +33,43 @@
       ]
     },
     {
+      "tag": "cpu_usage",
+      "patterns": [
+        "give me cpu usage",
+        "give me cpu status",
+        "cpu status",
+        "cpu status update"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
+      "tag": "memory_usage",
+      "patterns": [
+        "give me memory usage",
+        "give me memory status",
+        "memory status",
+        "memory status update"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
+      "tag": "specs",
+      "patterns": [
+        "give me specs",
+        "give me the specs",
+        "system specs",
+        "machine specs",
+        "pc specs"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
       "tag": "greeting",
       "patterns": [
         "good morning",
