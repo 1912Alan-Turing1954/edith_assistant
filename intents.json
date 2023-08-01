@@ -50,7 +50,9 @@
       "tag": "friday_you_there",
       "patterns": [
         "friday, you there?",
-        "friday, you up?"
+        "friday, you up?",
+        "are you there",
+        "are you up"
       ],
       "responses": [
         "Affirmative, sir.",
