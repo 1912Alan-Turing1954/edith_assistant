@@ -15,6 +15,24 @@
       ]
     },
     {
+      "tag": "stroage_info",
+      "patterns": [
+        "give me storage info",
+        "give me storage status",
+        "storage info",
+        "storage status",
+        "storage status update",
+        "drive status",
+        "drive status update",
+        "drive info",
+        "give me drive info",
+        "give me drive status"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
       "tag": "greeting",
       "patterns": [
         "good morning",

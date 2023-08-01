@@ -79,9 +79,33 @@ def generate_system_status_response(system_info):
 
     return response
 
+def generate_storage_status_response(system_info):
+    response = "I have obtained your storage details. "
+    free_disk_space = (system_info['Disk Info'][0]['Free Space'])
+    free_disk_space = free_disk_space.replace("GB", "gigabytes")
+    disk_usage = float(system_info['Disk Info'][0]['Disk Usage'][:-1])
+    overall_wellbeing = "healthy"
+    
+    if disk_usage > 75:
+        overall_wellbeing = "concerned"
+        response += "I must express my concern as your PC's storage is currently under considerable strain. "
+        response += "To ensure optimal performance, it is highly advisable to uninstall any unnecessary programs or games that are taking up excessive space."
+
+    # New recommendation
+    if disk_usage < 50:
+        overall_wellbeing = "healthy"
+        response += "Your PC's storage is functioning optimally. However, to maintain its peak performance, consider organizing your files and folders through defragmentation or rearranging data based on usage frequency."
+
+    if overall_wellbeing == "healthy":
+        response += f"At the moment, your PC has {free_disk_space} of free space, and your storage usage is at {disk_usage}%."
+    else:
+        response += "I am a tad concerned about your PC's storage health. It would be prudent to follow the aforementioned recommendations to enhance its overall storage performance."
+
+    return response
+
 # Get live system information
 system_info = get_system_info()
 
-# Generate and print the response
 info_system = generate_system_status_response(system_info)
+storage_info = generate_storage_status_response(system_info)
 
