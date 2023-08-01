@@ -1,10 +1,10 @@
-from coqui.TTS.api import TTS
+from TTS.api import TTS
 import simpleaudio as sa
 import os
 
 def text_to_speech(text):
     
-    tts = TTS(model_name="tts_models/en/jenny/jenny", progress_bar=False, gpu=False)
+    tts = TTS(model_name="tts_models/en/jenny/jenny", progress_bar=False, gpu=True)
     tts.tts_to_file(text, file_path='tts_/output.wav')
     
     # Run TTS

@@ -6,9 +6,10 @@ from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
 from tts_.tts import text_to_speech
 from functions.opinion import opinion
+from functions.system_info import info_system
+
 # from functions.is_question import is_question
 # from functions.wiki_info import wiki
-from functions.system_info import info_system
 
 with open('intents.json', 'r') as json_data:
     intents = json.load(json_data)
