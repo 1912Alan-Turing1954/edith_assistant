@@ -15,7 +15,7 @@
       ]
     },
     {
-      "tag": "stroage_info",
+      "tag": "storage_info",
       "patterns": [
         "give me storage info",
         "give me storage status",
