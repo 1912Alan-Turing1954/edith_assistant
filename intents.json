@@ -193,13 +193,30 @@
       ]
     },
     {
+      "tag": "mute",
+      "patterns": [
+        "mute", 
+        "quiet", 
+        "shush"
+      ],
+      "responses": [
+        "Okay, I'll stay quiet.", 
+        "Muting myself.", 
+        "Silent mode activated."
+      ]
+    },
+    {
+      "tag": "unmute",
+      "patterns": ["unmute", "speak", "talk"],
+      "responses": ["Okay, I'll speak now.", "Unmuting myself.", "Speaking mode activated."]
+    },
+    {
       "tag": "casual_greeting",
       "patterns": [
         "hey there",
         "what's up?",
         "yo",
         "hey, how's it going?",
-        "friday, my man",
         "friday, long time no see"
       ],
       "responses": [
@@ -336,19 +353,6 @@
         "Certainly, sir! Let me gather the latest weather information for you.",
         "Right away, sir! Fetching the current weather report.",
         "friday, prepare to get weather data. Fetching it now."
-      ]
-    },
-    {
-      "tag": "conversation_song",
-      "patterns": [
-        "friday, how about playing some tunes?",
-        "friday, let's get some music going.",
-        "Hey friday, time for some rocking beats!"
-      ],
-      "responses": [
-        "Excellent choice, sir! Cranking up the music for you.",
-        "Of course, sir! Let the music fill the room.",
-        "Sit back and enjoy, sir. The playlist is starting."
       ]
     },
     {

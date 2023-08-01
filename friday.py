@@ -41,6 +41,7 @@ while True:
         while True:
             user_input = input("friday is active: ")
             
+            
             if user_input.lower() == prev_input.lower():
                 tag = "repeat_string"
             
@@ -67,7 +68,7 @@ while True:
                             text_to_speech(f"{response} {prev_response}")
                             print(intent["tag"])
                             
-                        if intent["tag"] == "repeat_string":
+                        elif intent["tag"] == "repeat_string":
                             response = random.choice(intent["responses"])
                             text_to_speech(response)
                             print(intent["tag"])
