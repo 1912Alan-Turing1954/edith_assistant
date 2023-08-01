@@ -86,11 +86,6 @@ while True:
                             text_to_speech(response.replace("{string}", memory_usage))
                             print(intent["tag"])
 
-                        # elif intent["tag"] == "specs":
-                        #     response = random.choice(intent["responses"])
-                        #     text_to_speech(response.replace("{string}", specs))
-                        #     print(intent["tag"])
-
                         elif intent['tag'] == 'opinion':
                             text_to_speech(opinion(user_input))
                             prev_tag = intent['tag']

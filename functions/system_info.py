@@ -113,28 +113,6 @@ def generate_memory_usage_response(info_system):
     memory_usage = round(memory_usage, 2)
     return f"Your memory usage is at {memory_usage}%"
 
-# def generate_specs_response(info_system):
-#     response = ""
-    
-#     response += f"Your operating system is {info_system['Operating System']}. "
-
-#     # Computer Name
-#     response += f"your computer name is {info_system['Computer Name']}. "
-
-#     # CPU Information
-#     response += f"You possess {info_system['CPU Info']['Physical Cores']} physical cores and {info_system['CPU Info']['Total Cores']} total cores. "
-#     response += "Your CPU usage is"
-#     response += ", ".join([f"{usage}%" for usage in info_system['CPU Info']['CPU Usage']])
-#     response += ". "
-
-#     # Memory Information
-#     response += f"Total memory available is {info_system['Total Memory']}, with {info_system['Available Memory']} available for use and {info_system['Used Memory']} currently in use. Memory usage is {info_system['Memory Usage']}%. "
-
-#     # Disk Information
-#     response += "Disk Information: "
-#     for disk in info_system['Disk Info']:
-#         response += f"Drive: {disk['Drive']}, Mount Point: {disk['Mount Point']}, File System: {disk['File System']}, Total Space: {disk['Total Space']}, Used Space: {disk['Used Space']}, Free Space: {disk['Free Space']}, Disk Usage: {disk['Disk Usage']}. "
-
 # Get live system information
 info_system = get_system_info()
 
