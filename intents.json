@@ -365,14 +365,12 @@
     {
       "tag": "conversation_recipe",
       "patterns": [
-        "friday, give me a recipe to try.",
-        "Hey friday, share a delicious recipe.",
-        "friday, let's cook something amazing."
+        "Jarvis, give me a recipe to try.",
+        "Hey Jarvis, share a delicious recipe.",
+        "Jarvis, let's cook something amazing."
       ],
       "responses": [
-        "Certainly, sir! How about a classic spaghetti carbonara recipe? It's quick and delicious. Enjoy your cooking!",
-        "I've got a mouthwatering recipe for you, sir: roasted garlic and rosemary chicken. It's simple to make and full of flavor. Happy cooking!",
-        "How about indulging in a scrumptious chocolate lava cake? It's sure to satisfy your taste buds. Bon appétit!"
+        "Of course, Sir! How about indulging in a classic Spaghetti Aglio e Olio recipe? It's a delightful dish that will surely satisfy your culinary cravings. Allow me to guide you through the process!\n\nSpaghetti Aglio e Olio Recipe\nIngredients:\n- 400g spaghetti\n- 1/2 cup extra-virgin olive oil\n- 6 garlic cloves, thinly sliced\n- 1 teaspoon red pepper flakes (adjust to your preference)\n- 1/4 cup chopped fresh parsley\n- Grated Parmesan cheese for serving\n- Salt and pepper to taste\n\nInstructions:\n1. Cook the spaghetti until al dente. Drain, reserving 1/2 cup pasta water.\n2. Heat olive oil, sauté garlic and red pepper flakes until golden.\n3. Toss spaghetti in garlic oil, add pasta water for desired consistency.\n4. Season with salt, pepper, and toss with parsley.\n5. Serve with grated Parmesan cheese.\n\nEnjoy your culinary creation of Spaghetti Aglio e Olio! Bon appétit, Sir!"
       ]
     },
     {
