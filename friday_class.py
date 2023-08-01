@@ -25,7 +25,7 @@ model = NeuralNet(input_size, hidden_size, output_size)
 model.load_state_dict(model_state)
 model.eval()
 
-class Friday(object):
+class Friday():
     def __init__(self):
         self.prev_tag = ""
         self.prev_input = ""
@@ -34,8 +34,7 @@ class Friday(object):
     def get_time(self):
         return datetime.datetime.now().time().strftime('%I:%M %p')
     
-    def Main(self):
-        user_input = input("friday is active: ")
+    def Main(self, user_input):
         
         if user_input.lower() == self.prev_input.lower():
             tag = "repeat_string"
@@ -122,5 +121,3 @@ class Friday(object):
                     text_to_speech(f"{random.choice(intent['responses'])}")
                     print(intent['tag'])
                     
-while True:
-    Friday().Main()
