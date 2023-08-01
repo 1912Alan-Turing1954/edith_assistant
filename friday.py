@@ -64,48 +64,65 @@ while True:
                         
                         if intent["tag"] == "repeat":
                             response = random.choice(intent["responses"])
-                            text_to_speech(response)
+                            text_to_speech(f"{response} {prev_response}")
                             print(intent["tag"])
-
+                            
                         if intent["tag"] == "repeat_string":
                             response = random.choice(intent["responses"])
                             text_to_speech(response)
                             print(intent["tag"])
+                            prev_tag = intent['tag']
 
                         elif intent["tag"] == "system_info":
                             response = random.choice(intent["responses"])
-                            text_to_speech(response.replace("{string}", system_info))
+                            response = response.replace("{string}", system_info)
+                            text_to_speech(response)
                             print(intent["tag"])
+                            prev_tag = intent['tag']
+                            prev_response = response
 
                         elif intent["tag"] == "storage_info":
                             response = random.choice(intent["responses"])
-                            text_to_speech(response.replace("{string}", storage_info))
+                            response = response.replace("{string}", storage_info)
+                            text_to_speech(response)
                             print(intent["tag"])
+                            prev_tag = intent['tag']
+                            prev_response = response
                             
                         elif intent["tag"] == "cpu_usage":
                             response = random.choice(intent["responses"])
-                            text_to_speech(response.replace("{string}", cpu_usage))
+                            response = response.replace("{string}", cpu_usage)
+                            text_to_speech(response)
                             print(intent["tag"])
+                            prev_tag = intent['tag']
+                            prev_response = response
 
                         elif intent["tag"] == "memory_usage":
                             response = random.choice(intent["responses"])
-                            text_to_speech(response.replace("{string}", memory_usage))
+                            response = response.replace("{string}", memory_usage)
+                            text_to_speech(response)
                             print(intent["tag"])
+                            prev_tag = intent['tag']
+                            prev_response = response
 
                         elif intent['tag'] == 'opinion':
                             text_to_speech(opinion(user_input))
                             prev_tag = intent['tag']
+                            prev_response = response
                         
                         elif intent["tag"] == "time":
                             res_time = random.choice(intent['responses']).replace("{time}", get_time())
                             text_to_speech(f"{res_time}")
                             print(intent['tag'])
                             prev_tag = intent['tag']
+                            prev_response = res_time
                         
                         else:
-                            text_to_speech(f"{random.choice(intent['responses'])}")
+                            response = random.choice(intent['responses'])
+                            text_to_speech(f"{response}")
                             print(intent['tag'])
                             prev_tag = intent['tag']
+                            prev_response = response
 
                 prev_input = user_input.lower()
                 

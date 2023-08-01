@@ -38,7 +38,8 @@
         "give me cpu usage",
         "give me cpu status",
         "cpu status",
-        "cpu status update"
+        "cpu status update",
+        "cpu usage"
       ],
       "responses": [
         "{string}"
@@ -249,7 +250,7 @@
         "Hey Friday, how about a second take?"
       ],
       "responses": [
-        "Apologies, Sir. Reiterating.",
+        "Apologies, Sir.",
         "Certainly, Sir.",
         "My apologies, Sir. I said",
         "Of course, Sir.",
