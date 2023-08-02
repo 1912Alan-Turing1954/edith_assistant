@@ -100,7 +100,7 @@ def generate_storage_status_response(system_info):
     if overall_wellbeing == "healthy":
         response += f"At the moment, your PC has {free_disk_space} of free space, and your storage usage is at {str(disk_usage)}%."
     else:
-        response += "I am a tad concerned about your PC's storage health. It would be prudent to follow the aforementioned recommendations to enhance its overall storage performance."
+        response += f"I am a tad concerned about your PC's storage health. Your storage usage is at {str(disk_usage)}, It would be prudent to follow the aforementioned recommendations to enhance its overall storage performance."
 
     return response
 
@@ -113,6 +113,13 @@ def generate_memory_usage_response(info_system):
     memory_usage = float(info_system['Memory Usage'][:-1])
     memory_usage = round(memory_usage, 2)
     return f"Your memory usage is at {memory_usage}%"
+
+def generate_disk_space_response(info_system):
+    free_disk_space = (info_system['Disk Info'][0]['Free Space'])
+    free_disk_space = free_disk_space.replace("GB", "gigabytes")
+    disk_usage = float(info_system['Disk Info'][0]['Disk Usage'][:-1])
+    disk_usage = round(disk_usage, 2)
+    return f"You have {free_disk_space} of free space at the moment"
 
 # Get live system information
 def get_live_system_info():
@@ -134,11 +141,16 @@ def get_live_memory_usage_response():
     info_system = get_live_system_info()
     return generate_memory_usage_response(info_system)
 
+def get_live_disk_space_response():
+    info_system = get_live_system_info()
+    return generate_disk_space_response(info_system)
+
 # Call these functions whenever you need the live system information.
 system_info = get_live_system_status_response()
 storage_info = get_live_storage_status_response()
 cpu_usage = get_live_cpu_usage_response()
 memory_usage = get_live_memory_usage_response()
+disk_space = get_live_disk_space_response()
 
 
 

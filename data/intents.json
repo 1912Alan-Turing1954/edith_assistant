@@ -74,7 +74,24 @@
       "responses": [
         "{string}"
       ]
-    },    
+    },
+    {
+      "tag": "disk_space",
+      "patterns": [
+        "How much disk space do I have?",
+        "Can you tell me my available disk space?",
+        "What is my current disk space?",
+        "Show me the amount of disk space I have.",
+        "Check available disk space.",
+        "How much storage do I have?",
+        "What is my current storage?",
+        "Show me the amount of storage I have.",
+        "Check available storage."
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
     {
       "tag": "name",
       "patterns": [
