@@ -115,16 +115,30 @@ def generate_memory_usage_response(info_system):
     return f"Your memory usage is at {memory_usage}%"
 
 # Get live system information
-info_system = get_system_info()
+def get_live_system_info():
+    return get_system_info()
 
-system_info = generate_system_status_response(info_system)
-storage_info = generate_storage_status_response(info_system)
+def get_live_system_status_response():
+    info_system = get_live_system_info()
+    return generate_system_status_response(info_system)
 
-cpu_usage = generate_cpu_usage_response(info_system)
-memory_usage = generate_memory_usage_response(info_system)
+def get_live_storage_status_response():
+    info_system = get_live_system_info()
+    return generate_storage_status_response(info_system)
 
-# specs = generate_specs_response(info_system)
+def get_live_cpu_usage_response():
+    info_system = get_live_system_info()
+    return generate_cpu_usage_response(info_system)
 
+def get_live_memory_usage_response():
+    info_system = get_live_system_info()
+    return generate_memory_usage_response(info_system)
+
+# Call these functions whenever you need the live system information.
+system_info = get_live_system_status_response()
+storage_info = get_live_storage_status_response()
+cpu_usage = get_live_cpu_usage_response()
+memory_usage = get_live_memory_usage_response()
 
 
 

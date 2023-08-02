@@ -39,7 +39,14 @@
         "give me cpu status",
         "cpu status",
         "cpu status update",
-        "cpu usage"
+        "cpu usage",
+        "what is my cpu status",
+        "what is my cpu usage",
+        "show cpu usage",
+        "check cpu usage",
+        "check cpu status",
+        "get cpu info",
+        "cpu info"
       ],
       "responses": [
         "{string}"
@@ -55,12 +62,19 @@
         "memory usage",
         "ram usage",
         "ram status",
-        "ram status update"
+        "ram status update",
+        "what is my memory status",
+        "what is my memory usage",
+        "show memory usage",
+        "check memory usage",
+        "check memory status",
+        "get memory info",
+        "memory info"
       ],
       "responses": [
         "{string}"
       ]
-    },
+    },    
     {
       "tag": "name",
       "patterns": [

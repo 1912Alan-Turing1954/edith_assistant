@@ -7,7 +7,6 @@ from brain.nltk_utils import bag_of_words, tokenize
 from tts_.tts import text_to_speech
 from functions.opinion import opinion
 from functions.system_info import *
-from functions.timer import *
 
 with open('data/intents.json', 'r') as json_data:
     intents = json.load(json_data)
@@ -33,6 +32,9 @@ prev_tag = ""
 prev_input = ""
 prev_response = ""
 
+def get_updated_system_info():
+    return get_system_info()
+
 while True:
     
     wake_up = input("friday is inactive: ")
@@ -42,6 +44,10 @@ while True:
         while True:
             user_input = input("friday is active: ")
             
+            system_info = get_updated_system_info()
+            storage_info = generate_storage_status_response(system_info)
+            cpu_usage = generate_cpu_usage_response(system_info)
+            memory_usage = generate_memory_usage_response(system_info)
             
             if user_input.lower() == prev_input.lower():
                 tag = "repeat_string"
