@@ -90,12 +90,14 @@ class Friday():
                                     response = random.choice(intent["responses"])
                                     text_to_speech(f"{response} {prev_response}")
                                     print(intent["tag"])
+                                    break
 
                                 elif intent["tag"] == "repeat_string":
                                     response = random.choice(intent["responses"])
                                     text_to_speech(response)
                                     print(intent["tag"])
                                     prev_tag = intent['tag']
+                                    break
 
                                 elif intent["tag"] == "system_info":
                                     response = random.choice(intent["responses"])
@@ -104,6 +106,7 @@ class Friday():
                                     print(intent["tag"])
                                     prev_tag = intent['tag']
                                     prev_response = response
+                                    break
 
                                 elif intent["tag"] == "storage_info":
                                     response = random.choice(intent["responses"])
@@ -112,6 +115,7 @@ class Friday():
                                     print(intent["tag"])
                                     prev_tag = intent['tag']
                                     prev_response = response
+                                    break
 
                                 elif intent["tag"] == "cpu_usage":
                                     response = random.choice(intent["responses"])
@@ -120,6 +124,7 @@ class Friday():
                                     print(intent["tag"])
                                     prev_tag = intent['tag']
                                     prev_response = response
+                                    break
 
                                 elif intent["tag"] == "memory_usage":
                                     response = random.choice(intent["responses"])
@@ -128,6 +133,7 @@ class Friday():
                                     print(intent["tag"])
                                     prev_tag = intent['tag']
                                     prev_response = response
+                                    break
 
                                 elif intent["tag"] == "disk_space":
                                     response = random.choice(intent["responses"])
@@ -136,11 +142,13 @@ class Friday():
                                     print(intent["tag"])
                                     prev_tag = intent['tag']
                                     prev_response = response
+                                    break
 
                                 elif intent['tag'] == 'opinion':
                                     text_to_speech(opinion(user_input_part))
                                     prev_tag = intent['tag']
                                     prev_response = response
+                                    break
 
                                 elif intent["tag"] == "time":
                                     res_time = random.choice(intent['responses']).replace("{time}", get_time())
@@ -148,6 +156,7 @@ class Friday():
                                     print(intent['tag'])
                                     prev_tag = intent['tag']
                                     prev_response = res_time
+                                    break
 
                                 else:
                                     response = random.choice(intent['responses'])
@@ -155,14 +164,18 @@ class Friday():
                                     print(intent['tag'])
                                     prev_tag = intent['tag']
                                     prev_response = response
+                                    break
 
                         prev_input = user_input_part.lower()
+                        break
 
                     else:
-                        for intent in intents['intents']:
-                            if intent["tag"] == 'technical':
-                                text_to_speech(f"{random.choice(intent['responses'])}")
-                                print(intent['tag'])
+                            for intent in intents['intents']:
+                                if intent["tag"] == 'technical':
+                                    text_to_speech(f"{random.choice(intent['responses'])}")
+                                    print(intent['tag'])
+                                    break
+
             else:
                 system_info = get_updated_system_info()
                 storage_info = generate_storage_status_response(system_info)
@@ -194,12 +207,14 @@ class Friday():
                                 response = random.choice(intent["responses"])
                                 text_to_speech(f"{response} {prev_response}")
                                 print(intent["tag"])
+                                break
 
                             elif intent["tag"] == "repeat_string":
                                 response = random.choice(intent["responses"])
                                 text_to_speech(response)
                                 print(intent["tag"])
                                 prev_tag = intent['tag']
+                                break
 
                             elif intent["tag"] == "system_info":
                                 response = random.choice(intent["responses"])
@@ -208,6 +223,7 @@ class Friday():
                                 print(intent["tag"])
                                 prev_tag = intent['tag']
                                 prev_response = response
+                                break
 
                             elif intent["tag"] == "storage_info":
                                 response = random.choice(intent["responses"])
@@ -216,6 +232,7 @@ class Friday():
                                 print(intent["tag"])
                                 prev_tag = intent['tag']
                                 prev_response = response
+                                break
 
                             elif intent["tag"] == "cpu_usage":
                                 response = random.choice(intent["responses"])
@@ -224,6 +241,7 @@ class Friday():
                                 print(intent["tag"])
                                 prev_tag = intent['tag']
                                 prev_response = response
+                                break
 
                             elif intent["tag"] == "memory_usage":
                                 response = random.choice(intent["responses"])
@@ -232,6 +250,7 @@ class Friday():
                                 print(intent["tag"])
                                 prev_tag = intent['tag']
                                 prev_response = response
+                                break
 
                             elif intent["tag"] == "disk_space":
                                 response = random.choice(intent["responses"])
@@ -240,11 +259,13 @@ class Friday():
                                 print(intent["tag"])
                                 prev_tag = intent['tag']
                                 prev_response = response
+                                break
 
                             elif intent['tag'] == 'opinion':
                                 text_to_speech(opinion(user_input))
                                 prev_tag = intent['tag']
                                 prev_response = response
+                                break
 
                             elif intent["tag"] == "time":
                                 res_time = random.choice(intent['responses']).replace("{time}", get_time())
@@ -252,6 +273,7 @@ class Friday():
                                 print(intent['tag'])
                                 prev_tag = intent['tag']
                                 prev_response = res_time
+                                break
 
                             else:
                                 response = random.choice(intent['responses'])
@@ -259,11 +281,14 @@ class Friday():
                                 print(intent['tag'])
                                 prev_tag = intent['tag']
                                 prev_response = response
+                                break
 
                     prev_input = user_input.lower()
-
+                    break
+                
                 else:
-                    for intent in intents['intents']:
-                        if intent["tag"] == 'technical':
-                            text_to_speech(f"{random.choice(intent['responses'])}")
-                            print(intent['tag'])
+                            for intent in intents['intents']:
+                                if intent["tag"] == 'technical':
+                                    text_to_speech(f"{random.choice(intent['responses'])}")
+                                    print(intent['tag'])
+                                    break
