@@ -8,7 +8,7 @@ from tts_.tts import text_to_speech
 from functions.opinion import opinion
 from functions.system_info import system_info, storage_info, cpu_usage, memory_usage
 
-with open('intents.json', 'r') as json_data:
+with open('data/intents.json', 'r') as json_data:
     intents = json.load(json_data)
 
 FILE = "data/data.pth"

@@ -62,12 +62,24 @@
       ]
     },
     {
+      "tag": "name",
+      "patterns": [
+        "friday"
+      ],
+      "responses": [
+        "Yes, sir?",
+        "Sir?",
+        "Yes?"
+      ]
+    },
+    {
       "tag": "greeting",
       "patterns": [
         "good morning",
         "good afternoon",
         "friday, it's me",
-        "morning, friday"
+        "morning, friday",
+        "good eve"
       ],
       "responses": [
         "Greetings, sir. How may I assist you today?",
@@ -99,7 +111,8 @@
         "friday, you there?",
         "friday, you up?",
         "are you there",
-        "are you up"
+        "are you up",
+        "you there"
       ],
       "responses": [
         "Affirmative, sir.",
@@ -428,6 +441,17 @@
         "I apologize, sir, but I don't have real-time access to news. However, I can provide valuable information on various topics!",
         "As an AI, I'm not connected to live news feeds. Nevertheless, I'm here to engage in discussions and answer any questions.",
         "I'm afraid I don't have the capability to fetch real-time news, but I'm available to assist you with other tasks!"
+      ]
+    },
+    {
+      "tag": "timer",
+      "patterns": [
+        "set a timer for {duration}", 
+        "start a {duration} timer"
+      ],
+      "responses": [
+        "Timer started for {duration}.", 
+        "Setting a timer for {duration}."
       ]
     }
   ]

@@ -6,9 +6,10 @@ from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
 from tts_.tts import text_to_speech
 from functions.opinion import opinion
-from functions.system_info import system_info, storage_info, cpu_usage, memory_usage
+from functions.system_info import *
+from functions.timer import *
 
-with open('intents.json', 'r') as json_data:
+with open('data/intents.json', 'r') as json_data:
     intents = json.load(json_data)
 
 FILE = "data/data.pth"
@@ -73,7 +74,7 @@ while True:
                             text_to_speech(response)
                             print(intent["tag"])
                             prev_tag = intent['tag']
-
+                        
                         elif intent["tag"] == "system_info":
                             response = random.choice(intent["responses"])
                             response = response.replace("{string}", system_info)

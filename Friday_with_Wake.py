@@ -1,6 +1,6 @@
 import datetime
 import speech_recognition as sr  # Import the speech_recognition library
-from friday_class import Friday
+from Friday_class import Friday
 
 # Initialize the recognizer
 recognizer = sr.Recognizer()
