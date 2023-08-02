@@ -43,7 +43,7 @@ class Friday():
             'along with'
         ]
 
-    def get_time():
+    def get_time(self):
         time_ = datetime.datetime.now().time().strftime('%I:%M %p')
         if 'PM' in time_:
             time_ = time_.replace("PM", "P M")
@@ -55,8 +55,6 @@ class Friday():
     
     def Main(self, user_input):
         global prev_tag, prev_input, prev_response
-
-        user_input = input("friday is active: ")
             
         for word in self.list_of_words:
             if word in user_input.lower():
@@ -299,4 +297,6 @@ class Friday():
                             break
                     
 while True:
-    Friday().Main()
+    user_input = input("friday is active: ")
+
+    Friday().Main(user_input)
