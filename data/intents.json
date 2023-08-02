@@ -301,7 +301,7 @@
         "Certainly, Sir.",
         "My apologies, Sir. I said",
         "Of course, Sir.",
-        "Repeating, Sir."
+        "I said"
       ]
     },
     {
@@ -370,6 +370,63 @@
         "Sir, according to my calculations, it's {time}.",
         "I have the time at your disposal, sir. It's {time}.",
         "The time, sir, is {time}."
+      ]
+    },
+    {
+      "tag": "day",
+      "patterns": [
+        "what day is it?",
+        "can you tell me the day?",
+        "do you know the current day?",
+        "what's the day?",
+        "could you please inform me of the current day?",
+        "what day do we have?",
+        "do you have the day?",
+        "day, please?",
+        "any idea what day it is?",
+        "i need to know the day.",
+        "tell me the current day.",
+        "what day is today?",
+        "do you know the day of the week?"
+      ],
+      "responses": [
+        "Of course, sir. Today is {day}, just like any other day.",
+        "As you asked, it's {day} today, sir.",
+        "Allow me to check. The day is {day}.",
+        "Certainly, sir. Today is {day}, just as expected.",
+        "I've got the current day for you, sir. It's {day}.",
+        "Rest assured, sir. The day is {day}, just like the previous {day}.",
+        "Sir, according to my calculations, today is {day}.",
+        "I have the day at your disposal. It's {day} today.",
+        "The day, sir, is {day}, just as it was yesterday."
+      ]
+    },
+    {
+      "tag": "date",
+      "patterns": [
+        "What's the date today?",
+        "Can you tell me today's date?",
+        "Do you know the current date?",
+        "What date is it?",
+        "Could you please inform me of the current date?",
+        "Do you have the date?",
+        "Tell me the current date.",
+        "I need to know the date.",
+        "Any idea what date it is?",
+        "What's today's date?",
+        "Please tell me the date.",
+        "What is today's date?"
+      ],
+      "responses": [
+        "As you wish, sir. Today's date is {date}.",
+        "I'm pleased to inform you, sir, that it's {date} today.",
+        "Just a moment, sir. The date is {date}.",
+        "Of course, sir. Today's date is {date}.",
+        "I've got the current date for you, sir. It's {date}.",
+        "Rest assured, sir. The date is {date}.",
+        "Sir, according to my calculations, today's date is {date}.",
+        "I have the date at your disposal, sir. It's {date} today.",
+        "The date, sir, is {date}."
       ]
     },
     {

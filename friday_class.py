@@ -39,7 +39,7 @@ class Friday():
         self.list_of_words = [
             'and',
             'also',
-            'as well as'    
+            'as well as',
             'along with'
         ]
 
@@ -52,6 +52,14 @@ class Friday():
         else:
             pass
         return time_
+    
+    def get_day(self):
+        day = datetime.datetime.now().strftime('%A')
+        return day
+    
+    def get_date(self):
+        date = datetime.datetime.now().strftime('%B %d, %Y')
+        return date
     
     def Main(self, user_input):
         global prev_tag, prev_input, prev_response
@@ -155,11 +163,27 @@ class Friday():
                                     break
                             
                                 elif intent["tag"] == "time":
-                                    res_time = random.choice(intent['responses']).replace("{time}", self.get_time())
-                                    text_to_speech(f"{res_time}")
+                                    response = random.choice(intent['responses']).replace("{time}", self.get_time())
+                                    text_to_speech(response)
                                     print(intent['tag'])
                                     prev_tag = intent['tag']
-                                    prev_response = res_time
+                                    prev_response = response
+                                    break
+
+                                elif intent["tag"] == "day":
+                                    response = random.choice(intent['responses']).replace("{day}", self.get_day())
+                                    text_to_speech(response)
+                                    print(intent['tag'])
+                                    prev_tag = intent['tag']
+                                    prev_response = response
+                                    break
+
+                                elif intent["tag"] == "date":
+                                    response = random.choice(intent['responses']).replace("{date}", self.get_date())
+                                    text_to_speech(response)
+                                    print(intent['tag'])
+                                    prev_tag = intent['tag']
+                                    prev_response = response
                                     break
                             
                                 else:
@@ -271,11 +295,27 @@ class Friday():
                                 break
                 
                             elif intent["tag"] == "time":
-                                res_time = random.choice(intent['responses']).replace("{time}", self.get_time())
-                                text_to_speech(f"{res_time}")
+                                response = random.choice(intent['responses']).replace("{time}", self.get_time())
+                                text_to_speech(response)
                                 print(intent['tag'])
                                 prev_tag = intent['tag']
-                                prev_response = res_time
+                                prev_response = response
+                                break
+
+                            elif intent["tag"] == "day":
+                                    response = random.choice(intent['responses']).replace("{day}", self.get_day())
+                                    text_to_speech(response)
+                                    print(intent['tag'])
+                                    prev_tag = intent['tag']
+                                    prev_response = response
+                                    break
+
+                            elif intent["tag"] == "date":
+                                response = random.choice(intent['responses']).replace("{date}", self.get_date())
+                                text_to_speech(response)
+                                print(intent['tag'])
+                                prev_tag = intent['tag']
+                                prev_response = response
                                 break
                 
                             else:

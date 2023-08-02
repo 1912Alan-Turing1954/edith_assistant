@@ -35,6 +35,14 @@ def get_time():
         pass
     return time_
     
+def get_date():
+    date_ = datetime.datetime.now().date().strftime('%B %d, %Y')
+    return date_
+
+def get_day():
+    day_ = datetime.datetime.now().strftime('%A')
+    return day_
+
 
 prev_tag = ""
 prev_input = ""
@@ -158,13 +166,29 @@ while True:
                                         break
                                 
                                     elif intent["tag"] == "time":
-                                        res_time = random.choice(intent['responses']).replace("{time}", get_time())
-                                        text_to_speech(f"{res_time}")
+                                        response = random.choice(intent['responses']).replace("{time}", get_time())
+                                        text_to_speech(response)
                                         print(intent['tag'])
                                         prev_tag = intent['tag']
-                                        prev_response = res_time
+                                        prev_response = response
                                         break
-                                
+                                    
+                                    elif intent["tag"] == "date":
+                                        response = random.choice(intent['responses']).replace("{date}", get_date())
+                                        text_to_speech(response)
+                                        print(intent['tag'])
+                                        prev_tag = intent['tag']
+                                        prev_response = response
+                                        break
+
+                                    elif intent["tag"] == "day":
+                                        response = random.choice(intent['responses']).replace("{day}", get_day())
+                                        text_to_speech(response)
+                                        print(intent['tag'])
+                                        prev_tag = intent['tag']
+                                        prev_response = response
+                                        break
+
                                     else:
                                         response = random.choice(intent['responses'])
                                         text_to_speech(f"{response}")
@@ -279,6 +303,22 @@ while True:
                                     print(intent['tag'])
                                     prev_tag = intent['tag']
                                     prev_response = res_time
+                                    break
+
+                                elif intent["tag"] == "date":
+                                    res_date = random.choice(intent['responses']).replace("{date}", get_date())
+                                    text_to_speech(f"{res_date}")
+                                    print(intent['tag'])
+                                    prev_tag = intent['tag']
+                                    prev_response = res_date
+                                    break
+
+                                elif intent["tag"] == "day":
+                                    res_day = random.choice(intent['responses']).replace("{day}", get_day())
+                                    text_to_speech(f"{res_day}")
+                                    print(intent['tag'])
+                                    prev_tag = intent['tag']
+                                    prev_response = res_day
                                     break
                     
                                 else:
