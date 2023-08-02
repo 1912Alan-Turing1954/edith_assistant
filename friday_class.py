@@ -66,10 +66,10 @@ class Friday():
                     memory_usage = generate_memory_usage_response(system_info)
                     disk_space = generate_disk_space_response(system_info)
 
-                    if user_input_part.lower() == prev_input.lower():
+                    if user_input_part.lower() == self.prev_input.lower():
                         tag = "repeat_string"
 
-                    elif prev_tag == 'technical':
+                    elif self.prev_tag == 'technical':
                         pass
 
                     else:
@@ -86,9 +86,10 @@ class Friday():
                     if prob.item() > 0.785:
                         for intent in intents['intents']:
                             if tag == intent["tag"]:
+                                
                                 if intent["tag"] == "repeat":
                                     response = random.choice(intent["responses"])
-                                    text_to_speech(f"{response} {prev_response}")
+                                    text_to_speech(f"{response} {self.prev_response}")
                                     print(intent["tag"])
                                     break
 
@@ -96,7 +97,7 @@ class Friday():
                                     response = random.choice(intent["responses"])
                                     text_to_speech(response)
                                     print(intent["tag"])
-                                    prev_tag = intent['tag']
+                                    self.prev_tag = intent['tag']
                                     break
 
                                 elif intent["tag"] == "system_info":
@@ -104,8 +105,8 @@ class Friday():
                                     response = response.replace("{string}", str(system_info))
                                     text_to_speech(response)
                                     print(intent["tag"])
-                                    prev_tag = intent['tag']
-                                    prev_response = response
+                                    self.prev_tag = intent['tag']
+                                    self.prev_response = response
                                     break
 
                                 elif intent["tag"] == "storage_info":
@@ -113,8 +114,8 @@ class Friday():
                                     response = response.replace("{string}", str(storage_info))
                                     text_to_speech(response)
                                     print(intent["tag"])
-                                    prev_tag = intent['tag']
-                                    prev_response = response
+                                    self.prev_tag = intent['tag']
+                                    self.prev_response = response
                                     break
 
                                 elif intent["tag"] == "cpu_usage":
@@ -122,8 +123,8 @@ class Friday():
                                     response = response.replace("{string}", str(cpu_usage))
                                     text_to_speech(response)
                                     print(intent["tag"])
-                                    prev_tag = intent['tag']
-                                    prev_response = response
+                                    self.prev_tag = intent['tag']
+                                    self.prev_response = response
                                     break
 
                                 elif intent["tag"] == "memory_usage":
@@ -131,8 +132,8 @@ class Friday():
                                     response = response.replace("{string}", str(memory_usage))
                                     text_to_speech(response)
                                     print(intent["tag"])
-                                    prev_tag = intent['tag']
-                                    prev_response = response
+                                    self.prev_tag = intent['tag']
+                                    self.prev_response = response
                                     break
 
                                 elif intent["tag"] == "disk_space":
@@ -140,33 +141,33 @@ class Friday():
                                     response = response.replace("{string}", str(disk_space))
                                     text_to_speech(response)
                                     print(intent["tag"])
-                                    prev_tag = intent['tag']
-                                    prev_response = response
+                                    self.prev_tag = intent['tag']
+                                    self.prev_response = response
                                     break
 
                                 elif intent['tag'] == 'opinion':
                                     text_to_speech(opinion(user_input_part))
-                                    prev_tag = intent['tag']
-                                    prev_response = response
+                                    self.prev_tag = intent['tag']
+                                    self.prev_response = response
                                     break
 
                                 elif intent["tag"] == "time":
-                                    res_time = random.choice(intent['responses']).replace("{time}", get_time())
+                                    res_time = random.choice(intent['responses']).replace("{time}", self.get_time())
                                     text_to_speech(f"{res_time}")
                                     print(intent['tag'])
-                                    prev_tag = intent['tag']
-                                    prev_response = res_time
+                                    self.prev_tag = intent['tag']
+                                    self.prev_response = res_time
                                     break
 
                                 else:
                                     response = random.choice(intent['responses'])
                                     text_to_speech(f"{response}")
                                     print(intent['tag'])
-                                    prev_tag = intent['tag']
-                                    prev_response = response
+                                    self.prev_tag = intent['tag']
+                                    self.prev_response = response
                                     break
 
-                        prev_input = user_input_part.lower()
+                        self.prev_input = user_input_part.lower()
                         break
 
                     else:
@@ -183,10 +184,10 @@ class Friday():
                 memory_usage = generate_memory_usage_response(system_info)
                 disk_space = generate_disk_space_response(system_info)
 
-                if user_input.lower() == prev_input.lower():
+                if user_input.lower() == self.prev_input.lower():
                     tag = "repeat_string"
 
-                elif prev_tag == 'technical':
+                elif self.prev_tag == 'technical':
                     pass
 
                 else:
@@ -203,9 +204,10 @@ class Friday():
                 if prob.item() > 0.785:
                     for intent in intents['intents']:
                         if tag == intent["tag"]:
+                            
                             if intent["tag"] == "repeat":
                                 response = random.choice(intent["responses"])
-                                text_to_speech(f"{response} {prev_response}")
+                                text_to_speech(f"{response} {self.prev_response}")
                                 print(intent["tag"])
                                 break
 
@@ -213,7 +215,7 @@ class Friday():
                                 response = random.choice(intent["responses"])
                                 text_to_speech(response)
                                 print(intent["tag"])
-                                prev_tag = intent['tag']
+                                self.prev_tag = intent['tag']
                                 break
 
                             elif intent["tag"] == "system_info":
@@ -221,8 +223,8 @@ class Friday():
                                 response = response.replace("{string}", str(system_info))
                                 text_to_speech(response)
                                 print(intent["tag"])
-                                prev_tag = intent['tag']
-                                prev_response = response
+                                self.prev_tag = intent['tag']
+                                self.prev_response = response
                                 break
 
                             elif intent["tag"] == "storage_info":
@@ -230,8 +232,8 @@ class Friday():
                                 response = response.replace("{string}", str(storage_info))
                                 text_to_speech(response)
                                 print(intent["tag"])
-                                prev_tag = intent['tag']
-                                prev_response = response
+                                self.prev_tag = intent['tag']
+                                self.prev_response = response
                                 break
 
                             elif intent["tag"] == "cpu_usage":
@@ -239,8 +241,8 @@ class Friday():
                                 response = response.replace("{string}", str(cpu_usage))
                                 text_to_speech(response)
                                 print(intent["tag"])
-                                prev_tag = intent['tag']
-                                prev_response = response
+                                self.prev_tag = intent['tag']
+                                self.prev_response = response
                                 break
 
                             elif intent["tag"] == "memory_usage":
@@ -248,8 +250,8 @@ class Friday():
                                 response = response.replace("{string}", str(memory_usage))
                                 text_to_speech(response)
                                 print(intent["tag"])
-                                prev_tag = intent['tag']
-                                prev_response = response
+                                self.prev_tag = intent['tag']
+                                self.prev_response = response
                                 break
 
                             elif intent["tag"] == "disk_space":
@@ -257,33 +259,33 @@ class Friday():
                                 response = response.replace("{string}", str(disk_space))
                                 text_to_speech(response)
                                 print(intent["tag"])
-                                prev_tag = intent['tag']
-                                prev_response = response
+                                self.prev_tag = intent['tag']
+                                self.prev_response = response
                                 break
 
                             elif intent['tag'] == 'opinion':
                                 text_to_speech(opinion(user_input))
-                                prev_tag = intent['tag']
-                                prev_response = response
+                                self.prev_tag = intent['tag']
+                                self.prev_response = response
                                 break
 
                             elif intent["tag"] == "time":
-                                res_time = random.choice(intent['responses']).replace("{time}", get_time())
+                                res_time = random.choice(intent['responses']).replace("{time}", self.get_time())
                                 text_to_speech(f"{res_time}")
                                 print(intent['tag'])
-                                prev_tag = intent['tag']
-                                prev_response = res_time
+                                self.prev_tag = intent['tag']
+                                self.prev_response = res_time
                                 break
 
                             else:
                                 response = random.choice(intent['responses'])
                                 text_to_speech(f"{response}")
                                 print(intent['tag'])
-                                prev_tag = intent['tag']
-                                prev_response = response
+                                self.prev_tag = intent['tag']
+                                self.prev_response = response
                                 break
 
-                    prev_input = user_input.lower()
+                    self.prev_input = user_input.lower()
                     break
                 
                 else:
@@ -292,3 +294,7 @@ class Friday():
                                     text_to_speech(f"{random.choice(intent['responses'])}")
                                     print(intent['tag'])
                                     break
+
+while True:
+    user = str(input("What would you like to do? "))
+    Friday().Main(user)
