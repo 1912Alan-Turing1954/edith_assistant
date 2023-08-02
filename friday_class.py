@@ -157,7 +157,7 @@ class Friday():
                                     break
                             
                                 elif intent["tag"] == "time":
-                                    res_time = random.choice(intent['responses']).replace("{time}", get_time())
+                                    res_time = random.choice(intent['responses']).replace("{time}", self.get_time())
                                     text_to_speech(f"{res_time}")
                                     print(intent['tag'])
                                     prev_tag = intent['tag']
@@ -273,7 +273,7 @@ class Friday():
                                 break
                 
                             elif intent["tag"] == "time":
-                                res_time = random.choice(intent['responses']).replace("{time}", get_time())
+                                res_time = random.choice(intent['responses']).replace("{time}", self.get_time())
                                 text_to_speech(f"{res_time}")
                                 print(intent['tag'])
                                 prev_tag = intent['tag']
@@ -299,5 +299,4 @@ class Friday():
                             break
                     
 while True:
-    user = input("Friday active: ")
-    Friday().Main(user)
+    Friday().Main()

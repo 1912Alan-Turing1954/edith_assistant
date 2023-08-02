@@ -473,17 +473,6 @@
         "As an AI, I'm not connected to live news feeds. Nevertheless, I'm here to engage in discussions and answer any questions.",
         "I'm afraid I don't have the capability to fetch real-time news, but I'm available to assist you with other tasks!"
       ]
-    },
-    {
-      "tag": "timer",
-      "patterns": [
-        "set a timer for {duration}", 
-        "start a {duration} timer"
-      ],
-      "responses": [
-        "Timer started for {duration}.", 
-        "Setting a timer for {duration}."
-      ]
     }
   ]
 }
