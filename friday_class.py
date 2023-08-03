@@ -37,10 +37,10 @@ class Friday():
     def __init__(self):
         self.empty = ""
         self.list_of_words = [
-            'and',
-            'also',
-            'as well as',
-            'along with'
+            ' and ',
+            ' also ',
+            ' as well as ',
+            ' along with '
         ]
 
     def get_time(self):

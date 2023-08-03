@@ -3,12 +3,19 @@
     {
       "tag": "system_info",
       "patterns": [
-        "give me system info",
-        "give me system status",
-        "status update",
-        "system info",
-        "system status",
-        "system status update"
+        "what's up with my system?",
+        "tell me about my system status.",
+        "what's the status of my system?",
+        "do you have any system info?",
+        "how's my system doing?",
+        "give me the current system status.",
+        "any updates on my system?",
+        "system status?",
+        "system update, please?",
+        "system status update",
+        "status of system",
+        "system operational?",
+        "is the system operational?"
       ],
       "responses": [
         "{string}"
@@ -17,16 +24,20 @@
     {
       "tag": "storage_info",
       "patterns": [
-        "give me storage info",
-        "give me storage status",
-        "storage info",
-        "storage status",
-        "storage status update",
-        "drive status",
+        "hey, what's happening with my storage?",
+        "tell me about my storage status.",
+        "what's the status of my storage?",
+        "do you have any storage info?",
+        "how's my storage doing?",
+        "give me the current storage status.",
+        "any updates on my storage?",
+        "how much storage space do I have left?",
+        "can you show me my available storage space?",
+        "storage info, please?",
+        "drive status?",
         "drive status update",
-        "drive info",
-        "give me drive info",
-        "give me drive status"
+        "status of drive",
+        "is drive operational?"
       ],
       "responses": [
         "{string}"
@@ -35,18 +46,18 @@
     {
       "tag": "cpu_usage",
       "patterns": [
-        "give me cpu usage",
-        "give me cpu status",
-        "cpu status",
-        "cpu status update",
+        "tell me about my cpu status.",
+        "what's the status of my cpu?",
+        "do you have any cpu info?",
+        "how's my cpu doing?",
+        "give me the current cpu status.",
+        "any updates on my cpu?",
+        "how much of my cpu is being used?",
+        "can you show me my current cpu usage?",
         "cpu usage",
-        "what is my cpu status",
-        "what is my cpu usage",
-        "show cpu usage",
-        "check cpu usage",
-        "check cpu status",
-        "get cpu info",
-        "cpu info"
+        "cpu update",
+        "cpu status update",
+        "status of cpu"
       ],
       "responses": [
         "{string}"
@@ -55,21 +66,21 @@
     {
       "tag": "memory_usage",
       "patterns": [
-        "give me memory usage",
-        "give me memory status",
-        "memory status",
-        "memory status update",
+        "how's my memory usage?",
+        "tell me about my memory status.",
+        "what's the status of my memory?",
+        "do you have any memory info?",
+        "how's my ram doing?",
+        "give me the current memory status.",
+        "any updates on my memory?",
+        "how much of my ram is being used?",
+        "can you show me my current memory usage?",
+        "ram status?",
+        "memory update",
         "memory usage",
-        "ram usage",
-        "ram status",
-        "ram status update",
-        "what is my memory status",
-        "what is my memory usage",
-        "show memory usage",
-        "check memory usage",
-        "check memory status",
-        "get memory info",
-        "memory info"
+        "memory status update",
+        "status of ram",
+        "status of memory"
       ],
       "responses": [
         "{string}"
@@ -78,15 +89,20 @@
     {
       "tag": "disk_space",
       "patterns": [
-        "How much disk space do I have?",
-        "Can you tell me my available disk space?",
-        "What is my current disk space?",
-        "Show me the amount of disk space I have.",
-        "Check available disk space.",
-        "How much storage do I have?",
-        "What is my current storage?",
-        "Show me the amount of storage I have.",
-        "Check available storage."
+        "what's my disk space like?",
+        "tell me about my available disk space.",
+        "do you have any info on my disk space?",
+        "what's the status of my disk space?",
+        "how much disk space do I have left?",
+        "give me the current disk space.",
+        "any updates on my available disk space?",
+        "how much storage do I have left?",
+        "can you show me my current storage space?",
+        "disk space, please?",
+        "disk status?",
+        "disk available space",
+        "available space on disk",
+        "status of disk"
       ],
       "responses": [
         "{string}"
