@@ -100,7 +100,7 @@ def generate_system_status_response(system_info):
         response += " I must inform you that your CPU usage is quite high at the moment. "
         response += "It would be advisable to close some unnecessary programs or tasks to improve performance."
 
-    if memory_usage < 30:
+    if memory_usage > 65:
         overall_wellbeing = "concerned"
         response += " Additionally, your available memory is running low. "
         response += "I suggest closing unused applications or considering an upgrade to your RAM for better multitasking."

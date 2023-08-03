@@ -35,7 +35,7 @@ def listen():
             # Rest of your code remains unchanged
             # ... (Your existing code from here) ...
         
-            Friday.Main(user_input)
+            Friday.MainFrame(user_input)
                         
             # Once processing is done, break out of the listening loop
             break

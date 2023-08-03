@@ -5,7 +5,7 @@ import os
 def text_to_speech(text):
     
     tts = TTS(model_name="tts_models/en/jenny/jenny", progress_bar=False, gpu=True)
-    tts.tts_to_file(text, file_path='tts_/output.wav', speed=0.8)
+    tts.tts_to_file(text, file_path='tts_/output.wav')
     
     # Run TTS
     filename = 'tts_/output.wav'

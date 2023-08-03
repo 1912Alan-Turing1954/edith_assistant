@@ -51,9 +51,13 @@ prev_response = ""
 list_of_words = [
     'and',
     'also',
-    'as well as'    
+    'as well as', 
     'along with'
 ]
+
+string = 'cpu usage and check system status'
+string_parts = string.split('and')
+print(string_parts)
 
 def get_updated_system_info():
     return get_system_info()
@@ -75,11 +79,12 @@ while True:
                     for string_part in string_parts:
                         
                         user_input_part = string_part.strip()
-                        system_info = get_updated_system_info()
-                        storage_info = generate_storage_status_response(system_info)
-                        cpu_usage = generate_cpu_usage_response(system_info)
-                        memory_usage = generate_memory_usage_response(system_info)
-                        disk_space = generate_disk_space_response(system_info)
+                        info_system = get_updated_system_info()
+                        system_info = generate_system_status_response(info_system)
+                        storage_info = generate_storage_status_response(info_system)
+                        cpu_usage = generate_cpu_usage_response(info_system)
+                        memory_usage = generate_memory_usage_response(info_system)
+                        disk_space = generate_disk_space_response(info_system)
                         
                         if user_input_part.lower() == prev_input.lower():
                             tag = "repeat_string"
@@ -97,7 +102,7 @@ while True:
                             tag = tags[predicted.item()]
                             probs = torch.softmax(output, dim=1)
                             prob = probs[0][predicted.item()]
-                        if prob.item() > 0.785:
+                        if prob.item() > 0.80:
                             for intent in intents['intents']:
                                 if tag == intent["tag"]:
                                 
@@ -207,11 +212,12 @@ while True:
                                         print(intent['tag'])
                                         break
                 else:
-                    system_info = get_updated_system_info()
-                    storage_info = generate_storage_status_response(system_info)
-                    cpu_usage = generate_cpu_usage_response(system_info)
-                    memory_usage = generate_memory_usage_response(system_info)
-                    disk_space = generate_disk_space_response(system_info)
+                    info_system = get_updated_system_info()
+                    system_info = generate_system_status_response(info_system)
+                    storage_info = generate_storage_status_response(info_system)
+                    cpu_usage = generate_cpu_usage_response(info_system)
+                    memory_usage = generate_memory_usage_response(info_system)
+                    disk_space = generate_disk_space_response(info_system)
                     
                     if user_input.lower() == prev_input.lower():
                         tag = "repeat_string"
