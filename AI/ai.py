@@ -1,5 +1,5 @@
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, AutoModelForSequenceClassification
+from transformers import GPT2Tokenizer, GPT2LMHeadModel, AutoTokenizer, AutoModelForSequenceClassification
 from langchain.embeddings import HuggingFaceEmbeddings
 import tiktoken
 
@@ -7,10 +7,10 @@ def initialize_chatbot():
     # Check if GPU is available, otherwise use CPU
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # Load GPT-3-based chatbot model and tokenizer on GPU/CPU
-    chatbot_model_name = 'h2oai/h2ogpt-oasst1-512-12b'
-    chatbot_tokenizer = AutoTokenizer.from_pretrained(chatbot_model_name, max_length=512)
-    chatbot_model = AutoModelForCausalLM.from_pretrained(chatbot_model_name).to(device)
+    # Load GPT-2.5-based chatbot model and tokenizer on GPU/CPU
+    chatbot_model_name = 'EleutherAI/gpt-neo-1.3B'
+    chatbot_tokenizer = GPT2Tokenizer.from_pretrained(chatbot_model_name)
+    chatbot_model = GPT2LMHeadModel.from_pretrained(chatbot_model_name).to(device)
 
     # Load reward model and tokenizer on GPU/CPU
     reward_model_name = 'OpenAssistant/reward-model-deberta-v3-large-v2'
@@ -23,7 +23,7 @@ def initialize_chatbot():
 
     # Configure tokenization settings (if needed)
     encoding = tiktoken.get_encoding("cl100k_base")
-    encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
+    encoding = tiktoken.encoding_for_model("gpt-2.5-turbo")
 
     return chatbot_model, chatbot_tokenizer, reward_model, reward_tokenizer, embedding_model, device
 
