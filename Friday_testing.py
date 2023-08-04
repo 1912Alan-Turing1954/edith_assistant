@@ -1,6 +1,7 @@
 import random
 import datetime
-import json
+import json, re, time
+import threading
 import torch
 from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
@@ -55,10 +56,6 @@ list_of_words = [
     'along with'
 ]
 
-string = 'cpu usage and check system status'
-string_parts = string.split('and')
-print(string_parts)
-
 def get_updated_system_info():
     return get_system_info()
 
@@ -91,7 +88,7 @@ while True:
                         
                         elif prev_tag == 'technical':
                             pass
-                        
+
                         else:
                             sentence = tokenize(user_input_part)
                             X = bag_of_words(sentence, all_words)
@@ -102,7 +99,7 @@ while True:
                             tag = tags[predicted.item()]
                             probs = torch.softmax(output, dim=1)
                             prob = probs[0][predicted.item()]
-                        if prob.item() > 0.80:
+                        if prob.item() > 0.785:
                             for intent in intents['intents']:
                                 if tag == intent["tag"]:
                                 
@@ -224,7 +221,7 @@ while True:
                     
                     elif prev_tag == 'technical':
                         pass
-                    
+                        
                     else:
                         sentence = tokenize(user_input)
                         X = bag_of_words(sentence, all_words)
@@ -304,29 +301,29 @@ while True:
                                     break
                     
                                 elif intent["tag"] == "time":
-                                    res_time = random.choice(intent['responses']).replace("{time}", get_time())
-                                    text_to_speech(f"{res_time}")
+                                    response = random.choice(intent['responses']).replace("{time}", get_time())
+                                    text_to_speech(response)
                                     print(intent['tag'])
                                     prev_tag = intent['tag']
-                                    prev_response = res_time
-                                    break
-
-                                elif intent["tag"] == "date":
-                                    res_date = random.choice(intent['responses']).replace("{date}", get_date())
-                                    text_to_speech(f"{res_date}")
-                                    print(intent['tag'])
-                                    prev_tag = intent['tag']
-                                    prev_response = res_date
+                                    prev_response = response
                                     break
 
                                 elif intent["tag"] == "day":
-                                    res_day = random.choice(intent['responses']).replace("{day}", get_day())
-                                    text_to_speech(f"{res_day}")
+                                    response = random.choice(intent['responses']).replace("{day}", get_day())
+                                    text_to_speech(response)
                                     print(intent['tag'])
                                     prev_tag = intent['tag']
-                                    prev_response = res_day
+                                    prev_response = response
                                     break
-                    
+                                
+                                elif intent["tag"] == "date":
+                                    response = random.choice(intent['responses']).replace("{date}", get_date())
+                                    text_to_speech(response)
+                                    print(intent['tag'])
+                                    prev_tag = intent['tag']
+                                    prev_response = response
+                                    break
+
                                 else:
                                     response = random.choice(intent['responses'])
                                     text_to_speech(f"{response}")
