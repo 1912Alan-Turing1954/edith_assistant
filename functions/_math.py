@@ -53,6 +53,13 @@ word_to_operator = {
     "divided": "/",
     "divide": "/",
     "quotient": "/",
+    "power": "**",
+    "to the power of": "**",
+    "raise to": "**",
+    "modulo": "%",
+    "mod": "%",
+    "squared": "**2",
+    "cubed": "**3",
 }
 
 
@@ -74,22 +81,16 @@ def solve_math_expression(expression):
         result = eval(expression)
         return result
     except:
-        return None
+        pass
 
-
-def main():
-    user_input = input("Enter your word math expression (type 'exit' to quit): ")
-
+def solve_word_math_expression(user_input):
+    user_input = user_input.lower()
     expression = replace_words_with_values(user_input)
     if expression:
         answer = solve_math_expression(expression)
-        if answer is not None:
-            print(f"Answer: {answer}")
-        else:
-            print("Invalid math expression.")
+        return str(answer)
     else:
-        print("Unable to identify the math expression.")
+        pass    
 
+    
 
-if __name__ == "__main__":
-    main()

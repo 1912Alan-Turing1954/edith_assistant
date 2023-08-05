@@ -7,6 +7,7 @@ from brain.nltk_utils import bag_of_words, tokenize
 from tts_.tts import text_to_speech
 from functions.opinion import opinion
 from functions.system_info import *
+from functions._math import *
 
 
 class Friday:
@@ -82,6 +83,10 @@ class Friday:
 
                     if user_input.lower() == self.prev_input.lower():
                         tag = "repeat_string"
+
+                    elif self.prev_tag == "technical":
+                        pass
+                    
                     else:
                         sentence = tokenize(user_input)
                         X = bag_of_words(sentence, self.all_words)
@@ -100,80 +105,53 @@ class Friday:
                                     response = random.choice(intent["responses"])
                                     text_to_speech(f"{response} {self.prev_response}")
                                     print(intent["tag"])
-                                    break
 
                                 elif intent["tag"] == "repeat_string":
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(intent, response)
-                                    break
 
                                 elif intent["tag"] == "system_info":
                                     response = random.choice(intent["responses"])
-                                    self.get_intent_response(
-                                        intent, response, system_info
-                                    )
-                                    break
+                                    self.get_intent_response(intent, response, system_info)
 
                                 elif intent["tag"] == "storage_info":
                                     response = random.choice(intent["responses"])
-                                    self.get_intent_response(
-                                        intent, response, storage_info
-                                    )
-                                    break
+                                    self.get_intent_response(intent, response, storage_info)
 
                                 elif intent["tag"] == "cpu_usage":
                                     response = random.choice(intent["responses"])
-                                    self.get_intent_response(
-                                        intent, response, cpu_usage
-                                    )
-                                    break
+                                    self.get_intent_response(intent, response, cpu_usage)
 
                                 elif intent["tag"] == "memory_usage":
                                     response = random.choice(intent["responses"])
-                                    self.get_intent_response(
-                                        intent, response, memory_usage
-                                    )
-                                    break
+                                    self.get_intent_response(intent, response, memory_usage)
 
                                 elif intent["tag"] == "disk_space":
                                     response = random.choice(intent["responses"])
-                                    self.get_intent_response(
-                                        intent, response, disk_space
-                                    )
-                                    break
+                                    self.get_intent_response(intent, response, disk_space)
 
                                 elif intent["tag"] == "opinion":
                                     response = opinion(user_input)
                                     self.get_intent_response(intent, response)
-                                    break
 
                                 elif intent["tag"] == "time":
-                                    response = random.choice(
-                                        intent["responses"]
-                                    ).replace("{time}", self.get_time())
+                                    response = random.choice(intent["responses"]).replace("{time}", self.get_time())
                                     self.get_intent_response(intent, response)
-                                    break
 
                                 elif intent["tag"] == "date":
-                                    response = random.choice(
-                                        intent["responses"]
-                                    ).replace("{date}", self.get_date())
+                                    response = random.choice(intent["responses"]).replace("{date}", self.get_date())
                                     self.get_intent_response(intent, response)
-                                    break
 
                                 elif intent["tag"] == "day":
-                                    response = random.choice(
-                                        intent["responses"]
-                                    ).replace("{day}", self.get_day())
+                                    response = random.choice(intent["responses"]).replace("{day}", self.get_day())
                                     self.get_intent_response(intent, response)
-                                    break
 
                                 else:
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(intent, response)
-                                    break
 
                         self.prev_input = user_input.lower()
+
                     else:
                         for intent in self.intents["intents"]:
                             if intent["tag"] == "technical":
