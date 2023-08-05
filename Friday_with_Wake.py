@@ -5,8 +5,10 @@ from Friday_class import Friday
 # Initialize the recognizer
 recognizer = sr.Recognizer()
 
+
 def is_wake_word(phrase):
     return "friday" in phrase.lower()
+
 
 def listen_for_wake_word():
     print("Listening for the wake word...")
@@ -21,7 +23,10 @@ def listen_for_wake_word():
         except sr.UnknownValueError:
             pass
         except sr.RequestError as e:
-            print(f"Error occurred while requesting results from Google Speech Recognition service: {e}")
+            print(
+                f"Error occurred while requesting results from Google Speech Recognition service: {e}"
+            )
+
 
 def listen():
     while True:
@@ -34,16 +39,19 @@ def listen():
             print(f"You said: {user_input}")
             # Rest of your code remains unchanged
             # ... (Your existing code from here) ...
-        
+
             Friday.MainFrame(user_input)
-                        
+
             # Once processing is done, break out of the listening loop
             break
 
         except sr.UnknownValueError:
             print("Sorry, I could not understand you.")
         except sr.RequestError as e:
-            print(f"Error occurred while requesting results from Google Speech Recognition service: {e}")
+            print(
+                f"Error occurred while requesting results from Google Speech Recognition service: {e}"
+            )
+
 
 # Main loop
 while True:

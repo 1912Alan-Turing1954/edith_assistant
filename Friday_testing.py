@@ -9,7 +9,7 @@ from tts_.tts import text_to_speech
 from functions.opinion import opinion
 from functions.system_info import *
 
-with open('data/intents.json', 'r') as json_data:
+with open("data/intents.json", "r") as json_data:
     intents = json.load(json_data)
 
 FILE = "data/data.pth"
@@ -18,30 +18,33 @@ data = torch.load(FILE)
 input_size = data["input_size"]
 hidden_size = data["hidden_size"]
 output_size = data["output_size"]
-all_words = data['all_words']
-tags = data['tags']
+all_words = data["all_words"]
+tags = data["tags"]
 model_state = data["model_state"]
 
 model = NeuralNet(input_size, hidden_size, output_size)
 model.load_state_dict(model_state)
 model.eval()
 
+
 def get_time():
-    time_ = datetime.datetime.now().time().strftime('%I:%M %p')
-    if 'PM' in time_:
+    time_ = datetime.datetime.now().time().strftime("%I:%M %p")
+    if "PM" in time_:
         time_ = time_.replace("PM", "P M")
-    elif 'AM' in time_:
+    elif "AM" in time_:
         time_ = time_.replace("AM", "A M")
     else:
         pass
     return time_
-    
+
+
 def get_date():
-    date_ = datetime.datetime.now().date().strftime('%B %d, %Y')
+    date_ = datetime.datetime.now().date().strftime("%B %d, %Y")
     return date_
 
+
 def get_day():
-    day_ = datetime.datetime.now().strftime('%A')
+    day_ = datetime.datetime.now().strftime("%A")
     return day_
 
 
@@ -49,32 +52,26 @@ prev_tag = ""
 prev_input = ""
 prev_response = ""
 
-list_of_words = [
-    'and',
-    'also',
-    'as well as', 
-    'along with'
-]
+list_of_words = ["and", "also", "as well as", "along with"]
+
 
 def get_updated_system_info():
     return get_system_info()
 
+
 while True:
-    
     wake_up = input("friday is inactive: ")
 
-    if 'friday' == wake_up.lower():
-
+    if "friday" == wake_up.lower():
         while True:
             user_input = input("friday is active: ")
-            
+
             for word in list_of_words:
                 if word in user_input.lower():
                     # Split the user input based on the word "and"
                     string_parts = user_input.lower().split(word)
                     # Process each part of the user input individually
                     for string_part in string_parts:
-                        
                         user_input_part = string_part.strip()
                         info_system = get_updated_system_info()
                         system_info = generate_system_status_response(info_system)
@@ -82,11 +79,11 @@ while True:
                         cpu_usage = generate_cpu_usage_response(info_system)
                         memory_usage = generate_memory_usage_response(info_system)
                         disk_space = generate_disk_space_response(info_system)
-                        
+
                         if user_input_part.lower() == prev_input.lower():
                             tag = "repeat_string"
-                        
-                        elif prev_tag == 'technical':
+
+                        elif prev_tag == "technical":
                             pass
 
                         else:
@@ -100,114 +97,131 @@ while True:
                             probs = torch.softmax(output, dim=1)
                             prob = probs[0][predicted.item()]
                         if prob.item() > 0.785:
-                            for intent in intents['intents']:
+                            for intent in intents["intents"]:
                                 if tag == intent["tag"]:
-                                
                                     if intent["tag"] == "repeat":
                                         response = random.choice(intent["responses"])
                                         text_to_speech(f"{response} {prev_response}")
                                         print(intent["tag"])
                                         break
-                                
+
                                     elif intent["tag"] == "repeat_string":
                                         response = random.choice(intent["responses"])
                                         text_to_speech(response)
                                         print(intent["tag"])
-                                        prev_tag = intent['tag']
+                                        prev_tag = intent["tag"]
                                         break
-                                
+
                                     elif intent["tag"] == "system_info":
                                         response = random.choice(intent["responses"])
-                                        response = response.replace("{string}", str(system_info))
+                                        response = response.replace(
+                                            "{string}", str(system_info)
+                                        )
                                         text_to_speech(response)
                                         print(intent["tag"])
-                                        prev_tag = intent['tag']
+                                        prev_tag = intent["tag"]
                                         prev_response = response
                                         break
-                                
+
                                     elif intent["tag"] == "storage_info":
                                         response = random.choice(intent["responses"])
-                                        response = response.replace("{string}", str(storage_info))
+                                        response = response.replace(
+                                            "{string}", str(storage_info)
+                                        )
                                         text_to_speech(response)
                                         print(intent["tag"])
-                                        prev_tag = intent['tag']
+                                        prev_tag = intent["tag"]
                                         prev_response = response
                                         break
-                                
+
                                     elif intent["tag"] == "cpu_usage":
                                         response = random.choice(intent["responses"])
-                                        response = response.replace("{string}", str(cpu_usage))
+                                        response = response.replace(
+                                            "{string}", str(cpu_usage)
+                                        )
                                         text_to_speech(response)
                                         print(intent["tag"])
-                                        prev_tag = intent['tag']
+                                        prev_tag = intent["tag"]
                                         prev_response = response
                                         break
-                                
+
                                     elif intent["tag"] == "memory_usage":
                                         response = random.choice(intent["responses"])
-                                        response = response.replace("{string}", str(memory_usage))
+                                        response = response.replace(
+                                            "{string}", str(memory_usage)
+                                        )
                                         text_to_speech(response)
                                         print(intent["tag"])
-                                        prev_tag = intent['tag']
+                                        prev_tag = intent["tag"]
                                         prev_response = response
                                         break
-                                
+
                                     elif intent["tag"] == "disk_space":
                                         response = random.choice(intent["responses"])
-                                        response = response.replace("{string}", str(disk_space))
+                                        response = response.replace(
+                                            "{string}", str(disk_space)
+                                        )
                                         text_to_speech(response)
                                         print(intent["tag"])
-                                        prev_tag = intent['tag']
+                                        prev_tag = intent["tag"]
                                         prev_response = response
                                         break
-                                
-                                    elif intent['tag'] == 'opinion':
+
+                                    elif intent["tag"] == "opinion":
                                         text_to_speech(opinion(user_input_part))
-                                        prev_tag = intent['tag']
+                                        prev_tag = intent["tag"]
                                         prev_response = response
                                         break
-                                
+
                                     elif intent["tag"] == "time":
-                                        response = random.choice(intent['responses']).replace("{time}", get_time())
+                                        response = random.choice(
+                                            intent["responses"]
+                                        ).replace("{time}", get_time())
                                         text_to_speech(response)
-                                        print(intent['tag'])
-                                        prev_tag = intent['tag']
+                                        print(intent["tag"])
+                                        prev_tag = intent["tag"]
                                         prev_response = response
                                         break
-                                    
+
                                     elif intent["tag"] == "date":
-                                        response = random.choice(intent['responses']).replace("{date}", get_date())
+                                        response = random.choice(
+                                            intent["responses"]
+                                        ).replace("{date}", get_date())
                                         text_to_speech(response)
-                                        print(intent['tag'])
-                                        prev_tag = intent['tag']
+                                        print(intent["tag"])
+                                        prev_tag = intent["tag"]
                                         prev_response = response
                                         break
 
                                     elif intent["tag"] == "day":
-                                        response = random.choice(intent['responses']).replace("{day}", get_day())
+                                        response = random.choice(
+                                            intent["responses"]
+                                        ).replace("{day}", get_day())
                                         text_to_speech(response)
-                                        print(intent['tag'])
-                                        prev_tag = intent['tag']
+                                        print(intent["tag"])
+                                        prev_tag = intent["tag"]
                                         prev_response = response
                                         break
 
                                     else:
-                                        response = random.choice(intent['responses'])
+                                        response = random.choice(intent["responses"])
                                         text_to_speech(f"{response}")
-                                        print(intent['tag'])
-                                        prev_tag = intent['tag']
+                                        print(intent["tag"])
+                                        prev_tag = intent["tag"]
                                         prev_response = response
                                         break
-                            
+
                             prev_input = user_input_part.lower()
                             break
-                        
+
                         else:
-                                for intent in intents['intents']:
-                                    if intent["tag"] == 'technical':
-                                        text_to_speech(f"{random.choice(intent['responses'])}")
-                                        print(intent['tag'])
-                                        break
+                            for intent in intents["intents"]:
+                                if intent["tag"] == "technical":
+                                    text_to_speech(
+                                        f"{random.choice(intent['responses'])}"
+                                    )
+                                    print(intent["tag"])
+                                    break
                 else:
                     info_system = get_updated_system_info()
                     system_info = generate_system_status_response(info_system)
@@ -215,13 +229,13 @@ while True:
                     cpu_usage = generate_cpu_usage_response(info_system)
                     memory_usage = generate_memory_usage_response(info_system)
                     disk_space = generate_disk_space_response(info_system)
-                    
+
                     if user_input.lower() == prev_input.lower():
                         tag = "repeat_string"
-                    
-                    elif prev_tag == 'technical':
+
+                    elif prev_tag == "technical":
                         pass
-                        
+
                     else:
                         sentence = tokenize(user_input)
                         X = bag_of_words(sentence, all_words)
@@ -233,115 +247,129 @@ while True:
                         probs = torch.softmax(output, dim=1)
                         prob = probs[0][predicted.item()]
                     if prob.item() > 0.785:
-                        for intent in intents['intents']:
+                        for intent in intents["intents"]:
                             if tag == intent["tag"]:
-                    
                                 if intent["tag"] == "repeat":
                                     response = random.choice(intent["responses"])
                                     text_to_speech(f"{response} {prev_response}")
                                     print(intent["tag"])
                                     break
-                    
+
                                 elif intent["tag"] == "repeat_string":
                                     response = random.choice(intent["responses"])
                                     text_to_speech(response)
                                     print(intent["tag"])
-                                    prev_tag = intent['tag']
+                                    prev_tag = intent["tag"]
                                     break
-                    
+
                                 elif intent["tag"] == "system_info":
                                     response = random.choice(intent["responses"])
-                                    response = response.replace("{string}", str(system_info))
+                                    response = response.replace(
+                                        "{string}", str(system_info)
+                                    )
                                     text_to_speech(response)
                                     print(intent["tag"])
-                                    prev_tag = intent['tag']
+                                    prev_tag = intent["tag"]
                                     prev_response = response
                                     break
-                    
+
                                 elif intent["tag"] == "storage_info":
                                     response = random.choice(intent["responses"])
-                                    response = response.replace("{string}", str(storage_info))
+                                    response = response.replace(
+                                        "{string}", str(storage_info)
+                                    )
                                     text_to_speech(response)
                                     print(intent["tag"])
-                                    prev_tag = intent['tag']
+                                    prev_tag = intent["tag"]
                                     prev_response = response
                                     break
-                    
+
                                 elif intent["tag"] == "cpu_usage":
                                     response = random.choice(intent["responses"])
-                                    response = response.replace("{string}", str(cpu_usage))
+                                    response = response.replace(
+                                        "{string}", str(cpu_usage)
+                                    )
                                     text_to_speech(response)
                                     print(intent["tag"])
-                                    prev_tag = intent['tag']
+                                    prev_tag = intent["tag"]
                                     prev_response = response
                                     break
-                    
+
                                 elif intent["tag"] == "memory_usage":
                                     response = random.choice(intent["responses"])
-                                    response = response.replace("{string}", str(memory_usage))
+                                    response = response.replace(
+                                        "{string}", str(memory_usage)
+                                    )
                                     text_to_speech(response)
                                     print(intent["tag"])
-                                    prev_tag = intent['tag']
+                                    prev_tag = intent["tag"]
                                     prev_response = response
                                     break
-                    
+
                                 elif intent["tag"] == "disk_space":
                                     response = random.choice(intent["responses"])
-                                    response = response.replace("{string}", str(disk_space))
+                                    response = response.replace(
+                                        "{string}", str(disk_space)
+                                    )
                                     text_to_speech(response)
                                     print(intent["tag"])
-                                    prev_tag = intent['tag']
+                                    prev_tag = intent["tag"]
                                     prev_response = response
                                     break
-                    
-                                elif intent['tag'] == 'opinion':
+
+                                elif intent["tag"] == "opinion":
                                     text_to_speech(opinion(user_input))
-                                    prev_tag = intent['tag']
+                                    prev_tag = intent["tag"]
                                     prev_response = response
                                     break
-                    
+
                                 elif intent["tag"] == "time":
-                                    response = random.choice(intent['responses']).replace("{time}", get_time())
+                                    response = random.choice(
+                                        intent["responses"]
+                                    ).replace("{time}", get_time())
                                     text_to_speech(response)
-                                    print(intent['tag'])
-                                    prev_tag = intent['tag']
+                                    print(intent["tag"])
+                                    prev_tag = intent["tag"]
                                     prev_response = response
                                     break
 
                                 elif intent["tag"] == "day":
-                                    response = random.choice(intent['responses']).replace("{day}", get_day())
+                                    response = random.choice(
+                                        intent["responses"]
+                                    ).replace("{day}", get_day())
                                     text_to_speech(response)
-                                    print(intent['tag'])
-                                    prev_tag = intent['tag']
+                                    print(intent["tag"])
+                                    prev_tag = intent["tag"]
                                     prev_response = response
                                     break
-                                
+
                                 elif intent["tag"] == "date":
-                                    response = random.choice(intent['responses']).replace("{date}", get_date())
+                                    response = random.choice(
+                                        intent["responses"]
+                                    ).replace("{date}", get_date())
                                     text_to_speech(response)
-                                    print(intent['tag'])
-                                    prev_tag = intent['tag']
+                                    print(intent["tag"])
+                                    prev_tag = intent["tag"]
                                     prev_response = response
                                     break
 
                                 else:
-                                    response = random.choice(intent['responses'])
+                                    response = random.choice(intent["responses"])
                                     text_to_speech(f"{response}")
-                                    print(intent['tag'])
-                                    prev_tag = intent['tag']
+                                    print(intent["tag"])
+                                    prev_tag = intent["tag"]
                                     prev_response = response
                                     break
-                    
+
                         prev_input = user_input.lower()
                         break
-                    
+
                     else:
-                        for intent in intents['intents']:
-                            if intent["tag"] == 'technical':
+                        for intent in intents["intents"]:
+                            if intent["tag"] == "technical":
                                 text_to_speech(f"{random.choice(intent['responses'])}")
-                                print(intent['tag'])
+                                print(intent["tag"])
                                 break
-                        
+
     else:
         pass
-
