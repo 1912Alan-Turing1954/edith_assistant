@@ -67,7 +67,7 @@ class Friday:
         return get_system_info()
 
     def process_user_input(self, user_input):
-        return user_input.lower()
+        return user_input.lower() 
 
     def get_intent_response(self, intent, response, replacement=None):
         if replacement:
