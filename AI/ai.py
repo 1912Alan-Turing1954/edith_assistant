@@ -1,58 +1,65 @@
 import torch
-from transformers import GPT2Tokenizer, GPT2ForQuestionAnswering, Trainer, TrainingArguments
+from transformers import (
+    DistilBertTokenizer,
+    DistilBertForQuestionAnswering,
+    Trainer,
+    TrainingArguments,
+)
 from datasets import load_dataset
 
-# Load SQuAD dataset
-dataset = load_dataset("squad")
 
-# Filter out examples that do not have start_positions
-def filter_examples(example):
-    return 'start_positions' in example
+def main():
+    # Load the SQuAD dataset
+    dataset = load_dataset("squad")
 
-dataset = dataset.map(filter_examples, num_proc=4)
+    # Load the pre-trained DistilBERT tokenizer and model
+    tokenizer = DistilBertTokenizer.from_pretrained("distilbert-base-cased")
+    model = DistilBertForQuestionAnswering.from_pretrained("distilbert-base-cased")
 
-# Load GPT-2 tokenizer and model
-tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-model = GPT2ForQuestionAnswering.from_pretrained("gpt2")
+    # Preprocess the data and create datasets
+    def preprocess_function(examples):
+        return tokenizer(
+            examples["question"],
+            examples["context"],
+            truncation=True,
+            padding="max_length",
+            max_length=384,
+            return_overflowing_tokens=True,
+        )
 
-# Tokenize the filtered dataset
-def tokenize_function(examples):
-    return tokenizer(examples["question"], examples["context"], truncation=True)
+    train_dataset = dataset["train"].map(preprocess_function, batched=True)
+    eval_dataset = dataset["validation"].map(preprocess_function, batched=True)
 
-tokenized_datasets = dataset.map(tokenize_function, batched=True)
+    # Set up the Trainer with appropriate training arguments
+    training_args = TrainingArguments(
+        output_dir="./squad_qa",
+        num_train_epochs=3,
+        per_device_train_batch_size=8,
+        per_device_eval_batch_size=8,
+        warmup_steps=500,
+        weight_decay=0.01,
+        logging_dir="./logs",
+        logging_steps=100,
+    )
+    trainer = Trainer(
+        model=model,
+        args=training_args,
+        train_dataset=train_dataset,
+        eval_dataset=eval_dataset,
+        data_collator=lambda features: {
+            "input_ids": torch.stack([f for f in features["input_ids"]]),
+            "attention_mask": torch.stack([f for f in features["attention_mask"]]),
+            "start_positions": torch.stack([f for f in features["start_positions"]]),
+            "end_positions": torch.stack([f for f in features["end_positions"]]),
+        },
+    )
 
-# Training settings
-training_args = TrainingArguments(
-    output_dir="./output",
-    overwrite_output_dir=True,
-    num_train_epochs=3,
-    per_device_train_batch_size=4,
-    save_steps=1000,
-    save_total_limit=2,
-    prediction_loss_only=True,
-    disable_tqdm=True,  # Disable tqdm progress bar
-    report_to="none",   # Disable Wandb logging
-)
+    # Start the training
+    trainer.train()
 
-# Data collator function
-def data_collator(batch):
-    return {
-        'input_ids': torch.stack([example['input_ids'] for example in batch]),
-        'attention_mask': torch.stack([example['attention_mask'] for example in batch]),
-        'start_positions': torch.stack([example['start_positions'] for example in batch]),
-        'end_positions': torch.stack([example['end_positions'] for example in batch]),
-    }
+    # Save the model after training
+    trainer.save_model()
 
-# Trainer instance
-trainer = Trainer(
-    model=model,
-    args=training_args,
-    train_dataset=tokenized_datasets["train"],
-    data_collator=data_collator,
-)
 
-# Training loop
-trainer.train()
-
-# Save the model after fine-tuning
-trainer.save_model("AI/model/gpt2_squad_finetuned_model")
+if __name__ == "__main__":
+    main()
