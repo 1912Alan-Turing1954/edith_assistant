@@ -1,3 +1,4 @@
+import re
 import random
 import datetime
 import json
@@ -32,6 +33,17 @@ class Friday:
         self.prev_tag = ""
         self.prev_input = ""
         self.prev_response = ""
+
+    def is_complex_alphabetical_math_problem(self, user_input):
+        # Regular expression to check for complex alphabetical math problems or expressions
+        alphabetic_math_pattern = r'(?i)\b(?:what is the|evaluate the)?\s*(?:sum of|difference between|product of|square of|cube of)?\s*(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b\s*(?:plus|minus|times|multiplied by|divided by|\+|\-|\*|\/|\^|and)\s*\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b'
+
+        # Check if the input string matches the complex alphabetical math pattern
+        if re.search(alphabetic_math_pattern, user_input):
+            return True
+        else:
+            return False
+
 
     def get_time(self):
         time_ = datetime.datetime.now().time().strftime("%I:%M %p")
@@ -71,6 +83,7 @@ class Friday:
 
             if "friday" == wake_up.lower():
                 while True:
+                    
                     user_input = input("friday is active: ")
                     user_input = self.process_user_input(user_input)
 
@@ -86,7 +99,7 @@ class Friday:
 
                     elif self.prev_tag == "technical":
                         pass
-                    
+
                     else:
                         sentence = tokenize(user_input)
                         X = bag_of_words(sentence, self.all_words)
@@ -98,7 +111,15 @@ class Friday:
                         probs = torch.softmax(output, dim=1)
                         prob = probs[0][predicted.item()]
 
-                    if prob.item() > 0.80:
+                    if self.is_complex_alphabetical_math_problem(user_input) == True:
+                        for intent in self.intents["intents"]:
+                            if intent['tag'] == "math":
+                                response = random.choice(intent["responses"])
+                                answer = solve_word_math_expression(user_input)
+                                response = response.replace("{answer}", answer)
+                                text_to_speech(response)
+
+                    elif prob.item() > 0.80:
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
                                 if intent["tag"] == "repeat":

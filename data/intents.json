@@ -342,6 +342,31 @@
       ]
     },
     {
+      "tag": "math",
+      "patterns": [],
+      "responses": [
+        "The answer is {answer}, Sir.",
+        "After calculations, it is {answer}, Sir.",
+        "The result is {answer}, Sir.",
+        "I have deduced {answer}, Sir.",
+        "Based on my analysis, {answer}, Sir.",
+        "The correct response is {answer}, Sir.",
+        "It is {answer}, Sir.",
+        "Upon evaluation, {answer}, Sir.",
+        "{answer} is the solution, Sir.",
+        "Through careful analysis, {answer}, Sir.",
+        "After computations, it is {answer}, Sir.",
+        "The outcome is {answer}, Sir.",
+        "{answer}, as per my calculations, Sir.",
+        "The solution: {answer}, Sir.",
+        "Upon examination, {answer}, Sir.",
+        "After careful evaluation, {answer}, Sir.",
+        "The answer is {answer}, I trust, Sir.",
+        "After thorough analysis, {answer}, Sir.",
+        "{answer}, through my estimation, Sir."
+      ]
+    },    
+    {
       "tag": "time",
       "patterns": [
         "what time is it?",
