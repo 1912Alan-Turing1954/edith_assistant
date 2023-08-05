@@ -1,66 +1,58 @@
-# import torch
-# from transformers import GPT2Tokenizer, GPT2LMHeadModel, AutoTokenizer, AutoModelForSequenceClassification
-# from langchain.embeddings import HuggingFaceEmbeddings
-# import tiktoken
+import torch
+from transformers import GPT2Tokenizer, GPT2ForQuestionAnswering, Trainer, TrainingArguments
+from datasets import load_dataset
 
-# def initialize_chatbot():
-#     # Check if GPU is available, otherwise use CPU
-#     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# Load SQuAD dataset
+dataset = load_dataset("squad")
 
-#     # Load GPT-2.5-based chatbot model and tokenizer on GPU/CPU
-#     chatbot_model_name = 'EleutherAI/gpt-neo-1.3B'
-#     chatbot_tokenizer = GPT2Tokenizer.from_pretrained(chatbot_model_name)
-#     chatbot_model = GPT2LMHeadModel.from_pretrained(chatbot_model_name).to(device)
+# Filter out examples that do not have start_positions
+def filter_examples(example):
+    return 'start_positions' in example
 
-#     # Load reward model and tokenizer on GPU/CPU
-#     reward_model_name = 'OpenAssistant/reward-model-deberta-v3-large-v2'
-#     reward_tokenizer = AutoTokenizer.from_pretrained(reward_model_name, max_length=512)
-#     reward_model = AutoModelForSequenceClassification.from_pretrained(reward_model_name).to(device)
+dataset = dataset.map(filter_examples, num_proc=4)
 
-#     # Load sentence embedding model on GPU/CPU
-#     embedding_model_name = "sentence-transformers/all-MiniLM-L6-v2"
-#     embedding_model = HuggingFaceEmbeddings(model_name=embedding_model_name, model_kwargs=device)
+# Load GPT-2 tokenizer and model
+tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+model = GPT2ForQuestionAnswering.from_pretrained("gpt2")
 
-#     # Configure tokenization settings (if needed)
-#     encoding = tiktoken.get_encoding("cl100k_base")
-#     encoding = tiktoken.encoding_for_model("gpt-2.5-turbo")
+# Tokenize the filtered dataset
+def tokenize_function(examples):
+    return tokenizer(examples["question"], examples["context"], truncation=True)
 
-#     return chatbot_model, chatbot_tokenizer, reward_model, reward_tokenizer, embedding_model, device
+tokenized_datasets = dataset.map(tokenize_function, batched=True)
 
-# def generate_response(chatbot_model, chatbot_tokenizer, user_input, device):
-#     # Generate chatbot response using the chatbot model and tokenizer
-#     inputs = chatbot_tokenizer(user_input, return_tensors="pt", max_length=512).to(device)
-#     outputs = chatbot_model.generate(**inputs)
-#     response = chatbot_tokenizer.decode(outputs[0], skip_special_tokens=True)
+# Training settings
+training_args = TrainingArguments(
+    output_dir="./output",
+    overwrite_output_dir=True,
+    num_train_epochs=3,
+    per_device_train_batch_size=4,
+    save_steps=1000,
+    save_total_limit=2,
+    prediction_loss_only=True,
+    disable_tqdm=True,  # Disable tqdm progress bar
+    report_to="none",   # Disable Wandb logging
+)
 
-#     return response
+# Data collator function
+def data_collator(batch):
+    return {
+        'input_ids': torch.stack([example['input_ids'] for example in batch]),
+        'attention_mask': torch.stack([example['attention_mask'] for example in batch]),
+        'start_positions': torch.stack([example['start_positions'] for example in batch]),
+        'end_positions': torch.stack([example['end_positions'] for example in batch]),
+    }
 
-# def calculate_reward(reward_model, reward_tokenizer, response, device):
-#     # Calculate reward for the generated response using the reward model and tokenizer
-#     inputs = reward_tokenizer(response, return_tensors="pt", max_length=512).to(device)
-#     outputs = reward_model(**inputs)
-#     reward = outputs.logits.softmax(dim=1)[0][1].item()  # Assuming class 1 is the positive reward class
+# Trainer instance
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=tokenized_datasets["train"],
+    data_collator=data_collator,
+)
 
-#     return reward
+# Training loop
+trainer.train()
 
-# if __name__ == "__main__":
-#     chatbot_model, chatbot_tokenizer, reward_model, reward_tokenizer, embedding_model, device = initialize_chatbot()
-
-#     print("Chatbot: Hi! I am your chatbot assistant. How can I help you? (Type 'exit' to end the conversation)")
-
-#     while True:
-#         user_input = input("You: ")
-
-#         if user_input.lower() == "exit":
-#             print("Chatbot: Goodbye! Have a great day!")
-#             break
-
-#         # Move user input and chatbot response to the GPU/CPU
-#         user_input = user_input.to(device)
-#         chatbot_response = generate_response(chatbot_model, chatbot_tokenizer, user_input, device)
-
-#         # Calculate reward for the chatbot response
-#         reward = calculate_reward(reward_model, reward_tokenizer, chatbot_response, device)
-
-#         print("Chatbot:", chatbot_response)
-#         print("Reward:", reward)
+# Save the model after fine-tuning
+trainer.save_model("AI/model/gpt2_squad_finetuned_model")
