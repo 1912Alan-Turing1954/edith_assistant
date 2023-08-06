@@ -3,6 +3,7 @@ import random
 import datetime
 import json
 import torch
+import os
 from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
 from tts_.tts import text_to_speech
@@ -34,9 +35,11 @@ class Friday:
         self.prev_input = ""
         self.prev_response = ""
 
+        self.conversation_history = []
+
     def is_complex_alphabetical_math_problem(self, user_input):
         # Regular expression to check for complex alphabetical math problems or expressions
-        alphabetic_math_pattern = r'(?i)\b(?:what is the|evaluate the)?\s*(?:sum of|difference between|product of|square of|cube of)?\s*(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b\s*(?:plus|minus|times|multiplied by|divided by|\+|\-|\*|\/|\^|and)\s*\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b'
+        alphabetic_math_pattern = r"(?i)\b(?:what is the|evaluate the)?\s*(?:sum of|difference between|product of|square of|cube of)?\s*(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b\s*(?:plus|minus|times|multiplied by|divided by|\+|\-|\*|\/|\^|and)\s*\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b"
 
         # Check if the input string matches the complex alphabetical math pattern
         if re.search(alphabetic_math_pattern, user_input):
@@ -44,6 +47,62 @@ class Friday:
         else:
             return False
 
+    def save_conversation_history(self):
+        with open("data/conversation_history.json", "w") as file:
+            json.dump(self.conversation_history, file)
+
+    def manage_conversation_history_file(self):
+        max_history_size = 1000  # Set your desired maximum history size here
+        if len(self.conversation_history) > max_history_size:
+            self.conversation_history = self.conversation_history[-max_history_size:]
+
+    def update_model_with_conversation_history(self):
+        # Prepare training data from the conversation history
+        training_data = []
+        for conversation in self.conversation_history:
+            user_input = conversation["user_input"]
+            target_tag = self.get_tag_from_response(conversation["response"])
+            sentence = tokenize(user_input)
+            X = bag_of_words(sentence, self.all_words)
+            training_data.append((X, self.tags.index(target_tag)))
+
+        # Train the model using the conversation history data
+        X_train = torch.tensor([X for X, _ in training_data], dtype=torch.float32)
+        y_train = torch.tensor([y for _, y in training_data], dtype=torch.long)
+        y_train = y_train.reshape(-1, 1)
+
+        loss_function = torch.nn.CrossEntropyLoss()
+        optimizer = torch.optim.SGD(self.model.parameters(), lr=0.01)
+
+        for epoch in range(100):  # Adjust the number of epochs as needed
+            # Forward pass
+            output = self.model(X_train)
+            loss = loss_function(output, y_train.squeeze())
+
+            # Backward pass and optimization
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+        # Save the updated model state
+        torch.save(
+            {
+                "all_words": self.all_words,
+                "tags": self.tags,
+                "input_size": self.model.input_size,
+                "hidden_size": self.model.hidden_size,
+                "output_size": self.model.output_size,
+                "model_state": self.model.state_dict(),
+            },
+            "data/data.pth",
+        )
+
+    def get_tag_from_response(self, response):
+        # Find the tag associated with the given response in the intents
+        for intent in self.intents["intents"]:
+            if response in intent["responses"]:
+                return intent["tag"]
+        return None
 
     def get_time(self):
         time_ = datetime.datetime.now().time().strftime("%I:%M %p")
@@ -67,7 +126,7 @@ class Friday:
         return get_system_info()
 
     def process_user_input(self, user_input):
-        return user_input.lower() 
+        return user_input.lower()
 
     def get_intent_response(self, intent, response, replacement=None):
         if replacement:
@@ -83,7 +142,6 @@ class Friday:
 
             if "friday" == wake_up.lower():
                 while True:
-                    
                     user_input = input("friday is active: ")
                     user_input = self.process_user_input(user_input)
 
@@ -111,9 +169,9 @@ class Friday:
                         probs = torch.softmax(output, dim=1)
                         prob = probs[0][predicted.item()]
 
-                    if self.is_complex_alphabetical_math_problem(user_input) == True:
+                    if self.is_complex_alphabetical_math_problem(user_input):
                         for intent in self.intents["intents"]:
-                            if intent['tag'] == "math":
+                            if intent["tag"] == "math":
                                 response = random.choice(intent["responses"])
                                 answer = solve_word_math_expression(user_input)
                                 response = response.replace("{answer}", answer)
@@ -133,38 +191,54 @@ class Friday:
 
                                 elif intent["tag"] == "system_info":
                                     response = random.choice(intent["responses"])
-                                    self.get_intent_response(intent, response, system_info)
+                                    self.get_intent_response(
+                                        intent, response, system_info
+                                    )
 
                                 elif intent["tag"] == "storage_info":
                                     response = random.choice(intent["responses"])
-                                    self.get_intent_response(intent, response, storage_info)
+                                    self.get_intent_response(
+                                        intent, response, storage_info
+                                    )
 
                                 elif intent["tag"] == "cpu_usage":
                                     response = random.choice(intent["responses"])
-                                    self.get_intent_response(intent, response, cpu_usage)
+                                    self.get_intent_response(
+                                        intent, response, cpu_usage
+                                    )
 
                                 elif intent["tag"] == "memory_usage":
                                     response = random.choice(intent["responses"])
-                                    self.get_intent_response(intent, response, memory_usage)
+                                    self.get_intent_response(
+                                        intent, response, memory_usage
+                                    )
 
                                 elif intent["tag"] == "disk_space":
                                     response = random.choice(intent["responses"])
-                                    self.get_intent_response(intent, response, disk_space)
+                                    self.get_intent_response(
+                                        intent, response, disk_space
+                                    )
 
                                 elif intent["tag"] == "opinion":
                                     response = opinion(user_input)
                                     self.get_intent_response(intent, response)
 
                                 elif intent["tag"] == "time":
-                                    response = random.choice(intent["responses"]).replace("{time}", self.get_time())
+                                    response = random.choice(
+                                        intent["responses"]
+                                    ).replace("{time}", self.get_time())
                                     self.get_intent_response(intent, response)
 
                                 elif intent["tag"] == "date":
-                                    response = random.choice(intent["responses"]).replace("{date}", self.get_date())
+                                    response = random.choice(
+                                        intent["responses"]
+                                    ).replace("{date}", self.get_date())
                                     self.get_intent_response(intent, response)
 
                                 elif intent["tag"] == "day":
-                                    response = random.choice(intent["responses"]).replace("{day}", self.get_day())
+                                    response = random.choice(
+                                        intent["responses"]
+                                    ).replace("{day}", self.get_day())
                                     self.get_intent_response(intent, response)
 
                                 else:
@@ -182,6 +256,13 @@ class Friday:
                                 break
             else:
                 pass
+
+            # Update the model using the conversation history after each conversation loop
+            self.update_model_with_conversation_history()
+            # Save the conversation history after each conversation loop
+            self.save_conversation_history()
+            # Manage the conversation history file size
+            self.manage_conversation_history_file()
 
 
 if __name__ == "__main__":
