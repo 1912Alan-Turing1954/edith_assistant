@@ -13,6 +13,3 @@ def text_to_speech(text):
     play_obj = wave_obj.play()
     play_obj.wait_done()
     os.remove("tts_/output.wav")
-
-
-text_to_speech("hello mr world")
