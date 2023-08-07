@@ -52,6 +52,7 @@ word_to_operator = {
     "product": "*",
     "divided": "/",
     "divide": "/",
+    "divided by": "/",
     "quotient": "/",
     "power": "**",
     "to the power of": "**",
@@ -83,6 +84,7 @@ def solve_math_expression(expression):
     except:
         pass
 
+
 def solve_word_math_expression(user_input):
     user_input = user_input.lower()
     expression = replace_words_with_values(user_input)
@@ -90,7 +92,4 @@ def solve_word_math_expression(user_input):
         answer = solve_math_expression(expression)
         return str(answer)
     else:
-        pass    
-
-    
-
+        pass
