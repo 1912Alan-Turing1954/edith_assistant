@@ -3,13 +3,20 @@ import random
 import datetime
 import json
 import torch
-import os
 from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
 from tts_.tts import text_to_speech
 from functions.opinion import opinion
-from functions.system_info import *
-from functions._math import *
+from functions.system_info import (
+    get_system_info,
+    generate_system_status_response,
+    generate_storage_status_response,
+    generate_cpu_usage_response,
+    generate_memory_usage_response,
+    generate_disk_space_response,
+)
+from functions._math import solve_word_math_expression, celsius_to_fahrenheit
+from functions.weather import extract_location_from_string, get_weather
 
 
 class Friday:
@@ -36,17 +43,10 @@ class Friday:
         self.prev_response = ""
 
     def is_complex_alphabetical_math_problem(self, user_input):
-        # Regular expression to check for complex alphabetical math problems or expressions
         alphabetic_math_pattern = r"(?i)\b(?:what is the|evaluate the)?\s*(?:sum of|difference between|product of|square of|cube of)?\s*(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b\s*(?:plus|minus|times|multiplied by|divided by|\+|\-|\*|\/|\^|and)\s*\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b"
-
-        # Check if the input string matches the complex alphabetical math pattern
-        if re.search(alphabetic_math_pattern, user_input):
-            return True
-        else:
-            return False
+        return bool(re.search(alphabetic_math_pattern, user_input))
 
     def get_tag_from_response(self, response):
-        # Find the tag associated with the given response in the intents
         for intent in self.intents["intents"]:
             if response in intent["responses"]:
                 return intent["tag"]
@@ -58,8 +58,6 @@ class Friday:
             time_ = time_.replace("PM", "P M")
         elif "AM" in time_:
             time_ = time_.replace("AM", "A M")
-        else:
-            pass
         return time_
 
     def get_date(self):
@@ -102,10 +100,8 @@ class Friday:
 
                     if user_input.lower() == self.prev_input.lower():
                         tag = "repeat_string"
-
                     elif self.prev_tag == "technical":
                         pass
-
                     else:
                         sentence = tokenize(user_input)
                         X = bag_of_words(sentence, self.all_words)
@@ -187,6 +183,30 @@ class Friday:
                                     response = random.choice(
                                         intent["responses"]
                                     ).replace("{day}", self.get_day())
+                                    self.get_intent_response(intent, response)
+
+                                elif intent["tag"] == "weather":
+                                    response = random.choice(intent["responses"])
+                                    location = extract_location_from_string(user_input)
+                                    weather_data = get_weather(location)
+                                    forecast_items = weather_data["forecast"]["items"]
+                                    first_item = forecast_items[0]
+                                    temperature_celsius = first_item["temperature"][
+                                        "avg"
+                                    ]
+                                    temperature_fahrenheit = celsius_to_fahrenheit(
+                                        temperature_celsius
+                                    )
+                                    precipitation_probability = first_item["prec"][
+                                        "probability"
+                                    ]
+                                    formatted_response = response.format(
+                                        location=location,
+                                        temperature_celsius=temperature_celsius,
+                                        temperature_fahrenheit=temperature_fahrenheit,
+                                        precipitation_probability=precipitation_probability,
+                                    )
+                                    text_to_speech(formatted_response)
                                     self.get_intent_response(intent, response)
 
                                 else:

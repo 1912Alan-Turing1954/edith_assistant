@@ -454,16 +454,58 @@
       ]
     },
     {
-      "tag": "conversation_weather",
+      "tag": "weather",
       "patterns": [
-        "friday, what's the weather like today?",
-        "Hey friday, give me the forecast.",
-        "Do me a favor, friday. Check the weather for me."
+          "Give me the forecast on",
+          "What's the forecast on",
+          "Could you provide the forecast for",
+          "Tell me the weather forecast for",
+          "What can you tell me about the forecast on",
+          "Is there a weather update for",
+          "What's the weather in",
+          "Show me the weather forecast for",
+          "Could you let me know the forecast on",
+          "What's the weather looking like on",
+          "Tell me what's predicted for the weather on",
+          "Give me an update on the forecast for",
+          "Is there any information about the weather on",
+          "Can you share the weather forecast for",
+          "Inform me about the forecast on",
+          "What's the anticipated weather for",
+          "Provide me with the weather outlook for",
+          "Tell me what to expect in terms of weather on",
+          "Could you brief me on the forecast for",
+          "Give me the latest forecast for",
+          "What do you have on the weather forecast for",
+          "What's the projected weather on",
+          "Give me the forecast in",
+          "What's the forecast in",
+          "Tell me the weather forecast in",
+          "What can you tell me about the forecast in",
+          "Show me the weather forecast in",
+          "What's the weather like in",
+          "Could you let me know the forecast in",
+          "Tell me what's predicted for the weather in",
+          "Is there any information about the weather in",
+          "Can you share the weather forecast in",
+          "Inform me about the forecast in",
+          "Provide me with the weather outlook for",
+          "Tell me what to expect in terms of weather in",
+          "Could you brief me on the forecast in",
+          "What do you have on the weather forecast in",
+          "What's the projected weather in"
       ],
       "responses": [
-        "Certainly, sir! Let me gather the latest weather information for you.",
-        "Right away, sir! Fetching the current weather report.",
-        "friday, prepare to get weather data. Fetching it now."
+          "Of course, sir. Currently, the weather in {location} is at {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius). There is a {precipitation_probability}% chance of rain.",
+          "At this moment, I have retrieved the weather data for {location}. The temperature reads {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius). The probability of rain is {precipitation_probability}%.",
+          "I have the weather information ready for you, sir. As of now, in the vicinity of {location}, the temperature stands at {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius). The likelihood of rain is {precipitation_probability}%.",
+          "Sure thing! The current weather in {location} shows a temperature of {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius). There is a {precipitation_probability}% chance of rain.",
+          "Here's the latest weather update for {location}. The temperature is {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius), and there's a {precipitation_probability}% chance of precipitation.",
+          "The weather forecast for {location} indicates a temperature of {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius) with a {precipitation_probability}% chance of rain.",
+          "I've got the weather details for {location}. The current temperature is {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius), and the chance of rain is {precipitation_probability}%.",
+          "Here's what I found about the weather in {location}. The temperature is {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius). There's a {precipitation_probability}% chance of rain.",
+          "For {location}, the weather is currently showing a temperature of {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius). The probability of rain is {precipitation_probability}%.",
+          "The weather at {location} is {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius) right now, with a {precipitation_probability}% chance of rain."
       ]
     },
     {
@@ -557,6 +599,3 @@
     }
   ]
 }
-  
-  
-
