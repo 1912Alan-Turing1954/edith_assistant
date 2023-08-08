@@ -8,8 +8,16 @@ from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
 from tts_.tts import text_to_speech
 from functions.opinion import opinion
-from functions.system_info import *
-from functions._math import *
+from functions.system_info import (
+    get_system_info,
+    generate_system_status_response,
+    generate_storage_status_response,
+    generate_cpu_usage_response,
+    generate_memory_usage_response,
+    generate_disk_space_response,
+)
+from functions._math import solve_word_math_expression, celsius_to_fahrenheit
+from functions.weather import extract_location_from_string, get_weather
 
 
 class Friday:
@@ -85,8 +93,8 @@ class Friday:
         self.prev_response = response
 
     def MainFrame(self, user_input):
-        user_input = input("friday is active: ")
         user_input = self.process_user_input(user_input)
+
         info_system = self.get_updated_system_info()
         system_info = generate_system_status_response(info_system)
         storage_info = generate_storage_status_response(info_system)
@@ -157,9 +165,30 @@ class Friday:
                             "{day}", self.get_day()
                         )
                         self.get_intent_response(intent, response)
+                    elif intent["tag"] == "weather":
+                        response = random.choice(intent["responses"])
+                        location = extract_location_from_string(user_input)
+                        weather_data = get_weather(location)
+                        forecast_items = weather_data["forecast"]["items"]
+                        first_item = forecast_items[0]
+                        temperature_celsius = first_item["temperature"]["avg"]
+                        temperature_fahrenheit = celsius_to_fahrenheit(
+                            temperature_celsius
+                        )
+                        precipitation_probability = first_item["prec"]["probability"]
+                        formatted_response = response.format(
+                            location=location,
+                            temperature_celsius=temperature_celsius,
+                            temperature_fahrenheit=temperature_fahrenheit,
+                            precipitation_probability=precipitation_probability,
+                        )
+                        text_to_speech(formatted_response)
+                        self.get_intent_response(intent, response)
+
                     else:
                         response = random.choice(intent["responses"])
                         self.get_intent_response(intent, response)
+
             self.prev_input = user_input.lower()
         else:
             for intent in self.intents["intents"]:
