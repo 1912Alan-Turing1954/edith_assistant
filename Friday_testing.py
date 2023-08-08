@@ -15,8 +15,12 @@ from functions.system_info import (
     generate_memory_usage_response,
     generate_disk_space_response,
 )
-from functions._math import solve_word_math_expression, celsius_to_fahrenheit
-from functions.weather import extract_location_from_string, get_weather
+from functions.weather import (
+    extract_location_from_string,
+    get_weather,
+    celsius_to_fahrenheit,
+)
+from functions._math import solve_word_math_expression
 
 
 class Friday:
@@ -187,7 +191,10 @@ class Friday:
 
                                 elif intent["tag"] == "weather":
                                     response = random.choice(intent["responses"])
-                                    location = extract_location_from_string(user_input)
+                                    location = extract_location_from_string(
+                                        user_input
+                                    ).capitalize()
+                                    print(location)
                                     weather_data = get_weather(location)
                                     forecast_items = weather_data["forecast"]["items"]
                                     first_item = forecast_items[0]
