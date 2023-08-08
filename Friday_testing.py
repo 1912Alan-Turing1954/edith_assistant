@@ -7,6 +7,7 @@ from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
 from tts_.tts import text_to_speech
 from functions.opinion import opinion
+from AI.AI_model import generate_qna_answer
 from functions.system_info import (
     get_system_info,
     generate_system_status_response,
@@ -78,6 +79,20 @@ class Friday:
     def process_user_input(self, user_input):
         return user_input.lower()
 
+    def is_question(self, user_input):
+        question_keywords = [
+            "what",
+            "why",
+            "how",
+            "when",
+            "where",
+            "is",
+            "are",
+            "do",
+            "can",
+        ]
+        return any(word.lower() in question_keywords for word in user_input.split())
+
     def get_intent_response(self, intent, response, replacement=None):
         if replacement:
             response = response.replace("{string}", replacement)
@@ -117,15 +132,20 @@ class Friday:
                         probs = torch.softmax(output, dim=1)
                         prob = probs[0][predicted.item()]
 
-                    if self.is_complex_alphabetical_math_problem(user_input):
-                        for intent in self.intents["intents"]:
-                            if intent["tag"] == "math":
-                                response = random.choice(intent["responses"])
-                                answer = solve_word_math_expression(user_input)
-                                response = response.replace("{answer}", answer)
-                                text_to_speech(response)
+                    if self.is_question(user_input):
+                        response = generate_qna_answer(user_input)
+                        print(response)
+                        text_to_speech(response)
 
-                    elif prob.item() > 0.80:
+                    # if self.is_complex_alphabetical_math_problem(user_input):
+                    #     for intent in self.intents["intents"]:
+                    #         if intent["tag"] == "math":
+                    #             response = random.choice(intent["responses"])
+                    #             answer = solve_word_math_expression(user_input)
+                    #             response = response.replace("{answer}", answer)
+                    #             text_to_speech(response)
+
+                    elif prob.item() > 0.785:
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
                                 if intent["tag"] == "repeat":
@@ -189,33 +209,6 @@ class Friday:
                                     ).replace("{day}", self.get_day())
                                     self.get_intent_response(intent, response)
 
-                                elif intent["tag"] == "weather":
-                                    response = random.choice(intent["responses"])
-                                    location = extract_location_from_string(
-                                        user_input
-                                    ).capitalize()
-                                    print(location)
-                                    weather_data = get_weather(location)
-                                    forecast_items = weather_data["forecast"]["items"]
-                                    first_item = forecast_items[0]
-                                    temperature_celsius = first_item["temperature"][
-                                        "avg"
-                                    ]
-                                    temperature_fahrenheit = celsius_to_fahrenheit(
-                                        temperature_celsius
-                                    )
-                                    precipitation_probability = first_item["prec"][
-                                        "probability"
-                                    ]
-                                    formatted_response = response.format(
-                                        location=location,
-                                        temperature_celsius=temperature_celsius,
-                                        temperature_fahrenheit=temperature_fahrenheit,
-                                        precipitation_probability=precipitation_probability,
-                                    )
-                                    text_to_speech(formatted_response)
-                                    self.get_intent_response(intent, response)
-
                                 else:
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(intent, response)
@@ -223,12 +216,18 @@ class Friday:
                         self.prev_input = user_input.lower()
 
                     else:
-                        for intent in self.intents["intents"]:
-                            if intent["tag"] == "technical":
-                                response = random.choice(intent["responses"])
-                                text_to_speech(response)
-                                print(intent["tag"])
-                                break
+                        if self.is_question(user_input):
+                            response = qna_generation(user_input)
+                            print(response)
+                            text_to_speech(response)
+
+                        else:
+                            for intent in self.intents["intents"]:
+                                if intent["tag"] == "technical":
+                                    response = random.choice(intent["responses"])
+                                    text_to_speech(response)
+                                    print(intent["tag"])
+                                    break
             else:
                 pass
 
