@@ -132,18 +132,18 @@ class Friday:
                         probs = torch.softmax(output, dim=1)
                         prob = probs[0][predicted.item()]
 
-                    if self.is_question(user_input):
-                        response = generate_qna_answer(user_input)
-                        print(response)
-                        text_to_speech(response)
+                    # if self.is_question(user_input):
+                    #     response = generate_qna_answer(user_input)
+                    #     print(response)
+                    #     text_to_speech(response)
 
-                    # if self.is_complex_alphabetical_math_problem(user_input):
-                    #     for intent in self.intents["intents"]:
-                    #         if intent["tag"] == "math":
-                    #             response = random.choice(intent["responses"])
-                    #             answer = solve_word_math_expression(user_input)
-                    #             response = response.replace("{answer}", answer)
-                    #             text_to_speech(response)
+                    if self.is_complex_alphabetical_math_problem(user_input):
+                        for intent in self.intents["intents"]:
+                            if intent["tag"] == "math":
+                                response = random.choice(intent["responses"])
+                                answer = solve_word_math_expression(user_input)
+                                response = response.replace("{answer}", answer)
+                                text_to_speech(response)
 
                     elif prob.item() > 0.785:
                         for intent in self.intents["intents"]:
