@@ -7,7 +7,8 @@ from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
 from tts_.tts import text_to_speech
 from functions.opinion import opinion
-from AI.AI_model import generate_qna_answer
+
+# from AI.AI_model import generate_qna_answer
 from functions.system_info import (
     get_system_info,
     generate_system_status_response,
