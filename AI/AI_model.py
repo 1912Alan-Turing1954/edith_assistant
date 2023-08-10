@@ -24,13 +24,16 @@ def generative_gpt_bart_large(user_input):
 
     user_input = user_input.capitalize()
 
-    input_text = f"{user_input}?"
+    input_text = f"{user_input}"
     input_ids = tokenizer(input_text, return_tensors="pt").input_ids
 
-    outputs = model.generate(input_ids, max_length=142)
+    outputs = model.generate(input_ids, do_sample=True)
 
     text = tokenizer.decode(outputs[0])
 
     clean_text = text.replace("</s>", " ").replace("<s>", " ").replace("None", " ")
 
     return clean_text
+
+
+# print(generative_gpt_bart_large("how does the atomic bomb work"))
