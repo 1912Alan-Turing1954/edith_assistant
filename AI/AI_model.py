@@ -1,20 +1,36 @@
-# from transformers import T5Tokenizer, T5ForConditionalGeneration
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
-# tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-base")
-# model = T5ForConditionalGeneration.from_pretrained("google/flan-t5-base")
-
-
-# def generate_text(user_input):
-#     input_text = user_input
-#     input_ids = tokenizer(input_text, return_tensors="pt").input_ids
-
-#     # Update max_length to max_new_tokens
-#     max_new_tokens = 150  # Set the desired maximum length of the generated text
-#     outputs = model.generate(input_ids, max_new_tokens=max_new_tokens)
-#     response = tokenizer.decode(outputs[0])
-#     response = response.replace("<pad>", "").replace("</s>", "")
-#     return response
+tokenizer = AutoTokenizer.from_pretrained("Qiliang/bart-large-cnn-samsum-ChatGPT_v3")
+model = AutoModelForSeq2SeqLM.from_pretrained(
+    "Qiliang/bart-large-cnn-samsum-ChatGPT_v3"
+)
 
 
-# input_text = input("Enter text to generate: ")
-# print(generate_text(input_text))
+def generative_gpt_bart_large(user_input):
+    if "friday" in user_input:
+        user_input = user_input.replace("friday", "")
+
+    if "tell me about" in user_input:
+        user_input = user_input.replace("tell me about", "what is")
+    if "tell me about" in user_input and "friday" in user_input:
+        user_input = user_input.replace("tell me about", "what is").replace(
+            "friday", ""
+        )
+
+    if "describe" in user_input:
+        user_input = user_input.replace("describe", "what is")
+    if "describe" in user_input and "friday" in user_input:
+        user_input = user_input.replace("describe", "what is").replace("friday", "")
+
+    user_input = user_input.capitalize()
+
+    input_text = f"{user_input}?"
+    input_ids = tokenizer(input_text, return_tensors="pt").input_ids
+
+    outputs = model.generate(input_ids, max_length=142)
+
+    text = tokenizer.decode(outputs[0])
+
+    clean_text = text.replace("</s>", " ").replace("<s>", " ").replace("None", " ")
+
+    return clean_text

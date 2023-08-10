@@ -7,8 +7,8 @@ from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
 from tts_.tts import text_to_speech
 from functions.opinion import opinion
+from AI.AI_model import generative_gpt_bart_large
 
-# from AI.AI_model import generate_qna_answer
 from functions.system_info import (
     get_system_info,
     generate_system_status_response,
@@ -133,18 +133,18 @@ class Friday:
                         probs = torch.softmax(output, dim=1)
                         prob = probs[0][predicted.item()]
 
-                    # if self.is_question(user_input):
-                    #     response = generate_qna_answer(user_input)
-                    #     print(response)
-                    #     text_to_speech(response)
-
-                    if self.is_complex_alphabetical_math_problem(user_input):
-                        for intent in self.intents["intents"]:
-                            if intent["tag"] == "math":
-                                response = random.choice(intent["responses"])
-                                answer = solve_word_math_expression(user_input)
-                                response = response.replace("{answer}", answer)
-                                text_to_speech(response)
+                    if self.is_question(user_input):
+                        if self.is_complex_alphabetical_math_problem(user_input):
+                            for intent in self.intents["intents"]:
+                                if intent["tag"] == "math":
+                                    response = random.choice(intent["responses"])
+                                    answer = solve_word_math_expression(user_input)
+                                    response = response.replace("{answer}", answer)
+                                    text_to_speech(response)
+                        else:
+                            response = generative_gpt_bart_large(user_input)
+                            print(response)
+                            text_to_speech(response)
 
                     elif prob.item() > 0.785:
                         for intent in self.intents["intents"]:
@@ -217,18 +217,12 @@ class Friday:
                         self.prev_input = user_input.lower()
 
                     else:
-                        if self.is_question(user_input):
-                            response = qna_generation(user_input)
-                            print(response)
-                            text_to_speech(response)
-
-                        else:
-                            for intent in self.intents["intents"]:
-                                if intent["tag"] == "technical":
-                                    response = random.choice(intent["responses"])
-                                    text_to_speech(response)
-                                    print(intent["tag"])
-                                    break
+                        for intent in self.intents["intents"]:
+                            if intent["tag"] == "technical":
+                                response = random.choice(intent["responses"])
+                                text_to_speech(response)
+                                print(intent["tag"])
+                                break
             else:
                 pass
 
