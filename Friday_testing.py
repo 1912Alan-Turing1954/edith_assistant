@@ -80,20 +80,6 @@ class Friday:
     def process_user_input(self, user_input):
         return user_input.lower()
 
-    def is_question(self, user_input):
-        question_keywords = [
-            "what",
-            "why",
-            "how",
-            "when",
-            "where",
-            "is",
-            "are",
-            "do",
-            "can",
-        ]
-        return any(word.lower() in question_keywords for word in user_input.split())
-
     def get_intent_response(self, intent, response, replacement=None):
         if replacement:
             response = response.replace("{string}", replacement)
@@ -132,22 +118,6 @@ class Friday:
                         tag = self.tags[predicted.item()]
                         probs = torch.softmax(output, dim=1)
                         prob = probs[0][predicted.item()]
-
-                    # if self.is_question(user_input):
-                    #     if self.is_complex_alphabetical_math_problem(user_input):
-                    #         for intent in self.intents["intents"]:
-                    #             if intent["tag"] == "math":
-                    #                 response = random.choice(intent["responses"])
-                    #                 answer = solve_word_math_expression(user_input)
-                    #                 response = response.replace("{answer}", answer)
-                    #                 text_to_speech(response)
-                    #                 break
-                    #     elif (
-                    #         self.is_complex_alphabetical_math_problem(user_input)
-                    #         == False
-                    #     ):
-                    #         response = generative_gpt_bart_large(user_input)
-                    #         text_to_speech(response)
 
                     if prob.item() > 0.785:
                         for intent in self.intents["intents"]:
