@@ -18,7 +18,7 @@ def generative_gpt_bart_large(user_input):
     input_text = f"{user_input}"
     input_ids = tokenizer(input_text, return_tensors="pt").input_ids
 
-    outputs = model.generate(input_ids, max_length=142, do_sample=True)
+    outputs = model.generate(input_ids, do_sample=True)
 
     text = tokenizer.decode(outputs[0])
 

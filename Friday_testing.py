@@ -251,7 +251,7 @@ class Friday:
 
                     else:
                         response = generative_gpt_bart_large(user_input)
-                        print(response)
+                        text_to_speech(response)
                         # for intent in self.intents["intents"]:
                         #     if intent["tag"] == "technical":
                         #         response = random.choice(intent["responses"])
