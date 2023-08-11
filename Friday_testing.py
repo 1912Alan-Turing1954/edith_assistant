@@ -179,7 +179,7 @@ class Friday:
                         probs = torch.softmax(output, dim=1)
                         prob = probs[0][predicted.item()]
 
-                    if prob.item() > 0.80:
+                    if prob.item() > 0.985:
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
                                 if intent["tag"] == "repeat":
@@ -250,12 +250,14 @@ class Friday:
                         self.prev_input = user_input.lower()
 
                     else:
-                        for intent in self.intents["intents"]:
-                            if intent["tag"] == "technical":
-                                response = random.choice(intent["responses"])
-                                text_to_speech(response)
-                                print(intent["tag"])
-                                break
+                        response = generative_gpt_bart_large(user_input)
+                        print(response)
+                        # for intent in self.intents["intents"]:
+                        #     if intent["tag"] == "technical":
+                        #         response = random.choice(intent["responses"])
+                        #         text_to_speech(response)
+                        #         print(intent["tag"])
+                        #         break
             else:
                 pass
 
