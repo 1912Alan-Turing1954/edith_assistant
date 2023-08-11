@@ -516,32 +516,6 @@
       ]
     },
     {
-      "tag": "conversation_color",
-      "patterns": [
-        "friday, what's your favorite color?",
-        "Tell me, friday. What color do you like?",
-        "Hey friday, let's talk about colors."
-      ],
-      "responses": [
-        "As an AI, I don't experience colors like humans do. However, I can assist you with any color preferences you have.",
-        "Colors are fascinating, sir. Let me know how I can help with your color choices.",
-        "While I don't have personal favorites, I'm here to provide information and guidance on colors."
-      ]
-    },
-    {
-      "tag": "conversation_compliment",
-      "patterns": [
-        "friday, you're doing a great job!",
-        "Impressive work, friday!",
-        "Nice work, friday!"
-      ],
-      "responses": [
-        "Thank you, sir! Your approval means a lot. I'm here to make your life easier.",
-        "I appreciate the compliment, sir! It's an honor to be of service.",
-        "Your kind words motivate me, sir. I strive to be at my best for you."
-      ]
-    },
-    {
       "tag": "conversation_joke",
       "patterns": [
         "friday, tell me a joke to lighten the mood.",

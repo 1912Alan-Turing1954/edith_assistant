@@ -17,12 +17,6 @@ from functions.system_info import (
     generate_memory_usage_response,
     generate_disk_space_response,
 )
-from functions.weather import (
-    extract_location_from_string,
-    get_weather,
-    celsius_to_fahrenheit,
-)
-from functions._math import solve_word_math_expression
 
 
 class Friday:
@@ -78,7 +72,72 @@ class Friday:
         return get_system_info()
 
     def process_user_input(self, user_input):
-        return user_input.lower()
+        user_input = user_input.lower()
+
+    def is_query(self, user_input):
+        question_words = [
+            "what",
+            "when",
+            "where",
+            "which",
+            "who",
+            "whom",
+            "whose",
+            "why",
+            "how",
+            "can",
+            "could",
+            "may",
+            "might",
+            "will",
+            "would",
+            "shall",
+            "should",
+            "do",
+            "does",
+            "did",
+            "is",
+            "are",
+            "am",
+            "was",
+            "were",
+            "has",
+            "have",
+            "had",
+        ]
+
+        casual_question_patterns = [
+            r"^\s*can\s+",  # Can you, Can I, etc.
+            r"^\s*could\s+",
+            r"^\s*may\s+",
+            r"^\s*might\s+",
+            r"^\s*will\s+",
+            r"^\s*would\s+",
+            r"^\s*should\s+",
+            r"^\s*do\s+",
+            r"^\s*does\s+",
+            r"^\s*did\s+",
+            r"^\s*is\s+",
+            r"^\s*are\s+",
+            r"^\s*was\s+",
+            r"^\s*were\s+",
+            r"^\s*has\s+",
+            r"^\s*have\s+",
+            r"^\s*had\s+",
+        ]
+
+        user_input_lower = user_input.lower()
+
+        # Check for question words
+        if any(word in user_input_lower for word in question_words):
+            return True
+
+        # Check for casual question patterns
+        for pattern in casual_question_patterns:
+            if re.match(pattern, user_input_lower):
+                return True
+
+        return False
 
     def get_intent_response(self, intent, response, replacement=None):
         if replacement:
@@ -95,7 +154,8 @@ class Friday:
             if "friday" == wake_up.lower():
                 while True:
                     user_input = input("friday is active: ")
-                    user_input = self.process_user_input(user_input)
+                    print(type(user_input))
+                    user_input = user_input.lower()
 
                     info_system = self.get_updated_system_info()
                     system_info = generate_system_status_response(info_system)
@@ -119,7 +179,7 @@ class Friday:
                         probs = torch.softmax(output, dim=1)
                         prob = probs[0][predicted.item()]
 
-                    if prob.item() > 0.785:
+                    if prob.item() > 0.80:
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
                                 if intent["tag"] == "repeat":

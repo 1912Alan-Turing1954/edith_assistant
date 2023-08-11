@@ -5,22 +5,15 @@ model = AutoModelForSeq2SeqLM.from_pretrained(
     "Qiliang/bart-large-cnn-samsum-ChatGPT_v3"
 )
 
+words = [
+    "",
+]
+
 
 def generative_gpt_bart_large(user_input):
-    if "friday" in user_input:
-        user_input = user_input.replace("friday", "")
-
-    if "tell me about" in user_input:
-        user_input = user_input.replace("tell me about", "what is")
-    if "tell me about" in user_input and "friday" in user_input:
-        user_input = user_input.replace("tell me about", "what is").replace(
-            "friday", ""
-        )
-
-    if "describe" in user_input:
-        user_input = user_input.replace("describe", "what is")
-    if "describe" in user_input and "friday" in user_input:
-        user_input = user_input.replace("describe", "what is").replace("friday", "")
+    for word in words:
+        if word in user_input:
+            user_input.replace(word, "")
 
     user_input = user_input.capitalize()
 
@@ -34,6 +27,3 @@ def generative_gpt_bart_large(user_input):
     clean_text = text.replace("</s>", " ").replace("<s>", " ").replace("None", " ")
 
     return clean_text
-
-
-# print(generative_gpt_bart_large("how does the atomic bomb work"))
