@@ -177,8 +177,3 @@ class Friday:
                         text_to_speech(response)
                         print(intent["tag"])
                         break
-
-
-if __name__ == "__main__":
-    assistant = Friday()
-    assistant.MainFrame()
