@@ -4,10 +4,13 @@ import datetime
 import json
 import torch
 import os
+from AI.AI_Model import generative_with_t5
 from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
 from tts_.tts import text_to_speech
 from functions.opinion import opinion
+from functions._math import solve_word_math_expression
+
 from functions.system_info import (
     get_system_info,
     generate_system_status_response,
@@ -16,8 +19,6 @@ from functions.system_info import (
     generate_memory_usage_response,
     generate_disk_space_response,
 )
-from functions._math import solve_word_math_expression, celsius_to_fahrenheit
-from functions.weather import extract_location_from_string, get_weather
 
 
 class Friday:
@@ -93,8 +94,8 @@ class Friday:
         self.prev_response = response
 
     def MainFrame(self, user_input):
-        user_input = self.process_user_input(user_input)
-
+        print(type(user_input))
+        user_input = user_input.lower()
         info_system = self.get_updated_system_info()
         system_info = generate_system_status_response(info_system)
         storage_info = generate_storage_status_response(info_system)
@@ -115,14 +116,7 @@ class Friday:
             tag = self.tags[predicted.item()]
             probs = torch.softmax(output, dim=1)
             prob = probs[0][predicted.item()]
-        if self.is_complex_alphabetical_math_problem(user_input):
-            for intent in self.intents["intents"]:
-                if intent["tag"] == "math":
-                    response = random.choice(intent["responses"])
-                    answer = solve_word_math_expression(user_input)
-                    response = response.replace("{answer}", answer)
-                    text_to_speech(response)
-        elif prob.item() > 0.80:
+        if prob.item() > 0.995:
             for intent in self.intents["intents"]:
                 if tag == intent["tag"]:
                     if intent["tag"] == "repeat":
@@ -165,38 +159,24 @@ class Friday:
                             "{day}", self.get_day()
                         )
                         self.get_intent_response(intent, response)
-                    elif intent["tag"] == "weather":
-                        response = random.choice(intent["responses"])
-                        location = extract_location_from_string(user_input)
-                        weather_data = get_weather(location)
-                        forecast_items = weather_data["forecast"]["items"]
-                        first_item = forecast_items[0]
-                        temperature_celsius = first_item["temperature"]["avg"]
-                        temperature_fahrenheit = celsius_to_fahrenheit(
-                            temperature_celsius
-                        )
-                        precipitation_probability = first_item["prec"]["probability"]
-                        formatted_response = response.format(
-                            location=location,
-                            temperature_celsius=temperature_celsius,
-                            temperature_fahrenheit=temperature_fahrenheit,
-                            precipitation_probability=precipitation_probability,
-                        )
-                        text_to_speech(formatted_response)
-                        self.get_intent_response(intent, response)
-
                     else:
                         response = random.choice(intent["responses"])
                         self.get_intent_response(intent, response)
-
             self.prev_input = user_input.lower()
         else:
-            for intent in self.intents["intents"]:
-                if intent["tag"] == "technical":
-                    response = random.choice(intent["responses"])
-                    text_to_speech(response)
-                    print(intent["tag"])
-                    break
+            if self.is_complex_alphabetical_math_problem(user_input):
+                response = solve_word_math_expression(user_input)
+                text_to_speech(response)
+            elif self.is_complex_alphabetical_math_problem(user_input) == False:
+                response = generative_with_t5(user_input)
+                text_to_speech(response)
+            else:
+                for intent in self.intents["intents"]:
+                    if intent["tag"] == "technical":
+                        response = random.choice(intent["responses"])
+                        text_to_speech(response)
+                        print(intent["tag"])
+                        break
 
 
 if __name__ == "__main__":

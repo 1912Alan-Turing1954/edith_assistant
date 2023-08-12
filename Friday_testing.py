@@ -7,7 +7,8 @@ from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
 from tts_.tts import text_to_speech
 from functions.opinion import opinion
-from AI.AI_model import generative_gpt_bart_large
+from AI.AI_Model import generative_with_t5
+from functions._math import solve_word_math_expression
 
 from functions.system_info import (
     get_system_info,
@@ -179,7 +180,7 @@ class Friday:
                         probs = torch.softmax(output, dim=1)
                         prob = probs[0][predicted.item()]
 
-                    if prob.item() > 0.985:
+                    if prob.item() > 0.995:
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
                                 if intent["tag"] == "repeat":
@@ -250,14 +251,23 @@ class Friday:
                         self.prev_input = user_input.lower()
 
                     else:
-                        response = generative_gpt_bart_large(user_input)
-                        text_to_speech(response)
-                        # for intent in self.intents["intents"]:
-                        #     if intent["tag"] == "technical":
-                        #         response = random.choice(intent["responses"])
-                        #         text_to_speech(response)
-                        #         print(intent["tag"])
-                        #         break
+                        if self.is_complex_alphabetical_math_problem(user_input):
+                            response = solve_word_math_expression(user_input)
+                            text_to_speech(response)
+                        elif (
+                            self.is_complex_alphabetical_math_problem(user_input)
+                            == False
+                        ):
+                            response = generative_with_t5(user_input)
+                            text_to_speech(response)
+
+                        else:
+                            for intent in self.intents["intents"]:
+                                if intent["tag"] == "technical":
+                                    response = random.choice(intent["responses"])
+                                    text_to_speech(response)
+                                    print(intent["tag"])
+                                    break
             else:
                 pass
 
