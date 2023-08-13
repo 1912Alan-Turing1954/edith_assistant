@@ -140,12 +140,12 @@
     {
       "tag": "friday_you_there",
       "patterns": [
-        "friday you there",
-        "friday you up",
+        "friday, you there?",
+        "friday, you up?",
         "are you there",
         "are you up",
         "you there",
-        "hey friday got a minute"
+        "hey friday, got a minute?"
         ],
       "responses": [
         "Affirmative, sir.",
@@ -183,9 +183,9 @@
         "thank you",
         "thanks",
         "appreciate it",
-        "friday you're the best",
-        "thanks for your help friday",
-        "thanks friday"
+        "friday, you're the best",
+        "thanks for your help, friday",
+        "thanks, friday"
       ],
       "responses": [
         "You're most welcome, sir. It is my duty and pleasure to assist you.",
@@ -536,6 +536,7 @@
       "tag": "background_acknowledgment",
       "patterns": [
         "alright",
+        "okay friday",
         "okay",
         "gotcha",
         "sure thing",
@@ -559,6 +560,7 @@
         "for sure",
         "indeed",
         "absolutely sure",
+        "Got it, Friday.",
         "Alright, I'm on board.",
         "Sure thing, make it happen.",
         "Sounds good, let's proceed.",
