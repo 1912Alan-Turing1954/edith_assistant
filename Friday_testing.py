@@ -102,7 +102,10 @@ class Friday:
 
                     if user_input.lower() == self.prev_input.lower():
                         tag = "repeat_string"
-                    elif self.prev_tag == "technical":
+                    elif (
+                        self.prev_tag == "technical"
+                        or self.prev_tag == "background_acknowledgment"
+                    ):
                         pass
                     else:
                         sentence = tokenize(user_input)
@@ -118,6 +121,9 @@ class Friday:
                     if prob.item() > 0.995:
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
+                                if intent["tag"] == "background_acknowledgment":
+                                    break
+
                                 if intent["tag"] == "repeat_tsk":
                                     response = random.choice(intent["responses"])
                                     text_to_speech(f"{response} {self.prev_response}")
@@ -210,6 +216,7 @@ class Friday:
                                     text_to_speech(response)
                                     print(intent["tag"])
                                     break
+
             else:
                 pass
 
