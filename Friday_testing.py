@@ -118,7 +118,7 @@ class Friday:
                     if prob.item() > 0.995:
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
-                                if intent["tag"] == "repeat":
+                                if intent["tag"] == "repeat_tsk":
                                     response = random.choice(intent["responses"])
                                     text_to_speech(f"{response} {self.prev_response}")
                                     print(intent["tag"])
@@ -127,31 +127,31 @@ class Friday:
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(intent, response)
 
-                                elif intent["tag"] == "system_info":
+                                elif intent["tag"] == "system_info_tsk":
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(
                                         intent, response, system_info
                                     )
 
-                                elif intent["tag"] == "storage_info":
+                                elif intent["tag"] == "storage_info_tsk":
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(
                                         intent, response, storage_info
                                     )
 
-                                elif intent["tag"] == "cpu_usage":
+                                elif intent["tag"] == "cpu_usage_tsk":
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(
                                         intent, response, cpu_usage
                                     )
 
-                                elif intent["tag"] == "memory_usage":
+                                elif intent["tag"] == "memory_usage_tsk":
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(
                                         intent, response, memory_usage
                                     )
 
-                                elif intent["tag"] == "disk_space":
+                                elif intent["tag"] == "disk_space_tsk":
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(
                                         intent, response, disk_space
@@ -161,19 +161,19 @@ class Friday:
                                     response = opinion(user_input)
                                     self.get_intent_response(intent, response)
 
-                                elif intent["tag"] == "time":
+                                elif intent["tag"] == "time_tsk":
                                     response = random.choice(
                                         intent["responses"]
                                     ).replace("{time}", self.get_time())
                                     self.get_intent_response(intent, response)
 
-                                elif intent["tag"] == "date":
+                                elif intent["tag"] == "date_tsk":
                                     response = random.choice(
                                         intent["responses"]
                                     ).replace("{date}", self.get_date())
                                     self.get_intent_response(intent, response)
 
-                                elif intent["tag"] == "day":
+                                elif intent["tag"] == "day_tsk":
                                     response = random.choice(
                                         intent["responses"]
                                     ).replace("{day}", self.get_day())
@@ -187,8 +187,15 @@ class Friday:
 
                     else:
                         if self.is_complex_alphabetical_math_problem(user_input):
-                            response = solve_word_math_expression(user_input)
-                            text_to_speech(response)
+                            result = solve_word_math_expression(user_input)
+                            for intent in self.intents["intents"]:
+                                if intent["tag"] == "math_tsk":
+                                    response = random.choice(intent["responses"])
+                                    response = response.format(answer=result)
+                                    text_to_speech(response)
+                                    print(intent["tag"])
+                                    break
+
                         elif (
                             self.is_complex_alphabetical_math_problem(user_input)
                             == False

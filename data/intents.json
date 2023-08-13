@@ -1,7 +1,7 @@
 {
   "intents": [
     {
-      "tag": "system_info",
+      "tag": "system_info_tsk",
       "patterns": [
         "give me system info",
         "give me system status",
@@ -15,7 +15,7 @@
       ]
     },
     {
-      "tag": "storage_info",
+      "tag": "storage_info_tsk",
       "patterns": [
         "give me storage info",
         "give me storage status",
@@ -33,7 +33,7 @@
       ]
     },
     {
-      "tag": "cpu_usage",
+      "tag": "cpu_usage_tsk",
       "patterns": [
         "give me cpu usage",
         "give me cpu status",
@@ -53,7 +53,7 @@
       ]
     },
     {
-      "tag": "memory_usage",
+      "tag": "memory_usage_tsk",
       "patterns": [
         "give me memory usage",
         "give me memory status",
@@ -76,7 +76,7 @@
       ]
     },
     {
-      "tag": "disk_space",
+      "tag": "disk_space_tsk",
       "patterns": [
         "How much disk space do I have?",
         "Can you tell me my available disk space?",
@@ -286,7 +286,7 @@
       ]
     },
     {
-      "tag": "repeat",
+      "tag": "repeat_tsk",
       "patterns": [
         "Can you repeat that?",
         "Hey Friday, say that again.",
@@ -350,7 +350,7 @@
       ]
     },
     {
-      "tag": "math",
+      "tag": "math_tsk",
       "patterns": [],
       "responses": [
         "The answer is {answer}, Sir.",
@@ -375,7 +375,7 @@
       ]
     },    
     {
-      "tag": "time",
+      "tag": "time_tsk",
       "patterns": [
         "what time is it?",
         "can you tell me the time?",
@@ -405,7 +405,7 @@
       ]
     },
     {
-      "tag": "day",
+      "tag": "day_tsk",
       "patterns": [
         "what day is it?",
         "can you tell me the day?",
@@ -434,7 +434,7 @@
       ]
     },
     {
-      "tag": "date",
+      "tag": "date_tsk",
       "patterns": [
         "What's the date today?",
         "Can you tell me today's date?",
