@@ -8,9 +8,19 @@ def generative_with_t5(input_text):
     input_text = input_text.lower()
 
     _prompt = f"Please answer to the following question and elaborate. {input_text}?"
+    _prompt_yes_no = f"Answer the following yes/no question. {input_text}?"
+
+    if "friday" in input_text:
+        input_text = input_text.replace("friday", "")
+
+    def type_(input_text):
+        if "do" in input_text:
+            return _prompt_yes_no
+        if "do" not in input_text:
+            return _prompt
 
     # tokenize the input text
-    input_ids = tokenizer(_prompt, return_tensors="pt").input_ids
+    input_ids = tokenizer(type_(input_text), return_tensors="pt").input_ids
     outputs = model.generate(input_ids, max_length=1024)
 
     # Decode the generated translation
