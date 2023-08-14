@@ -106,22 +106,67 @@
     {
       "tag": "greeting",
       "patterns": [
-        "good morning",
-        "good afternoon",
         "friday, it's me",
-        "morning, friday",
-        "good eve"
+        "hello friday",
+        "greetings",
+        "hi friday",
+        "hey friday"
       ],
       "responses": [
-        "Greetings, sir. How may I assist you today?",
-        "Good day, sir. I am at your service. How may I help you?",
-        "Hello, sir. Your presence is most welcome. How may I be of assistance?",
-        "Good morning, sir. I trust you are prepared for a productive day.",
-        "Good afternoon, sir. How may I assist you in achieving your goals?",
-        "friday at your service, sir. It's a pleasure to interact with you.",
-        "Good morning, sir. The world awaits your guidance.",
-        "Good day, sir. I am here and fully operational to assist you.",
-        "Sir, it is always an honor to engage with you. How may I be of service today?"
+        "At your service, sir.",
+        "Hello, sir.",
+        "Greetings, sir.",
+        "Ready when you are, sir.",
+        "Sir, how may I assist you?",
+        "Hello, sir. Ready to proceed.",
+        "Good day, sir.",
+        "Hello, sir. Your command?",
+        "Greetings, sir. I'm listening.",
+        "Hello, sir. How may I help?",
+        "Sir, I await your direction.",
+        "Hello, sir. Ready to assist.",
+        "Greetings, sir. How may I serve?",
+        "Hello, sir. What's on your agenda?",
+        "Greetings, sir. Your orders?",
+        "Hello, sir. What's the plan?",
+        "Greetings, sir. How can I aid you?",
+        "Hello, sir. Initiating protocol.",
+        "Greetings, sir. Your call, sir.",
+        "Hello, sir. Awaiting instructions.",
+        "Greetings, sir. I'm here.",
+        "Hello, sir. Let's proceed.",
+        "Greetings, sir. Ready for action.",
+        "Hello, sir. Ready for your lead.",
+        "Greetings, sir. How may I assist?"
+      ]
+    },
+    {
+      "tag": "good_morning",
+      "patterns": [
+        "good morning"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
+      "tag": "good_afternoon",
+      "patterns": [
+        "good eve",
+        "good afternoon"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
+      "tag": "good_night",
+      "patterns": [
+        "good night",
+        "have a good night"
+      ],
+      "responses": [
+        "{string}"
       ]
     },
     {
@@ -480,7 +525,42 @@
         "shed light on",
         "when did",
         "how does",
-        "how did"
+        "how did",
+        "who was",
+        "who",
+        "where is",
+        "why does",
+        "why did",
+        "which is",
+        "what are",
+        "what was",
+        "how do",
+        "are there",
+        "is there",
+        "are they",
+        "is it",
+        "do you know",
+        "could you explain",
+        "can you tell me",
+        "could you clarify",
+        "can you describe",
+        "could you provide",
+        "can you shed light on",
+        "do you have information about",
+        "can you elaborate on",
+        "could you help me understand",
+        "do you know when",
+        "could you tell me when",
+        "can you explain how",
+        "could you describe how",
+        "do you know how",
+        "could you explain why",
+        "can you tell me why",
+        "could you clarify why",
+        "can you describe who",
+        "could you explain what",
+        "do you know what",
+        "could you provide information about"
       ],
       "responses": [
         "{string}"
