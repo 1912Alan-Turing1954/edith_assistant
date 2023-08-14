@@ -7,16 +7,16 @@ model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-large")
 def generative_with_t5(input_text):
     input_text = input_text.lower()
 
+    if "friday" in input_text.lower():
+        input_text = input_text.replace("friday", "")
+
     _prompt = f"Please answer to the following question and elaborate. {input_text}?"
     _prompt_yes_no = f"Answer the following yes/no question. {input_text}?"
 
-    if "friday" in input_text:
-        input_text = input_text.replace("friday", "")
-
     def type_(input_text):
-        if "do" in input_text:
+        if input_text.startswith("do"):
             return _prompt_yes_no
-        if "do" not in input_text:
+        else:
             return _prompt
 
     # tokenize the input text
