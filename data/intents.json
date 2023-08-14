@@ -377,19 +377,19 @@
     {
       "tag": "time_tsk",
       "patterns": [
-        "what time is it?",
-        "can you tell me the time?",
-        "do you know the current time?",
-        "what's the time?",
-        "what is the time?",
+        "what time is it",
+        "can you tell me the time",
+        "do you know the current time",
+        "what's the time",
+        "what is the time",
         "could you please inform me of the current time?",
-        "what time do we have?",
-        "do you have the time?",
-        "time, please?",
-        "any idea what time it is?",
+        "what time do we have",
+        "do you have the time",
+        "time, please",
+        "any idea what time it is",
         "i need to know the time.",
         "tell me the current time.",
-        "what hour is it?",
+        "what hour is it",
         "can you let me know the time, please?"
       ],
       "responses": [
@@ -459,6 +459,31 @@
         "Sir, according to my calculations, today's date is {date}.",
         "I have the date at your disposal, sir. It's {date} today.",
         "The date, sir, is {date}."
+      ]
+    },
+    {
+      "tag": "generative_with_t5",
+      "patterns": [
+        "what is",
+        "how much",
+        "tell me",
+        "explain",
+        "define",
+        "provide",
+        "give me",
+        "can you",
+        "please explain",
+        "clarify",
+        "describe",
+        "elaborate on",
+        "help me understand",
+        "shed light on",
+        "when did",
+        "how does",
+        "how did"
+      ],
+      "responses": [
+        "{string}"
       ]
     },
     {

@@ -140,12 +140,12 @@
     {
       "tag": "friday_you_there",
       "patterns": [
-        "friday, you there?",
-        "friday, you up?",
+        "friday you there",
+        "friday you up",
         "are you there",
         "are you up",
         "you there",
-        "hey friday, got a minute?"
+        "hey friday got a minute"
         ],
       "responses": [
         "Affirmative, sir.",
@@ -183,9 +183,9 @@
         "thank you",
         "thanks",
         "appreciate it",
-        "friday, you're the best",
-        "thanks for your help, friday",
-        "thanks, friday"
+        "friday you're the best",
+        "thanks for your help friday",
+        "thanks friday"
       ],
       "responses": [
         "You're most welcome, sir. It is my duty and pleasure to assist you.",
@@ -377,19 +377,19 @@
     {
       "tag": "time_tsk",
       "patterns": [
-        "what time is it?",
-        "can you tell me the time?",
-        "do you know the current time?",
-        "what's the time?",
-        "what is the time?",
+        "what time is it",
+        "can you tell me the time",
+        "do you know the current time",
+        "what's the time",
+        "what is the time",
         "could you please inform me of the current time?",
-        "what time do we have?",
-        "do you have the time?",
-        "time, please?",
-        "any idea what time it is?",
+        "what time do we have",
+        "do you have the time",
+        "time, please",
+        "any idea what time it is",
         "i need to know the time.",
         "tell me the current time.",
-        "what hour is it?",
+        "what hour is it",
         "can you let me know the time, please?"
       ],
       "responses": [
@@ -459,6 +459,28 @@
         "Sir, according to my calculations, today's date is {date}.",
         "I have the date at your disposal, sir. It's {date} today.",
         "The date, sir, is {date}."
+      ]
+    },
+    {
+      "tag": "generative_with_t5",
+      "patterns": [
+        "what is",
+        "how much",
+        "tell me",
+        "explain",
+        "define",
+        "provide",
+        "give me",
+        "can you",
+        "please explain",
+        "clarify",
+        "describe",
+        "elaborate on",
+        "help me understand",
+        "shed light on"
+      ],
+      "responses": [
+        "{string}"
       ]
     },
     {
@@ -536,7 +558,6 @@
       "tag": "background_acknowledgment",
       "patterns": [
         "alright",
-        "okay friday",
         "okay",
         "gotcha",
         "sure thing",
@@ -560,7 +581,6 @@
         "for sure",
         "indeed",
         "absolutely sure",
-        "Got it, Friday.",
         "Alright, I'm on board.",
         "Sure thing, make it happen.",
         "Sounds good, let's proceed.",
