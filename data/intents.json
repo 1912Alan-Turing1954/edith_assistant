@@ -143,7 +143,10 @@
     {
       "tag": "good_morning",
       "patterns": [
-        "good morning"
+        "good morning",
+        "morning, friday",
+        "friday, it's me",
+        "rise and shine"
       ],
       "responses": [
         "{string}"
@@ -153,7 +156,9 @@
       "tag": "good_afternoon",
       "patterns": [
         "good eve",
-        "good afternoon"
+        "good afternoon",
+        "afternoon, friday",
+        "hey friday, afternoon"
       ],
       "responses": [
         "{string}"
@@ -163,7 +168,9 @@
       "tag": "good_night",
       "patterns": [
         "good night",
-        "have a good night"
+        "have a good night",
+        "night, friday",
+        "friday, it's time to sleep"
       ],
       "responses": [
         "{string}"

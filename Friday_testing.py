@@ -48,8 +48,6 @@ class Friday:
         alphabetic_math_pattern = r"(?i)\b(?:what is the|evaluate the)?\s*(?:sum of|difference between|product of|square of|cube of)?\s*(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b\s*(?:plus|minus|times|multiplied by|divided by|\+|\-|\*|\/|\^|and)\s*\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b"
         return bool(re.search(alphabetic_math_pattern, user_input))
 
-    def handle_time_of_day(self, user_input):
-
     def get_tag_from_response(self, response):
         for intent in self.intents["intents"]:
             if response in intent["responses"]:
