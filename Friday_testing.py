@@ -147,11 +147,15 @@ class Friday:
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(intent, response)
 
-                                elif (
-                                    intent["tag"] == "good_morning"
-                                    or "good_afternoon"
-                                    or "good_night"
-                                ):
+                                elif intent["tag"] == "good_morning":
+                                    response = time_of_day_correct(user_input)
+                                    self.get_intent_response(intent, response)
+
+                                elif intent["tag"] == "good_afternoon":
+                                    response = time_of_day_correct(user_input)
+                                    self.get_intent_response(intent, response)
+
+                                elif intent["tag"] == "good_night":
                                     response = time_of_day_correct(user_input)
                                     self.get_intent_response(intent, response)
 
