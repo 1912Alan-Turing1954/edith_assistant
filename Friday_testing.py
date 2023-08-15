@@ -9,6 +9,7 @@ from tts_.tts import text_to_speech
 from functions.opinion import opinion
 from AI.flan_t5_large_model import generative_with_t5
 from functions._math import solve_word_math_expression
+from functions.time_of_day import time_of_day_correct
 
 from functions.system_info import (
     get_system_info,
@@ -146,6 +147,14 @@ class Friday:
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(intent, response)
 
+                                elif (
+                                    intent["tag"] == "good_morning"
+                                    or "good_afternoon"
+                                    or "good_night"
+                                ):
+                                    response = time_of_day_correct(user_input)
+                                    self.get_intent_response(intent, response)
+
                                 elif intent["tag"] == "generative_with_t5":
                                     response = random.choice(
                                         intent["responses"]
@@ -207,7 +216,6 @@ class Friday:
                                 else:
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(intent, response)
-                                    print(response)
 
                         self.prev_input = user_input.lower()
 

@@ -120,7 +120,6 @@
         "Sir, how may I assist you?",
         "Hello, sir. Ready to proceed.",
         "Good day, sir.",
-        "Hello, sir. Your command?",
         "Greetings, sir. I'm listening.",
         "Hello, sir. How may I help?",
         "Sir, I await your direction.",
@@ -174,6 +173,22 @@
       ],
       "responses": [
         "{string}"
+      ]
+    },
+    {
+      "tag": "day_correction",
+      "patterns": [],
+      "responses": [
+        "My sincerest apologies, but it's actually {current_time}",
+        "Regrettably, it appears to be genuinely {current_time}",
+        "I must inform you that it's currently honestly {current_time}",
+        "I regret to say that the time is genuinely {current_time}",
+        "Unfortunately, it's in fact {current_time}",
+        "Sir, the current time is unmistakably {current_time}",
+        "I'm obliged to inform you that it's genuinely {current_time}",
+        "I regret to report that it's veritably {current_time}",
+        "I'm afraid it's truly {current_time}",
+        "I must advise that the time is actually {current_time}"
       ]
     },
     {
@@ -310,13 +325,16 @@
         "friday, long time no see"
       ],
       "responses": [
-        "Greetings! How may I assist you today, sir?",
-        "Hello! How may I be of service to you, sir?",
-        "Hey there! What can I do for you, sir?",
-        "Hey, how's it going? How may I assist you today, sir?",
-        "Hello, sir. Always a pleasure to interact with you.",
-        "Indeed, sir. It has been a while. How may I be of service today?",
-        "Ah, a familiar greeting. How may I assist you further, sir?"
+        "Good day, sir. How may I be of service?",
+        "Hello, sir. Your commands are my priority.",
+        "Greetings, sir. Your instructions guide my actions.",
+        "Welcome, sir. What can I assist you with?",
+        "Ah, sir. I am at your disposal. How may I help?",
+        "Salutations, sir. How may I be of assistance?",
+        "Hello, sir. Your directives are my focus.",
+        "Greetings, sir. Your needs are my concern.",
+        "Good day, sir. How can I serve you?",
+        "Hello, sir. What is your request?"
       ]
     },
     {
@@ -402,6 +420,18 @@
       ]
     },
     {
+      "tag": "anything_else_sir",
+      "patterns": [],
+      "responses": [
+        "Will that be all, sir?",
+        "Is there anything else I can assist you with?",
+        "Do you have any more questions?",
+        "Can I help you with anything else?",
+        "Is there something else on your mind?",
+        "Would you like to ask anything else?"
+      ]
+    },
+    {
       "tag": "math_tsk",
       "patterns": [],
       "responses": [
@@ -445,15 +475,26 @@
         "can you let me know the time, please?"
       ],
       "responses": [
-        "Of course, sir. It's {time}.",
-        "I'm glad you asked, sir. It's currently {time}.",
-        "Allow me to check, sir. It's {time}.",
-        "Certainly, sir. The time is {time}.",
-        "I've got the current time for you, sir. It reads {time}.",
-        "Rest assured, sir. It's {time}.",
-        "Sir, according to my calculations, it's {time}.",
-        "I have the time at your disposal, sir. It's {time}.",
-        "The time, sir, is {time}."
+        "It's {time}, sir.",
+        "It's currently {time}, sir.",
+        "It reads {time}, sir.",
+        "According to my calculations, it's {time}, sir.",
+        "It's {time}, sir.",
+        "The time is {time}, sir.",
+        "Indeed, the present hour is {time}, sir.",
+        "Per my analysis, the time stands at {time}, sir.",
+        "At this juncture, the clock displays {time}, sir.",
+        "I have determined the time to be {time}, sir.",
+        "The current moment corresponds to {time}, sir.",
+        "Sir, the temporal data indicates {time}.",
+        "As of now, the clock indicates {time}, sir.",
+        "Your awareness of the time is appreciated; it's {time}, sir.",
+        "Timekeeping accuracy is paramount; it's {time}, sir.",
+        "Temporal precision suggests it's {time}, sir.",
+        "Observing the chronometric data, it's {time}, sir.",        
+        "The temporal realm unveils {time}, sir.",
+        "Temporal calculations concur: it's {time}, sir.",
+        "Temporal metrics confirm that it's {time}, sir."
       ]
     },
     {
@@ -474,15 +515,18 @@
         "do you know the day of the week?"
       ],
       "responses": [
-        "Of course, sir. Today is {day}, just like any other day.",
-        "As you asked, it's {day} today, sir.",
-        "Allow me to check. The day is {day}.",
-        "Certainly, sir. Today is {day}, just as expected.",
-        "I've got the current day for you, sir. It's {day}.",
-        "Rest assured, sir. The day is {day}, just like the previous {day}.",
-        "Sir, according to my calculations, today is {day}.",
-        "I have the day at your disposal. It's {day} today.",
-        "The day, sir, is {day}, just as it was yesterday."
+        "Today is {day}, sir, just like any other day.",
+        "It's {day} today, sir.",
+        "The day is {day}, sir.",
+        "Today is {day}, just as expected, sir.",
+        "The current day is {day}, sir.",
+        "It's {day} today, sir.",
+        "As you've asked, sir, the day is {day}.",
+        "Rest assured, sir, today is indeed {day}.",
+        "I'm pleased to provide the information, sir. It's {day} today.",
+        "At this moment, sir, the day is {day}.",
+        "I've cross-checked, sir. Today is {day}.",
+        "Allow me to confirm, sir. The day is {day}."
       ]
     },
     {
@@ -567,7 +611,11 @@
         "can you describe who",
         "could you explain what",
         "do you know what",
-        "could you provide information about"
+        "could you provide information about",
+        "give me everything on",
+        "get me everything on",
+        "get me everything regarding",
+        "give me everything regarding"
       ],
       "responses": [
         "{string}"
