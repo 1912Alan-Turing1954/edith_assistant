@@ -10,6 +10,11 @@ from functions.opinion import opinion
 from AI.flan_t5_large_model import generative_with_t5
 from functions._math import solve_word_math_expression
 from functions.time_of_day import time_of_day_correct
+from functions.location import (
+    get_address_description,
+    get_location_description,
+    get_long_and_lati,
+)
 
 from functions.system_info import (
     get_system_info,
@@ -137,9 +142,17 @@ class Friday:
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
                                 if intent["tag"] == "background_acknowledgment":
-                                    pass
+                                    continue
 
-                                if intent["tag"] == "repeat_tsk":
+                                elif intent["tag"] == "mute_command":
+                                    break
+
+                                elif intent["tag"] == "location_inquiry":
+                                    response = random.choice(intent["responses"])
+                                    response = get_location_description(response)
+                                    text_to_speech(response)
+
+                                elif intent["tag"] == "repeat_tsk":
                                     response = random.choice(intent["responses"])
                                     text_to_speech(f"{response} {self.prev_response}")
 
