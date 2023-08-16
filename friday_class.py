@@ -7,6 +7,8 @@ import os
 from AI.flan_t5_large_model import generative_with_t5
 from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
+from functions.location import get_location_description
+from functions.time_of_day import time_of_day_correct
 from tts_.tts import text_to_speech
 from functions.opinion import opinion
 from functions._math import solve_word_math_expression
@@ -97,7 +99,6 @@ class Friday:
         user_input = input("friday is active: ")
         print(type(user_input))
         user_input = user_input.lower()
-
         info_system = self.get_updated_system_info()
         system_info = generate_system_status_response(info_system)
         storage_info = generate_storage_status_response(info_system)
@@ -121,19 +122,45 @@ class Friday:
             tag = self.tags[predicted.item()]
             probs = torch.softmax(output, dim=1)
             prob = probs[0][predicted.item()]
-
-        if prob.item() > 0.995:
+        if self.is_complex_alphabetical_math_problem(user_input):
+            result = solve_word_math_expression(user_input)
+            for intent in self.intents["intents"]:
+                if intent["tag"] == "math_tsk":
+                    response = random.choice(intent["responses"]).format(answer=result)
+                    text_to_speech(response)
+                    print(intent["tag"])
+                    print(response)
+                    break
+        elif prob.item() > 0.95:
             for intent in self.intents["intents"]:
                 if tag == intent["tag"]:
                     if intent["tag"] == "background_acknowledgment":
+                        continue
+                    elif intent["tag"] == "mute_command":
                         break
-
-                    if intent["tag"] == "repeat_tsk":
+                    elif intent["tag"] == "location_inquiry":
+                        response = random.choice(intent["responses"])
+                        response = get_location_description(response)
+                        text_to_speech(response)
+                    elif intent["tag"] == "repeat_tsk":
                         response = random.choice(intent["responses"])
                         text_to_speech(f"{response} {self.prev_response}")
-                        print(intent["tag"])
                     elif intent["tag"] == "repeat_string":
                         response = random.choice(intent["responses"])
+                        self.get_intent_response(intent, response)
+                    elif intent["tag"] == "good_morning":
+                        response = time_of_day_correct(user_input)
+                        self.get_intent_response(intent, response)
+                    elif intent["tag"] == "good_afternoon":
+                        response = time_of_day_correct(user_input)
+                        self.get_intent_response(intent, response)
+                    elif intent["tag"] == "good_night":
+                        response = time_of_day_correct(user_input)
+                        self.get_intent_response(intent, response)
+                    elif intent["tag"] == "generative_with_t5":
+                        response = random.choice(intent["responses"]).format(
+                            string=generative_with_t5(user_input)
+                        )
                         self.get_intent_response(intent, response)
                     elif intent["tag"] == "system_info_tsk":
                         response = random.choice(intent["responses"])
@@ -171,27 +198,11 @@ class Friday:
                     else:
                         response = random.choice(intent["responses"])
                         self.get_intent_response(intent, response)
-
-                        self.prev_input = user_input.lower()
-
-                else:
-                    if self.is_complex_alphabetical_math_problem(user_input):
-                        result = solve_word_math_expression(user_input)
-                        for intent in self.intents["intents"]:
-                            if intent["tag"] == "math_tsk":
-                                response = random.choice(intent["responses"])
-                                response = response.format(answer=result)
-                                text_to_speech(response)
-                                print(intent["tag"])
-                                break
-
-                    elif self.is_complex_alphabetical_math_problem(user_input) == False:
-                        response = generative_with_t5(user_input)
-                        text_to_speech(response)
-                    else:
-                        for intent in self.intents["intents"]:
-                            if intent["tag"] == "technical":
-                                response = random.choice(intent["responses"])
-                                text_to_speech(response)
-                                print(intent["tag"])
-                                break
+            self.prev_input = user_input.lower()
+        else:
+            for intent in self.intents["intents"]:
+                if intent["tag"] == "technical":
+                    response = random.choice(intent["responses"])
+                    text_to_speech(response)
+                    print(intent["tag"])
+                    break
