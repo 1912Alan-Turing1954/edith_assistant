@@ -8,7 +8,8 @@
         "status update",
         "system info",
         "system status",
-        "system status update"
+        "system status update",
+        "what is my sytem status"
       ],
       "responses": [
         "{string}"
@@ -26,7 +27,9 @@
         "drive status update",
         "drive info",
         "give me drive info",
-        "give me drive status"
+        "give me drive status",
+        "what is my storage status",
+        "what is my drive status"
       ],
       "responses": [
         "{string}"
@@ -106,22 +109,89 @@
     {
       "tag": "greeting",
       "patterns": [
-        "good morning",
-        "good afternoon",
         "friday, it's me",
-        "morning, friday",
-        "good eve"
+        "hello friday",
+        "greetings",
+        "hi friday",
+        "hey friday"
       ],
       "responses": [
-        "Greetings, sir. How may I assist you today?",
-        "Good day, sir. I am at your service. How may I help you?",
-        "Hello, sir. Your presence is most welcome. How may I be of assistance?",
-        "Good morning, sir. I trust you are prepared for a productive day.",
-        "Good afternoon, sir. How may I assist you in achieving your goals?",
-        "friday at your service, sir. It's a pleasure to interact with you.",
-        "Good morning, sir. The world awaits your guidance.",
-        "Good day, sir. I am here and fully operational to assist you.",
-        "Sir, it is always an honor to engage with you. How may I be of service today?"
+        "At your service, sir.",
+        "Hello, sir.",
+        "Greetings, sir.",
+        "Ready when you are, sir.",
+        "Sir, how may I assist you?",
+        "Hello, sir. Ready to proceed.",
+        "Good day, sir.",
+        "Greetings, sir. I'm listening.",
+        "Hello, sir. How may I help?",
+        "Sir, I await your direction.",
+        "Hello, sir. Ready to assist.",
+        "Greetings, sir. How may I serve?",
+        "Hello, sir. What's on your agenda?",
+        "Greetings, sir. Your orders?",
+        "Hello, sir. What's the plan?",
+        "Greetings, sir. How can I aid you?",
+        "Hello, sir. Initiating protocol.",
+        "Greetings, sir. Your call, sir.",
+        "Hello, sir. Awaiting instructions.",
+        "Greetings, sir. I'm here.",
+        "Hello, sir. Let's proceed.",
+        "Greetings, sir. Ready for action.",
+        "Hello, sir. Ready for your lead.",
+        "Greetings, sir. How may I assist?"
+      ]
+    },
+    {
+      "tag": "good_morning",
+      "patterns": [
+        "good morning",
+        "morning, friday",
+        "friday, it's me",
+        "rise and shine"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
+      "tag": "good_afternoon",
+      "patterns": [
+        "good eve",
+        "good afternoon",
+        "afternoon, friday",
+        "hey friday, afternoon"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
+      "tag": "good_night",
+      "patterns": [
+        "good night",
+        "have a good night",
+        "night, friday",
+        "friday, it's time to sleep"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
+      "tag": "day_correction",
+      "patterns": [],
+      "responses": [
+        "My sincerest apologies, but it's actually {current_time}",
+        "Regrettably, it appears to be genuinely {current_time}",
+        "I must inform you that it's currently honestly {current_time}",
+        "I regret to say that the time is genuinely {current_time}",
+        "Unfortunately, it's in fact {current_time}",
+        "Sir, the current time is unmistakably {current_time}",
+        "I'm obliged to inform you that it's genuinely {current_time}",
+        "I regret to report that it's veritably {current_time}",
+        "I'm afraid it's truly {current_time}",
+        "I must advise that the time is actually {current_time}"
       ]
     },
     {
@@ -258,13 +328,16 @@
         "friday, long time no see"
       ],
       "responses": [
-        "Greetings! How may I assist you today, sir?",
-        "Hello! How may I be of service to you, sir?",
-        "Hey there! What can I do for you, sir?",
-        "Hey, how's it going? How may I assist you today, sir?",
-        "Hello, sir. Always a pleasure to interact with you.",
-        "Indeed, sir. It has been a while. How may I be of service today?",
-        "Ah, a familiar greeting. How may I assist you further, sir?"
+        "Good day, sir. How may I be of service?",
+        "Hello, sir. Your commands are my priority.",
+        "Greetings, sir. Your instructions guide my actions.",
+        "Welcome, sir. What can I assist you with?",
+        "Ah, sir. I am at your disposal. How may I help?",
+        "Salutations, sir. How may I be of assistance?",
+        "Hello, sir. Your directives are my focus.",
+        "Greetings, sir. Your needs are my concern.",
+        "Good day, sir. How can I serve you?",
+        "Hello, sir. What is your request?"
       ]
     },
     {
@@ -350,6 +423,65 @@
       ]
     },
     {
+      "tag": "anything_else_sir",
+      "patterns": [],
+      "responses": [
+        "Will that be all, sir?",
+        "Is there anything else I can assist you with?",
+        "Do you have any more questions?",
+        "Can I help you with anything else?",
+        "Is there something else on your mind?",
+        "Would you like to ask anything else?"
+      ]
+    },
+    {
+      "tag": "mute_command",
+      "patterns": [
+        "Please mute.",
+        "friday, quiet please.",
+        "Silence for a moment.",
+        "Mute audio.",
+        "Turn off sound.",
+        "Initiate mute.",
+        "friday, hush now.",
+        "Mute, if you will.",
+        "Engage quiet mode.",
+        "Audio off, friday.",
+        "Let's have some silence, friday.",
+        "Time for a mute break, friday.",
+        "Mute."
+      ],
+      "responses": []
+    },
+    {
+      "tag": "location_inquiry",
+      "patterns": [
+        "Where am I?",
+        "Where are we?",
+        "What's our location?",
+        "Can you tell me where I am?",
+        "Could you let me know our current location?",
+        "What's my current location?",
+        "Where in the world am I?",
+        "Where have we ended up?",
+        "Do you know where I am right now?",
+        "get me my location",
+        "location"
+      ],
+      "responses": [
+        "You're in {city}, {state}, {country}, sir.",
+        "Currently in {city}, {state}, {country}, sir.",
+        "You're at {city}, {state}, {country}, sir.",
+        "{city}, {state}, {country}, sir.",
+        "You've reached {city}, {state}, {country}, sir.",
+        "As I analyze the data, you are in {city}, {state}, {country}, sir.",
+        "Allow me to enlighten you, sir. You find yourself in {city}, {state}, {country}.",
+        "Sir, your coordinates indicate {city}, {state}, {country}.",
+        "If I may provide a geographical update, sir, you're positioned in {city}, {state}, {country}.",
+        "According to my calculations, your current location is {city}, {state}, {country}, sir."
+      ]
+    },
+    {
       "tag": "math_tsk",
       "patterns": [],
       "responses": [
@@ -393,15 +525,26 @@
         "can you let me know the time, please?"
       ],
       "responses": [
-        "Of course, sir. It's {time}.",
-        "I'm glad you asked, sir. It's currently {time}.",
-        "Allow me to check, sir. It's {time}.",
-        "Certainly, sir. The time is {time}.",
-        "I've got the current time for you, sir. It reads {time}.",
-        "Rest assured, sir. It's {time}.",
-        "Sir, according to my calculations, it's {time}.",
-        "I have the time at your disposal, sir. It's {time}.",
-        "The time, sir, is {time}."
+        "It's {time}, sir.",
+        "It's currently {time}, sir.",
+        "It reads {time}, sir.",
+        "According to my calculations, it's {time}, sir.",
+        "It's {time}, sir.",
+        "The time is {time}, sir.",
+        "Indeed, the present hour is {time}, sir.",
+        "Per my analysis, the time stands at {time}, sir.",
+        "At this juncture, the clock displays {time}, sir.",
+        "I have determined the time to be {time}, sir.",
+        "The current moment corresponds to {time}, sir.",
+        "Sir, the temporal data indicates {time}.",
+        "As of now, the clock indicates {time}, sir.",
+        "Your awareness of the time is appreciated; it's {time}, sir.",
+        "Timekeeping accuracy is paramount; it's {time}, sir.",
+        "Temporal precision suggests it's {time}, sir.",
+        "Observing the chronometric data, it's {time}, sir.",        
+        "The temporal realm unveils {time}, sir.",
+        "Temporal calculations concur: it's {time}, sir.",
+        "Temporal metrics confirm that it's {time}, sir."
       ]
     },
     {
@@ -422,15 +565,18 @@
         "do you know the day of the week?"
       ],
       "responses": [
-        "Of course, sir. Today is {day}, just like any other day.",
-        "As you asked, it's {day} today, sir.",
-        "Allow me to check. The day is {day}.",
-        "Certainly, sir. Today is {day}, just as expected.",
-        "I've got the current day for you, sir. It's {day}.",
-        "Rest assured, sir. The day is {day}, just like the previous {day}.",
-        "Sir, according to my calculations, today is {day}.",
-        "I have the day at your disposal. It's {day} today.",
-        "The day, sir, is {day}, just as it was yesterday."
+        "Today is {day}, sir, just like any other day.",
+        "It's {day} today, sir.",
+        "The day is {day}, sir.",
+        "Today is {day}, just as expected, sir.",
+        "The current day is {day}, sir.",
+        "It's {day} today, sir.",
+        "As you've asked, sir, the day is {day}.",
+        "Rest assured, sir, today is indeed {day}.",
+        "I'm pleased to provide the information, sir. It's {day} today.",
+        "At this moment, sir, the day is {day}.",
+        "I've cross-checked, sir. Today is {day}.",
+        "Allow me to confirm, sir. The day is {day}."
       ]
     },
     {
@@ -477,83 +623,55 @@
         "describe",
         "elaborate on",
         "help me understand",
-        "shed light on"
+        "shed light on",
+        "when did",
+        "how does",
+        "how did",
+        "who was",
+        "who",
+        "where is",
+        "why does",
+        "why did",
+        "which is",
+        "what are",
+        "what was",
+        "how do",
+        "are there",
+        "is there",
+        "are they",
+        "is it",
+        "do you know",
+        "could you explain",
+        "can you tell me",
+        "could you clarify",
+        "can you describe",
+        "could you provide",
+        "can you shed light on",
+        "do you have information about",
+        "can you elaborate on",
+        "could you help me understand",
+        "do you know when",
+        "could you tell me when",
+        "can you explain how",
+        "could you describe how",
+        "do you know how",
+        "could you explain why",
+        "can you tell me why",
+        "could you clarify why",
+        "can you describe who",
+        "could you explain what",
+        "do you know what",
+        "could you provide information about",
+        "give me everything on",
+        "get me everything on",
+        "get me everything regarding",
+        "give me everything regarding"
       ],
       "responses": [
         "{string}"
       ]
     },
-    {
-      "tag": "weather",
-      "patterns": [
-          "Give me the forecast on",
-          "What's the forecast on",
-          "Could you provide the forecast for",
-          "Tell me the weather forecast for",
-          "What can you tell me about the forecast on",
-          "Is there a weather update for",
-          "What's the weather in",
-          "Show me the weather forecast for",
-          "Could you let me know the forecast on",
-          "What's the weather looking like on",
-          "Tell me what's predicted for the weather on",
-          "Give me an update on the forecast for",
-          "Is there any information about the weather on",
-          "Can you share the weather forecast for",
-          "Inform me about the forecast on",
-          "What's the anticipated weather for",
-          "Provide me with the weather outlook for",
-          "Tell me what to expect in terms of weather on",
-          "Could you brief me on the forecast for",
-          "Give me the latest forecast for",
-          "What do you have on the weather forecast for",
-          "What's the projected weather on",
-          "Give me the forecast in",
-          "What's the forecast in",
-          "Tell me the weather forecast in",
-          "What can you tell me about the forecast in",
-          "Show me the weather forecast in",
-          "What's the weather like in",
-          "Could you let me know the forecast in",
-          "Tell me what's predicted for the weather in",
-          "Is there any information about the weather in",
-          "Can you share the weather forecast in",
-          "Inform me about the forecast in",
-          "Provide me with the weather outlook for",
-          "Tell me what to expect in terms of weather in",
-          "Could you brief me on the forecast in",
-          "What do you have on the weather forecast in",
-          "What's the projected weather in"
-      ],
-      "responses": [
-          "Of course, sir. Currently, the weather in {location} is at {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius). There is a {precipitation_probability}% chance of rain.",
-          "At this moment, I have retrieved the weather data for {location}. The temperature reads {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius). The probability of rain is {precipitation_probability}%.",
-          "I have the weather information ready for you, sir. As of now, in the vicinity of {location}, the temperature stands at {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius). The likelihood of rain is {precipitation_probability}%.",
-          "Sure thing! The current weather in {location} shows a temperature of {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius). There is a {precipitation_probability}% chance of rain.",
-          "Here's the latest weather update for {location}. The temperature is {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius), and there's a {precipitation_probability}% chance of precipitation.",
-          "The weather forecast for {location} indicates a temperature of {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius) with a {precipitation_probability}% chance of rain.",
-          "I've got the weather details for {location}. The current temperature is {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius), and the chance of rain is {precipitation_probability}%.",
-          "Here's what I found about the weather in {location}. The temperature is {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius). There's a {precipitation_probability}% chance of rain.",
-          "For {location}, the weather is currently showing a temperature of {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius). The probability of rain is {precipitation_probability}%.",
-          "The weather at {location} is {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius) right now, with a {precipitation_probability}% chance of rain."
-      ]
-    },
-    {
-      "tag": "conversation_joke",
-      "patterns": [
-        "friday, tell me a joke to lighten the mood.",
-        "Hey friday, share something funny.",
-        "friday, I need a good laugh. Tell me a joke.",
-        "friday, do you know a joke",
-        "do you know any jokes",
-        "tell me a joke"
-      ],
-      "responses": [
-        "Why don't scientists trust atoms? Because they make up everything!",
-        "Here's one for you, sir: I told my wife she was drawing her eyebrows too high. She looked surprised!",
-        "I've got a joke for you, sir. How do you organize a space party? You planet!"
-      ]
-    },
+
     {
       "tag": "background_acknowledgment",
       "patterns": [
@@ -622,7 +740,7 @@
         "Indeed, that's a valid point.",
         "Absolutely sure, I have no doubts about it."
       ],
-      "responses": [""]
+      "responses": []
     }
   ]
 }

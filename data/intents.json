@@ -8,7 +8,8 @@
         "status update",
         "system info",
         "system status",
-        "system status update"
+        "system status update",
+        "what is my sytem status"
       ],
       "responses": [
         "{string}"
@@ -26,7 +27,9 @@
         "drive status update",
         "drive info",
         "give me drive info",
-        "give me drive status"
+        "give me drive status",
+        "what is my storage status",
+        "what is my drive status"
       ],
       "responses": [
         "{string}"
@@ -432,6 +435,53 @@
       ]
     },
     {
+      "tag": "mute_command",
+      "patterns": [
+        "Please mute.",
+        "friday, quiet please.",
+        "Silence for a moment.",
+        "Mute audio.",
+        "Turn off sound.",
+        "Initiate mute.",
+        "friday, hush now.",
+        "Mute, if you will.",
+        "Engage quiet mode.",
+        "Audio off, friday.",
+        "Let's have some silence, friday.",
+        "Time for a mute break, friday.",
+        "Mute."
+      ],
+      "responses": []
+    },
+    {
+      "tag": "location_inquiry",
+      "patterns": [
+        "Where am I?",
+        "Where are we?",
+        "What's our location?",
+        "Can you tell me where I am?",
+        "Could you let me know our current location?",
+        "What's my current location?",
+        "Where in the world am I?",
+        "Where have we ended up?",
+        "Do you know where I am right now?",
+        "get me my location",
+        "location"
+      ],
+      "responses": [
+        "You're in {city}, {state}, {country}, sir.",
+        "Currently in {city}, {state}, {country}, sir.",
+        "You're at {city}, {state}, {country}, sir.",
+        "{city}, {state}, {country}, sir.",
+        "You've reached {city}, {state}, {country}, sir.",
+        "As I analyze the data, you are in {city}, {state}, {country}, sir.",
+        "Allow me to enlighten you, sir. You find yourself in {city}, {state}, {country}.",
+        "Sir, your coordinates indicate {city}, {state}, {country}.",
+        "If I may provide a geographical update, sir, you're positioned in {city}, {state}, {country}.",
+        "According to my calculations, your current location is {city}, {state}, {country}, sir."
+      ]
+    },
+    {
       "tag": "math_tsk",
       "patterns": [],
       "responses": [
@@ -621,77 +671,7 @@
         "{string}"
       ]
     },
-    {
-      "tag": "weather",
-      "patterns": [
-          "Give me the forecast on",
-          "What's the forecast on",
-          "Could you provide the forecast for",
-          "Tell me the weather forecast for",
-          "What can you tell me about the forecast on",
-          "Is there a weather update for",
-          "What's the weather in",
-          "Show me the weather forecast for",
-          "Could you let me know the forecast on",
-          "What's the weather looking like on",
-          "Tell me what's predicted for the weather on",
-          "Give me an update on the forecast for",
-          "Is there any information about the weather on",
-          "Can you share the weather forecast for",
-          "Inform me about the forecast on",
-          "What's the anticipated weather for",
-          "Provide me with the weather outlook for",
-          "Tell me what to expect in terms of weather on",
-          "Could you brief me on the forecast for",
-          "Give me the latest forecast for",
-          "What do you have on the weather forecast for",
-          "What's the projected weather on",
-          "Give me the forecast in",
-          "What's the forecast in",
-          "Tell me the weather forecast in",
-          "What can you tell me about the forecast in",
-          "Show me the weather forecast in",
-          "What's the weather like in",
-          "Could you let me know the forecast in",
-          "Tell me what's predicted for the weather in",
-          "Is there any information about the weather in",
-          "Can you share the weather forecast in",
-          "Inform me about the forecast in",
-          "Provide me with the weather outlook for",
-          "Tell me what to expect in terms of weather in",
-          "Could you brief me on the forecast in",
-          "What do you have on the weather forecast in",
-          "What's the projected weather in"
-      ],
-      "responses": [
-          "Of course, sir. Currently, the weather in {location} is at {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius). There is a {precipitation_probability}% chance of rain.",
-          "At this moment, I have retrieved the weather data for {location}. The temperature reads {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius). The probability of rain is {precipitation_probability}%.",
-          "I have the weather information ready for you, sir. As of now, in the vicinity of {location}, the temperature stands at {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius). The likelihood of rain is {precipitation_probability}%.",
-          "Sure thing! The current weather in {location} shows a temperature of {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius). There is a {precipitation_probability}% chance of rain.",
-          "Here's the latest weather update for {location}. The temperature is {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius), and there's a {precipitation_probability}% chance of precipitation.",
-          "The weather forecast for {location} indicates a temperature of {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius) with a {precipitation_probability}% chance of rain.",
-          "I've got the weather details for {location}. The current temperature is {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius), and the chance of rain is {precipitation_probability}%.",
-          "Here's what I found about the weather in {location}. The temperature is {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius). There's a {precipitation_probability}% chance of rain.",
-          "For {location}, the weather is currently showing a temperature of {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius). The probability of rain is {precipitation_probability}%.",
-          "The weather at {location} is {temperature_fahrenheit:.1f} degrees Fahrenheit ({temperature_celsius:.1f} degrees Celsius) right now, with a {precipitation_probability}% chance of rain."
-      ]
-    },
-    {
-      "tag": "conversation_joke",
-      "patterns": [
-        "friday, tell me a joke to lighten the mood.",
-        "Hey friday, share something funny.",
-        "friday, I need a good laugh. Tell me a joke.",
-        "friday, do you know a joke",
-        "do you know any jokes",
-        "tell me a joke"
-      ],
-      "responses": [
-        "Why don't scientists trust atoms? Because they make up everything!",
-        "Here's one for you, sir: I told my wife she was drawing her eyebrows too high. She looked surprised!",
-        "I've got a joke for you, sir. How do you organize a space party? You planet!"
-      ]
-    },
+
     {
       "tag": "background_acknowledgment",
       "patterns": [
@@ -760,7 +740,7 @@
         "Indeed, that's a valid point.",
         "Absolutely sure, I have no doubts about it."
       ],
-      "responses": [""]
+      "responses": []
     }
   ]
 }
