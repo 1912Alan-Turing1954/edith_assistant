@@ -61,7 +61,7 @@ def extract_function_from_input(input_str):
     return input_str
 
 
-def create_3d_rotation_animation(func, num_frames=120, rotation_speed=0.1):
+def create_static_3d_plot(func):
     x = np.linspace(-3, 3, 200)
     y = np.linspace(-3, 3, 200)
     X, Y = np.meshgrid(x, y)
@@ -70,67 +70,51 @@ def create_3d_rotation_animation(func, num_frames=120, rotation_speed=0.1):
     fig = plt.figure(figsize=(10, 8), facecolor="black")
     ax = fig.add_subplot(111, projection="3d")
 
-    for i in range(num_frames):
-        ax.cla()
-        t = (i * rotation_speed) % 360
-        X_rotated = X * np.cos(np.radians(t)) - Y * np.sin(np.radians(t))
-        Y_rotated = X * np.sin(np.radians(t)) + Y * np.cos(np.radians(t))
-        Z_rotated = func(X_rotated, Y_rotated)
+    surface = ax.plot_surface(
+        X,
+        Y,
+        Z,
+        cmap="viridis",
+        edgecolor="none",
+        antialiased=True,
+    )
 
-        surface = ax.plot_surface(
-            X_rotated,
-            Y_rotated,
-            Z_rotated,
-            cmap="viridis",
-            edgecolor="none",
-            antialiased=True,
-        )
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
+    ax.set_zlabel("Z")
+    ax.set_title("3D Function Static Plot")
 
-        ax.set_xlabel("X")
-        ax.set_ylabel("Y")
-        ax.set_zlabel("Z")
-        ax.set_title("3D Function Slow Rotation")
+    ax.grid(False)
+    ax.w_xaxis.pane.fill = False
+    ax.w_yaxis.pane.fill = False
+    ax.w_zaxis.pane.fill = False
 
-        ax.grid(False)
-        ax.w_xaxis.pane.fill = False
-        ax.w_yaxis.pane.fill = False
-        ax.w_zaxis.pane.fill = False
+    ax.set_facecolor("black")
 
-        ax.set_facecolor("black")
+    ax.xaxis._axinfo["grid"]["color"] = "white"
+    ax.yaxis._axinfo["grid"]["color"] = "white"
+    ax.zaxis._axinfo["grid"]["color"] = "white"
 
-        ax.xaxis._axinfo["grid"]["color"] = "white"
-        ax.yaxis._axinfo["grid"]["color"] = "white"
-        ax.zaxis._axinfo["grid"]["color"] = "white"
+    ax.xaxis.label.set_color("white")
+    ax.yaxis.label.set_color("white")
+    ax.zaxis.label.set_color("white")
 
-        ax.xaxis.label.set_color("white")
-        ax.yaxis.label.set_color("white")
-        ax.zaxis.label.set_color("white")
+    ax.tick_params(axis="x", colors="white")
+    ax.tick_params(axis="y", colors="white")
+    ax.tick_params(axis="z", colors="white")
 
-        ax.tick_params(axis="x", colors="white")
-        ax.tick_params(axis="y", colors="white")
-        ax.tick_params(axis="z", colors="white")
-
-        ax.view_init(elev=30, azim=45)
-
-        plt.pause(0.01)
+    ax.view_init(elev=30, azim=45)
 
     plt.show()
 
 
-# Ask user for the input and extract the function from it
-user_input = input(
-    "Enter a description of the function (e.g., 'simulate the function of x squared'): "
-)
-extracted_function = extract_function_from_input(user_input)
-print("Extracted function:", extracted_function)
+def create_simlulation_function(user_input):
+    extracted_function = extract_function_from_input(user_input)
+
+    def extracted_function_python(x, y):
+        return eval(extracted_function)
+
+    create_static_3d_plot(extracted_function_python)
 
 
-# Convert the extracted function text to a Python function
-def extracted_function_python(x, y):
-    return eval(extracted_function)
-
-
-# Call the animation function with the extracted function
-create_3d_rotation_animation(
-    func=extracted_function_python, num_frames=120, rotation_speed=0.1
-)
+create_simlulation_function("simulate the function of y times 10 times x squared")
