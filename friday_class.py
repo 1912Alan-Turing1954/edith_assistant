@@ -3,15 +3,20 @@ import random
 import datetime
 import json
 import torch
-import os
-from AI.flan_t5_large_model import generative_with_t5
+import concurrent.futures
 from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
-from functions.location import get_location_description
-from functions.time_of_day import time_of_day_correct
 from tts_.tts import text_to_speech
 from functions.opinion import opinion
+from AI.flan_t5_large_model import generative_with_t5
 from functions._math import solve_word_math_expression
+from functions.time_of_day import time_of_day_correct
+from functions.three_math_sim import create_simlulation_function
+from functions.location import (
+    get_address_description,
+    get_location_description,
+    get_long_and_lati,
+)
 
 from functions.system_info import (
     get_system_info,
@@ -45,6 +50,7 @@ class Friday:
         self.prev_tag = ""
         self.prev_input = ""
         self.prev_response = ""
+        self.mute = False
 
     def is_complex_alphabetical_math_problem(self, user_input):
         # Regular expression to check for complex alphabetical math problems or expressions
@@ -96,7 +102,12 @@ class Friday:
         self.prev_response = response
 
     def MainFrame(self, user_input):
-        user_input = input("friday is active: ")
+        if self.mute:
+            self.mute = False
+            print("break_mute")
+        else:
+            pass
+
         print(type(user_input))
         user_input = user_input.lower()
         info_system = self.get_updated_system_info()
@@ -105,7 +116,6 @@ class Friday:
         cpu_usage = generate_cpu_usage_response(info_system)
         memory_usage = generate_memory_usage_response(info_system)
         disk_space = generate_disk_space_response(info_system)
-
         if user_input.lower() == self.prev_input.lower():
             tag = "repeat_string"
         elif (
@@ -137,10 +147,27 @@ class Friday:
                     if intent["tag"] == "background_acknowledgment":
                         continue
                     elif intent["tag"] == "mute_command":
-                        break
+                        self.mute = True
+                        pass
                     elif intent["tag"] == "location_inquiry":
                         response = random.choice(intent["responses"])
                         response = get_location_description(response)
+                        text_to_speech(response)
+                    elif intent["tag"] == "simulate_interference":
+                        response = user_input.lower()
+                        text_to_speech("simulation initiated successfully")
+                        with concurrent.futures.ThreadPoolExecutor(
+                            max_workers=2
+                        ) as executor:
+                            # Run input processing and function conversion in parallel
+                            future = executor.submit(
+                                create_simlulation_function, response
+                            )
+                            # Wait for the future to complete
+                            future.result()
+                    elif intent["tag"] == "address_inquiry":
+                        response = random.choice(intent["responses"])
+                        response = get_address_description(response)
                         text_to_speech(response)
                     elif intent["tag"] == "repeat_tsk":
                         response = random.choice(intent["responses"])
