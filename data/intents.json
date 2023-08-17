@@ -529,6 +529,33 @@
       ]
     },
     {
+      "tag": "address_inquiry",
+      "patterns": [
+        "What's the address?",
+        "Could you tell me the address?",
+        "What's our current address?",
+        "Do you know the address?",
+        "Please provide the address.",
+        "I need to know the address.",
+        "Tell me the address, Jarvis.",
+        "Jarvis, what's the address?",
+        "Could you give me the address, Jarvis?",
+        "What's my location address?",
+        "Location address, please.",
+        "address, please"
+      ],
+      "responses": [
+        "Your current address is {address}.",
+        "The address you're at is {address}.",
+        "You've reached the address {address}.",
+        "Based on my analysis, your address is {address}.",
+        "Certainly, your present address is {address}.",
+        "Your coordinates indicate {address}.",
+        "Allow me to assist, you're located at {address}.",
+        "According to my calculations, your current address is {address}."
+      ]
+    },
+    {
       "tag": "math_tsk",
       "patterns": [],
       "responses": [

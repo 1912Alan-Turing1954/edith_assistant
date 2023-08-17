@@ -152,6 +152,11 @@ class Friday:
                                     response = get_location_description(response)
                                     text_to_speech(response)
 
+                                elif intent["tag"] == "address_inquiry":
+                                    response = random.choice(intent["responses"])
+                                    response = get_address_description(response)
+                                    text_to_speech(response)
+
                                 elif intent["tag"] == "repeat_tsk":
                                     response = random.choice(intent["responses"])
                                     text_to_speech(f"{response} {self.prev_response}")
