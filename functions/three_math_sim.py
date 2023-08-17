@@ -1,131 +1,127 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import sympy as sp
+import concurrent.futures
 import matplotlib
-from mpl_toolkits.mplot3d import Axes3D
-import json
 
 matplotlib.use("TkAgg")
 
-with open("./data/intents.json") as f:
-    intents = json.load(f)
+patterns = [
+    "simulate the function of",
+    "simulate the function",
+    "simulate function",
+    "simulate",
+    "plot the function of",
+    "plot the function",
+    "display the function",
+]
 
 
 def extract_function_from_input(input_str):
-    input_str = input_str.replace("{string}", "")
-
-    for intent in intents["intents"]:
-        if intent["tag"] == "simulate_interference":
-            for pattern in intent["patterns"]:
-                if pattern in input_str:
-                    input_str = input_str.replace(pattern, "").strip()
+    for pattern in patterns:
+        if pattern in input_str:
+            input_str = input_str.replace(pattern, "")
+        else:
+            input_str = input_str
 
     replacements = {
+        "cosine of x": "cos(x)",
+        "sine of x": "sin(x)",
+        "tangent of x": "tan(x)",
+        "square root of x": "sqrt(x)",
+        "logarithm base 10 of x": "log10(x)",
+        "natural logarithm of x": "log(x)",
+        "exponential of x": "exp(x)",
+        "absolute value of x": "abs(x)",
+        "cosine of y": "cos(y)",
+        "sine of y": "sin(y)",
+        "tangent of y": "tan(y)",
+        "square root of y": "sqrt(y)",
+        "logarithm base 10 of y": "log10(y)",
+        "natural logarithm of y": "log(y)",
+        "exponential of y": "exp(y)",
+        "absolute value of y": "abs(y)",
         "x squared": "x**2",
-        "x square": "x**2",
         "x cubed": "x**3",
-        "x cube": "x**3",
-        "x to the power of 2": "x**2",
-        "x to the power of 3": "x**3",
-        "sine of x": "np.sin(x)",
-        "cosine of x": "np.cos(x)",
-        "tangent of x": "np.tan(x)",
-        "square root of x": "np.sqrt(x)",
-        "absolute value of x": "np.abs(x)",
-        "logarithm base 10 of x": "np.log10(x)",
-        "natural logarithm of x": "np.log(x)",
-        "exponential of x": "np.exp(x)",
-        "inverse sine of x": "np.arcsin(x)",
-        "inverse cosine of x": "np.arccos(x)",
-        "inverse tangent of x": "np.arctan(x)",
-        "addition": "+",
-        "subtraction": "-",
-        "multiplication": "*",
-        "division": "/",
+        "y squared": "y**2",
+        "y cubed": "y**3",
+        "equals": "==",
+        "equal to": "==",
         "plus": "+",
         "minus": "-",
         "times": "*",
         "divided by": "/",
         "greater than": ">",
         "less than": "<",
-        "equal to": "==",
-        "equals": "==",
         "not equal to": "!=",
-        "y squared": "y**2",
-        "y square": "y**2",
-        "y cubed": "y**3",
-        "y cube": "y**3",
-        "y to the power of 2": "y**2",
-        "y to the power of 3": "y**3",
-        "sine of y": "np.sin(y)",
-        "cosine of y": "np.cos(y)",
-        "tangent of y": "np.tan(y)",
-        "square root of y": "np.sqrt(y)",
-        "absolute value of y": "np.abs(y)",
-        "logarithm base 10 of y": "np.log10(y)",
-        "natural logarithm of y": "np.log(y)",
-        "exponential of y": "np.exp(y)",
-        "inverse sine of y": "np.arcsin(y)",
-        "inverse cosine of y": "np.arccos(y)",
-        "inverse tangent of y": "np.arctan(y)",
     }
-
     for keyword, replacement in replacements.items():
         input_str = input_str.replace(keyword, replacement)
+    return input_str.strip()
 
-    return input_str
 
+def plot_custom_function(user_function_str):
+    x = sp.symbols("x")
+    y = sp.symbols("y")
 
-def create_static_3d_plot(func):
-    x = np.linspace(-3, 3, 200)
-    y = np.linspace(-3, 3, 200)
-    X, Y = np.meshgrid(x, y)
-    Z = func(X, Y)
+    user_function_expr = sp.sympify(user_function_str)
+    user_function = sp.lambdify((x, y), user_function_expr, "numpy")
 
-    fig = plt.figure(figsize=(10, 8), facecolor="black")
-    ax = fig.add_subplot(111, projection="3d")
+    x_values = np.linspace(-10, 10, 400)
+    y_values = np.linspace(-10, 10, 400)
 
-    surface = ax.plot_surface(
-        X,
-        Y,
-        Z,
-        cmap="viridis",
-        edgecolor="none",
-        antialiased=True,
+    y_custom = user_function(x_values, y_values)
+
+    fig = plt.figure(figsize=(12, 6))
+    ax2d = fig.add_subplot(121)
+    ax3d = fig.add_subplot(122, projection="3d")
+
+    fig.patch.set_facecolor("black")
+
+    ax2d.plot(x_values, y_custom, color="white", linewidth=2)
+    ax2d.set_xlabel("x")
+    ax2d.set_ylabel("f(x)")
+    ax2d.set_title("2D Plot of Function", color="white")
+    ax2d.set_facecolor("black")
+
+    ax2d.xaxis.label.set_color("white")
+    ax2d.yaxis.label.set_color("white")
+    ax2d.tick_params(axis="x", colors="white")
+    ax2d.tick_params(axis="y", colors="white")
+
+    X, Y = np.meshgrid(x_values, x_values)
+    Z = user_function(X, Y)
+
+    surf = ax3d.plot_surface(
+        X, Y, Z, cmap="viridis", rstride=10, cstride=10, antialiased=True
     )
+    ax3d.set_xlabel("X")
+    ax3d.set_ylabel("Y")
+    ax3d.set_zlabel("Z")
+    ax3d.set_title("3D Plot of Function", color="white")
 
-    ax.set_xlabel("X")
-    ax.set_ylabel("Y")
-    ax.set_zlabel("Z")
-    ax.set_title("3D Function Static Plot")
+    ax3d.set_facecolor("black")
+    ax3d.xaxis.pane.fill = False
+    ax3d.yaxis.pane.fill = False
+    ax3d.zaxis.pane.fill = False
+    ax3d.xaxis._axinfo["grid"]["color"] = "white"
+    ax3d.yaxis._axinfo["grid"]["color"] = "white"
+    ax3d.zaxis._axinfo["grid"]["color"] = "white"
+    ax3d.xaxis.label.set_color("white")
+    ax3d.yaxis.label.set_color("white")
+    ax3d.zaxis.label.set_color("white")
+    ax3d.tick_params(axis="x", colors="white")
+    ax3d.tick_params(axis="y", colors="white")
+    ax3d.tick_params(axis="z", colors="white")
+    ax3d.view_init(elev=30, azim=45)
 
-    ax.grid(False)
-    ax.w_xaxis.pane.fill = False
-    ax.w_yaxis.pane.fill = False
-    ax.w_zaxis.pane.fill = False
-
-    ax.set_facecolor("black")
-
-    ax.xaxis._axinfo["grid"]["color"] = "white"
-    ax.yaxis._axinfo["grid"]["color"] = "white"
-    ax.zaxis._axinfo["grid"]["color"] = "white"
-
-    ax.xaxis.label.set_color("white")
-    ax.yaxis.label.set_color("white")
-    ax.zaxis.label.set_color("white")
-
-    ax.tick_params(axis="x", colors="white")
-    ax.tick_params(axis="y", colors="white")
-    ax.tick_params(axis="z", colors="white")
-
-    ax.view_init(elev=30, azim=45)
-
+    plt.tight_layout()
     plt.show()
 
 
 def create_simlulation_function(user_input):
-    extracted_function = extract_function_from_input(user_input)
-
-    def extracted_function_python(x, y):
-        return eval(extracted_function)
-
-    create_static_3d_plot(extracted_function_python)
+    cleaned_function_description = extract_function_from_input(user_input)
+    if cleaned_function_description:
+        plot_custom_function(cleaned_function_description)
+    else:
+        pass

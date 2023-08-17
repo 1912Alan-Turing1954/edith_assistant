@@ -489,7 +489,8 @@
         "simulate function",
         "simulate",
         "plot the function of",
-        "plot the function"
+        "plot the function",
+        "display the function"
       ],
       "responses": [
         "{string}"

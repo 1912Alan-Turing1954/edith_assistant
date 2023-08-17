@@ -3,6 +3,7 @@ import random
 import datetime
 import json
 import torch
+import concurrent.futures
 from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
 from tts_.tts import text_to_speech
@@ -49,7 +50,7 @@ class Friday:
         self.prev_tag = ""
         self.prev_input = ""
         self.prev_response = ""
-        self.task_counts = []
+        self.mute = False
 
     def is_complex_alphabetical_math_problem(self, user_input):
         alphabetic_math_pattern = r"(?i)\b(?:what is the|evaluate the)?\s*(?:sum of|difference between|product of|square of|cube of)?\s*(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b\s*(?:plus|minus|times|multiplied by|divided by|\+|\-|\*|\/|\^|and)\s*\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b"
@@ -93,7 +94,15 @@ class Friday:
 
     def MainFrame(self):
         while True:
+            if self.mute:
+                self.mute = False
+                print("break_mute")
+                break
+            else:
+                pass
+
             user_input = input("friday is active: ")
+
             print(type(user_input))
             user_input = user_input.lower()
             info_system = self.get_updated_system_info()
@@ -130,13 +139,17 @@ class Friday:
                         print(intent["tag"])
                         print(response)
                         break
+
             elif prob.item() > 0.95:
                 for intent in self.intents["intents"]:
                     if tag == intent["tag"]:
                         if intent["tag"] == "background_acknowledgment":
                             continue
+
                         elif intent["tag"] == "mute_command":
-                            break
+                            self.mute = True
+                            pass
+
                         elif intent["tag"] == "location_inquiry":
                             response = random.choice(intent["responses"])
                             response = get_location_description(response)
@@ -145,7 +158,15 @@ class Friday:
                         elif intent["tag"] == "simulate_interference":
                             response = user_input.lower()
                             text_to_speech("simulation initiated successfully")
-                            create_simlulation_function(response)
+                            with concurrent.futures.ThreadPoolExecutor(
+                                max_workers=2
+                            ) as executor:
+                                # Run input processing and function conversion in parallel
+                                future = executor.submit(
+                                    create_simlulation_function, response
+                                )
+                                # Wait for the future to complete
+                                future.result()
 
                         elif intent["tag"] == "address_inquiry":
                             response = random.choice(intent["responses"])
