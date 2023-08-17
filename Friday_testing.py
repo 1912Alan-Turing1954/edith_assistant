@@ -10,6 +10,7 @@ from functions.opinion import opinion
 from AI.flan_t5_large_model import generative_with_t5
 from functions._math import solve_word_math_expression
 from functions.time_of_day import time_of_day_correct
+from functions.three_math_sim import create_simlulation_function
 from functions.location import (
     get_address_description,
     get_location_description,
@@ -140,6 +141,12 @@ class Friday:
                             response = random.choice(intent["responses"])
                             response = get_location_description(response)
                             text_to_speech(response)
+
+                        elif intent["tag"] == "simulate_interference":
+                            response = user_input.lower()
+                            text_to_speech("simulation initiated successfully")
+                            create_simlulation_function(response)
+
                         elif intent["tag"] == "address_inquiry":
                             response = random.choice(intent["responses"])
                             response = get_address_description(response)

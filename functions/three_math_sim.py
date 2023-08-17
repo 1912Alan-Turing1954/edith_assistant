@@ -1,10 +1,23 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 from mpl_toolkits.mplot3d import Axes3D
+import json
+
+matplotlib.use("TkAgg")
+
+with open("./data/intents.json") as f:
+    intents = json.load(f)
 
 
 def extract_function_from_input(input_str):
-    input_str = input_str.replace("simulate the function of", "")
+    input_str = input_str.replace("{string}", "")
+
+    for intent in intents["intents"]:
+        if intent["tag"] == "simulate_interference":
+            for pattern in intent["patterns"]:
+                if pattern in input_str:
+                    input_str = input_str.replace(pattern, "").strip()
 
     replacements = {
         "x squared": "x**2",
@@ -35,6 +48,7 @@ def extract_function_from_input(input_str):
         "greater than": ">",
         "less than": "<",
         "equal to": "==",
+        "equals": "==",
         "not equal to": "!=",
         "y squared": "y**2",
         "y square": "y**2",
@@ -115,6 +129,3 @@ def create_simlulation_function(user_input):
         return eval(extracted_function)
 
     create_static_3d_plot(extracted_function_python)
-
-
-create_simlulation_function("simulate the function of y times 10 times x squared")

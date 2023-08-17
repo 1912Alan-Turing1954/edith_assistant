@@ -482,6 +482,20 @@
       ]
     },
     {
+      "tag": "simulate_interference",
+      "patterns": [
+        "simulate the function of",
+        "simulate the function",
+        "simulate function",
+        "simulate",
+        "plot the function of",
+        "plot the function"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
       "tag": "mute_command",
       "patterns": [
         "Please mute.",
