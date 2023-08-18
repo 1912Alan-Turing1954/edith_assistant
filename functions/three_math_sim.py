@@ -32,9 +32,6 @@ def convert_textual_numbers(input_str):
     return processed_input.strip()
 
 
-print(convert_textual_numbers("one plus one"))
-
-
 def extract_function_from_input(input_str):
     for pattern in patterns:
         if pattern in input_str:
@@ -90,7 +87,7 @@ def plot_custom_function(user_function_str):
 
     y_custom = user_function(x_values, y_values)
 
-    fig = plt.figure(figsize=(18, 8))
+    fig = plt.figure(figsize=(16, 8))
     ax2d = fig.add_subplot(121)
     ax3d = fig.add_subplot(122, projection="3d")
 
@@ -144,6 +141,3 @@ def create_simlulation_function(user_input):
         return plot_custom_function(cleaned_function_description)
     else:
         pass
-
-
-create_simlulation_function("simulate function sine of x plus one")
