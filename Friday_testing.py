@@ -155,9 +155,19 @@ class Friday:
                             response = get_location_description(response)
                             text_to_speech(response)
 
+                        elif intent["tag"] == "address_inquiry":
+                            response = random.choice(intent["responses"])
+                            response = get_address_description(response)
+                            text_to_speech(response)
+
+                        elif intent["tag"] == "coordinates":
+                            response = random.choice(intent["responses"])
+                            response = get_long_and_lati(response)
+                            text_to_speech(response)
+
                         elif intent["tag"] == "simulate_interference":
-                            response = user_input.lower()
-                            text_to_speech("simulation initiated successfully")
+                            response = random.choice(intent["responses"])
+                            text_to_speech(response)
                             with concurrent.futures.ThreadPoolExecutor(
                                 max_workers=2
                             ) as executor:
@@ -168,10 +178,6 @@ class Friday:
                                 # Wait for the future to complete
                                 future.result()
 
-                        elif intent["tag"] == "address_inquiry":
-                            response = random.choice(intent["responses"])
-                            response = get_address_description(response)
-                            text_to_speech(response)
                         elif intent["tag"] == "repeat_tsk":
                             response = random.choice(intent["responses"])
                             text_to_speech(f"{response} {self.prev_response}")

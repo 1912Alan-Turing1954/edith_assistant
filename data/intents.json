@@ -493,7 +493,50 @@
         "display the function"
       ],
       "responses": [
-        "{string}"
+        "Starting simulation. Preparing the virtual environment for setup.",
+        "Initializing simulation parameters. Virtual environment setup in progress.",
+        "Virtual environment loading for simulation. Stand by.",
+        "Simulation initiation underway. Configuring virtual environment components.",
+        "Commencing simulation process. Virtual environment setup in motion.",
+        "Virtual environment activation for simulation. Initializing necessary resources.",
+        "Engaging simulation protocol. Preparing the virtual environment.",
+        "Initiating virtual environment for simulation purposes. Please wait.",
+        "Setting the stage for simulation. Virtual environment activation in progress."
+      ]
+    },
+    {
+      "tag": "coordinates",
+      "patterns": [
+        "Coordinates, please?",
+        "Latitude and longitude?",
+        "What's the location?",
+        "GPS info, please.",
+        "Exact coordinates?",
+        "Tell me the spot.",
+        "Share the coordinates.",
+        "Location data?",
+        "What's our position?",
+        "GPS details, please.",
+        "Give me coordinates.",
+        "Where are we exactly?",
+        "Can you tell me the location?",
+        "What are the coordinates?",
+        "what are our coordinates",
+        "coordinates",
+        "friday coordinates",
+        "friday exact coordinates?"
+      ],
+      "responses": [
+        "Boss, your coordinates are latitude {latitude} and longitude {longitude}.",
+        "Sir, confirming your position at latitude {latitude} and longitude {longitude}.",
+        "Boss, you're currently located at latitude {latitude} and longitude {longitude}.",
+        "Sir, your location is latitude {latitude} and longitude {longitude}.",
+        "At your service, boss. Latitude {latitude}, longitude {longitude}.",
+        "Mr. Stark, your coordinates read latitude {latitude} and longitude {longitude}.",
+        "Position confirmed, boss. Latitude {latitude}, longitude {longitude}.",
+        "Coordinates logged, sir. Latitude {latitude}, longitude {longitude}.",
+        "Sir, marking your location with latitude {latitude} and longitude {longitude}.",
+        "Understood, boss. Your coordinates: latitude {latitude}, longitude {longitude}."
       ]
     },
     {

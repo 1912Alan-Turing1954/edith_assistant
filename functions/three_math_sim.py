@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import sympy as sp
-import concurrent.futures
 import matplotlib
+from word2number import w2n
 
 matplotlib.use("TkAgg")
 
@@ -15,6 +15,24 @@ patterns = [
     "plot the function",
     "display the function",
 ]
+
+
+def convert_textual_numbers(input_str):
+    words = input_str.lower().split()  # Split input into words
+    numerical_words = []
+
+    for word in words:
+        try:
+            num = w2n.word_to_num(word)
+            numerical_words.append(str(num))
+        except ValueError:
+            numerical_words.append(word)  # Keep non-convertible words as they are
+
+    processed_input = " ".join(numerical_words)
+    return processed_input.strip()
+
+
+print(convert_textual_numbers("one plus one"))
 
 
 def extract_function_from_input(input_str):
@@ -72,7 +90,7 @@ def plot_custom_function(user_function_str):
 
     y_custom = user_function(x_values, y_values)
 
-    fig = plt.figure(figsize=(12, 6))
+    fig = plt.figure(figsize=(18, 8))
     ax2d = fig.add_subplot(121)
     ax3d = fig.add_subplot(122, projection="3d")
 
@@ -121,7 +139,11 @@ def plot_custom_function(user_function_str):
 
 def create_simlulation_function(user_input):
     cleaned_function_description = extract_function_from_input(user_input)
+    cleaned_function_description = convert_textual_numbers(cleaned_function_description)
     if cleaned_function_description:
-        plot_custom_function(cleaned_function_description)
+        return plot_custom_function(cleaned_function_description)
     else:
         pass
+
+
+create_simlulation_function("simulate function sine of x plus one")
