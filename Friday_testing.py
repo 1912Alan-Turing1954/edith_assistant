@@ -52,12 +52,12 @@ class Friday:
         self.prev_response = ""
         self.mute = False
 
-    # def is_complex_alphabetical_math_problem(self, user_input):
-    #     alphabetic_math_pattern = r"(?i)\b(?:what is the|evaluate the)?\s*(?:sum of|difference between|product of|square of|cube of)?\s*(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b\s*(?:plus|minus|times|multiplied by|divided by|\+|\-|\*|\/|\^|and)\s*\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b"
-    #     return bool(re.search(alphabetic_math_pattern, user_input))
+    def is_complex_alphabetical_math_problem(self, user_input):
+        alphabetic_math_pattern = r"(?i)\b(?:what is the|evaluate the)?\s*(?:sum of|difference between|product of|square of|cube of)?\s*(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b\s*(?:plus|minus|times|multiplied by|divided by|\+|\-|\*|\/|\^|and)\s*\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b"
+        return bool(re.search(alphabetic_math_pattern, user_input))
 
     def convert_textual_numbers(self, user_input):
-        words = user_input.lower().split()  # Split input into words
+        words = user_input.lower().split()
         numerical_words = []
 
         for word in words:
@@ -65,7 +65,7 @@ class Friday:
                 num = w2n.word_to_num(word)
                 numerical_words.append(str(num))
             except ValueError:
-                numerical_words.append(word)  # Keep non-convertible words as they are
+                numerical_words.append(word)
 
         processed_input = " ".join(numerical_words)
         return processed_input.strip()
@@ -187,19 +187,19 @@ class Friday:
                 probs = torch.softmax(output, dim=1)
                 prob = probs[0][predicted.item()]
 
-            # if self.is_complex_alphabetical_math_problem(user_input):
-            #     result = solve_word_math_expression(user_input)
-            #     for intent in self.intents["intents"]:
-            #         if intent["tag"] == "math_tsk":
-            #             response = random.choice(intent["responses"]).format(
-            #                 answer=result
-            #             )
-            #             text_to_speech(response)
-            #             print(intent["tag"])
-            #             print(response)
-            #             break
+            if self.is_complex_alphabetical_math_problem(user_input):
+                result = solve_word_math_expression(user_input)
+                for intent in self.intents["intents"]:
+                    if intent["tag"] == "math_tsk":
+                        response = random.choice(intent["responses"]).format(
+                            answer=result
+                        )
+                        text_to_speech(response)
+                        print(intent["tag"])
+                        print(response)
+                        break
 
-            if prob.item() > 0.95:
+            elif prob.item() > 0.95:
                 for intent in self.intents["intents"]:
                     if tag == intent["tag"]:
                         if intent["tag"] == "background_acknowledgment":
@@ -232,11 +232,9 @@ class Friday:
                             with concurrent.futures.ThreadPoolExecutor(
                                 max_workers=2
                             ) as executor:
-                                # Run input processing and function conversion in parallel
                                 future = executor.submit(
                                     create_simlulation_function, user_input
                                 )
-                                # Wait for the future to complete
                                 future.result()
 
                         elif intent["tag"] == "repeat_tsk":
