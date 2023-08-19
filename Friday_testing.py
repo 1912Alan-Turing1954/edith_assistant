@@ -454,6 +454,11 @@ class Friday:
                                         print(
                                             "The script three_math_sim.py was not found."
                                         )
+                                        continue
+                                    except Exception as e:
+                                        print(e)
+                                        continue
+
                                 elif intent["tag"] == "repeat_tsk":
                                     response = random.choice(intent["responses"])
                                     text_to_speech(f"{response} {self.prev_response}")
