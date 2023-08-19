@@ -57,8 +57,6 @@ def get_location():
 
 location_data = get_location()
 
-print(location_data)
-
 
 def get_location_description(response):
     description = response

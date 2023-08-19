@@ -1,8 +1,8 @@
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 import sympy as sp
 import matplotlib
-
 
 matplotlib.use("TkAgg")
 
@@ -75,3 +75,11 @@ def create_simlulation_function(user_input):
         return plot_custom_function(cleaned_function_description)
     else:
         pass
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python your_script.py <user_function_description>")
+    else:
+        user_function_description = sys.argv[1]
+        create_simlulation_function(user_function_description)

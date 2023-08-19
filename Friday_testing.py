@@ -2,6 +2,7 @@ import re
 import random
 import datetime
 import json
+import subprocess
 import torch
 from word2number import w2n
 import concurrent.futures
@@ -50,6 +51,7 @@ class Friday:
         self.prev_tag = ""
         self.prev_input = ""
         self.prev_response = ""
+        self.task_tag_count = 0
         self.mute = False
 
     def is_complex_alphabetical_math_problem(self, user_input):
@@ -169,6 +171,7 @@ class Friday:
             cpu_usage = generate_cpu_usage_response(info_system)
             memory_usage = generate_memory_usage_response(info_system)
             disk_space = generate_disk_space_response(info_system)
+
             if user_input.lower() == self.prev_input.lower():
                 tag = "repeat_string"
             elif (
@@ -194,7 +197,7 @@ class Friday:
                         response = random.choice(intent["responses"]).format(
                             answer=result
                         )
-                        text_to_speech(response)
+                        self.get_intent_response(intent, response)
                         print(intent["tag"])
                         print(response)
                         break
@@ -202,6 +205,15 @@ class Friday:
             elif prob.item() > 0.95:
                 for intent in self.intents["intents"]:
                     if tag == intent["tag"]:
+                        if "tsk" in intent["tag"]:
+                            self.task_tag_count += 1
+                            if self.task_tag_count == 2:
+                                for intent in self.intents["intents"]:
+                                    if intent["tag"] == "anything_else_sir":
+                                        response = random.choice(intent["responses"])
+                                        self.get_intent_response(intent, response)
+                                        self.task_tag_count = 0
+
                         if intent["tag"] == "background_acknowledgment":
                             continue
 
@@ -212,30 +224,33 @@ class Friday:
                         elif intent["tag"] == "location_inquiry":
                             response = random.choice(intent["responses"])
                             response = get_location_description(response)
-                            text_to_speech(response)
+                            self.get_intent_response(intent, response)
 
                         elif intent["tag"] == "address_inquiry":
                             response = random.choice(intent["responses"])
                             response = get_address_description(response)
-                            text_to_speech(response)
+                            self.get_intent_response(response)
 
                         elif intent["tag"] == "coordinates":
                             response = random.choice(intent["responses"])
                             response = get_long_and_lati(response)
-                            text_to_speech(response)
+                            self.get_intent_response(intent, response)
 
                         elif intent["tag"] == "simulate_interference":
                             user_input = self.convert_textual_numbers(user_input)
                             user_input = self.extract_function_from_input(user_input)
                             response = random.choice(intent["responses"])
-                            text_to_speech(response)
-                            with concurrent.futures.ThreadPoolExecutor(
-                                max_workers=2
-                            ) as executor:
-                                future = executor.submit(
-                                    create_simlulation_function, user_input
+                            self.get_intent_response(intent, response)
+                            try:
+                                subprocess.Popen(
+                                    [
+                                        "python",
+                                        "./functions/math/three_math_sim.py",
+                                        user_input,
+                                    ]
                                 )
-                                future.result()
+                            except FileNotFoundError:
+                                print("The script three_math_sim.py was not found.")
 
                         elif intent["tag"] == "repeat_tsk":
                             response = random.choice(intent["responses"])
@@ -301,12 +316,13 @@ class Friday:
                         else:
                             response = random.choice(intent["responses"])
                             self.get_intent_response(intent, response)
+
                 self.prev_input = user_input.lower()
             else:
                 for intent in self.intents["intents"]:
                     if intent["tag"] == "technical":
                         response = random.choice(intent["responses"])
-                        text_to_speech(response)
+                        self.get_intent_response(intent, response)
                         print(intent["tag"])
                         break
 

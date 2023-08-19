@@ -418,7 +418,8 @@
         "What's the name you go by?",
         "Could you share the name I should address you with?",
         "what is your name?",
-        "what do i call you"
+        "what do i call you",
+        "do you have a name?"
       ],
       "responses": [
         "You can call me Friday, which is an abbreviation for Female Replacement Intelligent Digital Assistant Youth.",
@@ -472,7 +473,7 @@
       ]
     },
     {
-      "tag": "simulate_interference",
+      "tag": "simulate_interference_tsk",
       "patterns": [
         "Emulate the function of",
         "Mimic the function",
@@ -544,7 +545,7 @@
       ]
     },
     {
-      "tag": "coordinates",
+      "tag": "coordinates_tsk",
       "patterns": [
         "Coordinates, please?",
         "Latitude and longitude?",
@@ -579,7 +580,7 @@
       ]
     },
     {
-      "tag": "mute_command",
+      "tag": "mute_command_tsk",
       "patterns": [
         "Please mute.",
         "friday, quiet please.",
@@ -598,7 +599,7 @@
       "responses": []
     },
     {
-      "tag": "location_inquiry",
+      "tag": "location_inquiry_tsk",
       "patterns": [
         "Where am I?",
         "Where are we?",
@@ -626,7 +627,7 @@
       ]
     },
     {
-      "tag": "address_inquiry",
+      "tag": "address_inquiry_tsk",
       "patterns": [
         "What's the address?",
         "what is my address",
