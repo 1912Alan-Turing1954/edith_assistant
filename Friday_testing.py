@@ -205,14 +205,16 @@ class Friday:
             elif prob.item() > 0.95:
                 for intent in self.intents["intents"]:
                     if tag == intent["tag"]:
-                        if "tsk" in intent["tag"]:
-                            self.task_tag_count += 1
-                            if self.task_tag_count == 2:
-                                for intent in self.intents["intents"]:
-                                    if intent["tag"] == "anything_else_sir":
-                                        response = random.choice(intent["responses"])
-                                        self.get_intent_response(intent, response)
-                                        self.task_tag_count = 0
+                        # if "tsk" in intent["tag"]:
+                        #     self.task_tag_count += 1
+                        #     if self.task_tag_count == 3:
+                        #         for intent in self.intents["intents"]:
+                        #             if intent["tag"] == "anything_else_sir":
+                        #                 response_tsk = random.choice(
+                        #                     intent["responses"]
+                        #                 )
+                        #                 self.get_intent_response(intent, response_tsk)
+                        #                 self.task_tag_count = 0
 
                         if intent["tag"] == "background_acknowledgment":
                             continue
