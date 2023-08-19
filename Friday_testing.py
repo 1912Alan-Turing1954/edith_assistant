@@ -449,6 +449,7 @@ class Friday:
                                 except Exception as e:
                                     print(e)
                                     continue
+
                             elif intent["tag"] == "repeat_tsk":
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(
