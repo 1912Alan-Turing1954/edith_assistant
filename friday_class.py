@@ -180,12 +180,12 @@ class Friday:
         self.prev_response = response
 
     def MainFrame(self, user_input):
-        # if self.mute:
-        #     self.mute = False
-        #     print("break_mute")
-        #     pass
-        # else:
-        #     pass
+        if self.mute:
+            self.mute = False
+            print("break_mute")
+            return
+        else:
+            pass
 
         user_input = input("friday is active: ")
         print(type(user_input))
@@ -244,9 +244,11 @@ class Friday:
                             #                 self.task_tag_count = 0
                             if intent["tag"] == "background_acknowledgment":
                                 continue
-                            # elif intent["tag"] == "mute_command_tsk":
-                            #     self.mute = True
-                            #     continue
+
+                            elif intent["tag"] == "mute_command_tsk":
+                                self.mute = True
+                                continue
+
                             elif intent["tag"] == "location_inquiry_tsk":
                                 response = random.choice(intent["responses"])
                                 response = get_location_description(response)
