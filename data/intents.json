@@ -692,6 +692,7 @@
         "what time do we have",
         "do you have the time",
         "time, please",
+        "tell me the time",
         "any idea what time it is",
         "i need to know the time.",
         "tell me the current time.",
@@ -735,6 +736,7 @@
         "any idea what day it is?",
         "i need to know the day.",
         "tell me the current day.",
+        "tell me the day",
         "what day is today?",
         "do you know the day of the week?"
       ],
