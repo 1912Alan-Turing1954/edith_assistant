@@ -67,8 +67,7 @@ class Friday:
         for word in self.follow_words:
             if word in user_input:
                 return True
-            else:
-                return False
+        return False
 
     def replace_follow_up_word(self, user_input):
         for word in self.follow_words:
@@ -188,10 +187,10 @@ class Friday:
 
             user_input = input("friday is active: ")
             print(type(user_input))
+            print(self.follow_word_check(user_input))
 
-            if self.follow_word_check(user_input) == True:
+            if self.follow_word_check(user_input):
                 string_parts = self.replace_follow_up_word(user_input)
-                print(string_parts)
 
                 for string_part in string_parts:
                     user_input = string_part.lower()
@@ -227,6 +226,7 @@ class Friday:
                                 )
                                 self.get_intent_response(intent, response)
                                 break
+
                     elif prob.item() > 0.95:
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
@@ -252,7 +252,8 @@ class Friday:
                                 elif intent["tag"] == "address_inquiry_tsk":
                                     response = random.choice(intent["responses"])
                                     response = get_address_description(response)
-                                    self.get_intent_response(response)
+                                    self.get_intent_response(intent, response)
+
                                 elif intent["tag"] == "coordinates_tsk":
                                     response = random.choice(intent["responses"])
                                     response = get_long_and_lati(response)
@@ -404,23 +405,29 @@ class Friday:
                             #                 )
                             #                 self.get_intent_response(intent, response_tsk)
                             #                 self.task_tag_count = 0
+
                             if intent["tag"] == "background_acknowledgment":
                                 continue
+
                             elif intent["tag"] == "mute_command_tsk":
                                 self.mute = True
                                 continue
+
                             elif intent["tag"] == "location_inquiry_tsk":
                                 response = random.choice(intent["responses"])
                                 response = get_location_description(response)
                                 self.get_intent_response(intent, response)
+
                             elif intent["tag"] == "address_inquiry_tsk":
                                 response = random.choice(intent["responses"])
                                 response = get_address_description(response)
-                                self.get_intent_response(response)
+                                self.get_intent_response(intent, response)
+
                             elif intent["tag"] == "coordinates_tsk":
                                 response = random.choice(intent["responses"])
                                 response = get_long_and_lati(response)
                                 self.get_intent_response(intent, response)
+
                             elif intent["tag"] == "simulate_interference_tsk":
                                 user_input = self.convert_textual_numbers(user_input)
                                 user_input = self.extract_function_from_input(

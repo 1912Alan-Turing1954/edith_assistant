@@ -2,28 +2,6 @@ from geopy.geocoders import Nominatim
 import geocoder
 
 
-# def get_location():
-#     g = geocoder.ip("me")
-
-#     if g.ok:
-#         latitude = g.latlng[0]
-#         longitude = g.latlng[1]
-#         address = g.address
-#         city = g.city
-#         state = g.state
-#         country = g.country
-#         return {
-#             "latitude": latitude,
-#             "longitude": longitude,
-#             "address": address,
-#             "city": city,
-#             "state": state,
-#             "country": country,
-#         }
-#     else:
-#         return None
-
-
 def get_location():
     g = geocoder.ip("me")
 
