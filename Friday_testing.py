@@ -241,10 +241,12 @@ class Friday:
                                 #                 self.get_intent_response(intent, response_tsk)
                                 #                 self.task_tag_count = 0
                                 if intent["tag"] == "background_acknowledgment":
-                                    continue
-                                # elif intent["tag"] == "mute_command_tsk":
-                                #     self.mute = True
-                                #     continue
+                                    pass
+
+                                elif intent["tag"] == "mute_command_tsk":
+                                    self.mute = True
+                                    pass
+
                                 elif intent["tag"] == "location_inquiry_tsk":
                                     response = random.choice(intent["responses"])
                                     response = get_location_description(response)
@@ -279,10 +281,11 @@ class Friday:
                                         print(
                                             "The script three_math_sim.py was not found."
                                         )
-                                        continue
+                                        pass
                                     except Exception as e:
                                         print(e)
-                                        continue
+                                        pass
+
                                 elif intent["tag"] == "repeat_tsk":
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(
@@ -407,11 +410,11 @@ class Friday:
                             #                 self.task_tag_count = 0
 
                             if intent["tag"] == "background_acknowledgment":
-                                continue
+                                pass
 
                             elif intent["tag"] == "mute_command_tsk":
                                 self.mute = True
-                                continue
+                                pass
 
                             elif intent["tag"] == "location_inquiry_tsk":
                                 response = random.choice(intent["responses"])
@@ -445,10 +448,10 @@ class Friday:
                                     )
                                 except FileNotFoundError:
                                     print("The script three_math_sim.py was not found.")
-                                    continue
+                                    pass
                                 except Exception as e:
                                     print(e)
-                                    continue
+                                    pass
 
                             elif intent["tag"] == "repeat_tsk":
                                 response = random.choice(intent["responses"])
