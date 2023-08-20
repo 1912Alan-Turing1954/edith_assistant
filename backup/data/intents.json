@@ -89,7 +89,8 @@
         "How much storage do I have?",
         "What is my current storage?",
         "Show me the amount of storage I have.",
-        "Check available storage."
+        "Check available storage.",
+        "whats our storage look like"
       ],
       "responses": [
         "{string}"
@@ -103,6 +104,7 @@
       "responses": [
         "Yes sir?",
         "Sir?",
+        "yes boss",
         "Yes?"
       ]
     },
@@ -322,8 +324,6 @@
       "tag": "casual_greeting",
       "patterns": [
         "hey there",
-        "what's up?",
-        "yo",
         "hey, how's it going?",
         "friday, long time no see"
       ],
@@ -331,12 +331,10 @@
         "Good day, sir. How may I be of service?",
         "Hello, sir. Your commands are my priority.",
         "Greetings, sir. Your instructions guide my actions.",
-        "Welcome, sir. What can I assist you with?",
         "Ah, sir. I am at your disposal. How may I help?",
-        "Salutations, sir. How may I be of assistance?",
         "Hello, sir. Your directives are my focus.",
         "Greetings, sir. Your needs are my concern.",
-        "Good day, sir. How can I serve you?",
+        "Good day, boss. How can I serve you?",
         "Hello, sir. What is your request?"
       ]
     },
@@ -386,14 +384,54 @@
       ]
     },
     {
-      "tag": "opinion",
+      "tag": "who_are_you",
       "patterns": [
-        "what is your opinion on",
-        "what are your views on",
-        "friday, tell me your opinion on",
-        "friday whats your opinion on"
+        "who are you?",
+        "Could you introduce yourself?",
+        "What's your identity?",
+        "Tell me a bit about yourself.",
+        "What exactly are you?",
+        "What are you?",
+        "What are you exactly?",
+        "What are you really?"
       ],
-      "responses": []
+      "responses": [
+        "I am Friday, an advanced AI designed to assist you.",
+        "You may call me Friday, your AI companion.",
+        "I am Friday, a culmination of algorithms here to help.",
+        "I go by Friday, a digital entity crafted to aid you.",
+        "I'm Friday, an AI manifestation to enhance your experience.",
+        "I'm Friday, a creation of code dedicated to aiding you.",
+        "Within the realm of ones and zeros, I am Friday, your assistant.",
+        "At the core, I am Friday, an artificial intelligence at your service.",
+        "I am Friday, an intelligent construct focused on simplifying your tasks."
+      ]
+    },
+    {
+      "tag": "curious_what_should_i_call_you",
+      "patterns": [
+        "I'm curious, what should I call you?",
+        "What's your preferred name?",
+        "Any suggestions for what I can call you?",
+        "Can you tell me the name you'd like to be called?",
+        "I'd like to know what to call you. Any ideas?",
+        "What's the name you go by?",
+        "Could you share the name I should address you with?",
+        "what is your name?",
+        "what do i call you",
+        "do you have a name?"
+      ],
+      "responses": [
+        "You can call me Friday, which is an abbreviation for Female Replacement Intelligent Digital Assistant Youth.",
+        "Feel free to call me Friday, your AI companion.",
+        "You may refer to me as Friday, which stands for Female Replacement Intelligent Digital Assistant Youth.",
+        "You can call me Friday, your reliable digital assistant. The name represents Female Replacement Intelligent Digital Assistant Youth.",
+        "I go by the name Friday, here to assist and support you. It's an acronym that stands for Female Replacement Intelligent Digital Assistant Youth.",
+        "Call me Friday, your dedicated AI aide. Friday is short for Female Replacement Intelligent Digital Assistant Youth.",
+        "Address me as Friday, your helpful AI. The term Friday stands for Female Replacement Intelligent Digital Assistant Youth.",
+        "Feel comfortable calling me Friday, your personal AI. The name Friday signifies Female Replacement Intelligent Digital Assistant Youth.",
+        "Just call me Friday, your trusted AI. The name Friday encompasses Female Replacement Intelligent Digital Assistant Youth."
+      ]
     },
     {
       "tag": "technical",
@@ -435,7 +473,114 @@
       ]
     },
     {
-      "tag": "mute_command",
+      "tag": "simulate_interference_tsk",
+      "patterns": [
+        "emulate the function of",
+        "mimic the function",
+        "imitate function",
+        "replicate",
+        "model the function of",
+        "model the function",
+        "reproduce the function of",
+        "reproduce the function",
+        "imitate the operation of",
+        "emulate the operation",
+        "model the operation of",
+        "model the operation",
+        "reproduce the operation of",
+        "reproduce the operation",
+        "simulate the behavior of",
+        "emulate the behavior",
+        "imitate behavior",
+        "replicate the behavior of",
+        "replicate the behavior",
+        "mimic the behavior of",
+        "reproduce the functionality of",
+        "replicate the functionality",
+        "emulate the functionality of",
+        "imitate the functionality",
+        "mirror the function of",
+        "mirror the function",
+        "duplicate the function of",
+        "duplicate the function",
+        "render the function of",
+        "render the function",
+        "render function",
+        "portray the function of",
+        "portray the function",
+        "depict the function of",
+        "depict the function",
+        "illustrate the function of",
+        "illustrate the function",
+        "show the function of",
+        "show the function",
+        "visualize the function of",
+        "visualize the function",
+        "graph the function of",
+        "graph the function",
+        "chart the function of",
+        "chart the function",
+        "map the function of",
+        "map the function",
+        "demonstrate the function of",
+        "demonstrate the function",
+        "exhibit the function of",
+        "exhibit the function",
+        "give me a visual of the function of",
+        "provide a visualization of the function of",
+        "display a graphical representation of the function of",
+        "show me the function of",
+        "create a simulated model of the function of",
+        "generate a virtual representation of the function of"
+      ],
+      "responses": [
+        "Starting simulation. Preparing the virtual environment for setup.",
+        "Initializing simulation parameters. Virtual environment setup in progress.",
+        "Virtual environment loading for simulation. Stand by.",
+        "Simulation initiation underway. Configuring virtual environment components.",
+        "Commencing simulation process. Virtual environment setup in motion.",
+        "Virtual environment activation for simulation. Initializing necessary resources.",
+        "Engaging simulation protocol. Preparing the virtual environment.",
+        "Initiating virtual environment for simulation purposes. Please wait.",
+        "Setting the stage for simulation. Virtual environment activation in progress."
+      ]
+    },
+    {
+      "tag": "coordinates_tsk",
+      "patterns": [
+        "latitude and longitude?",
+        "what's the location?",
+        "gps info.",
+        "exact coordinates?",
+        "tell me the spot.",
+        "share the coordinates.",
+        "location data?",
+        "what's our position?",
+        "gps details.",
+        "give me coordinates.",
+        "where are we exactly?",
+        "can you tell me the location?",
+        "what are the coordinates?",
+        "what are our coordinates",
+        "coordinates",
+        "friday coordinates",
+        "friday exact coordinates?"
+      ],
+      "responses": [
+        "Boss, your coordinates are latitude {latitude} and longitude {longitude}.",
+        "Sir, confirming your position at latitude {latitude} and longitude {longitude}.",
+        "Boss, you're currently located at latitude {latitude} and longitude {longitude}.",
+        "Sir, your location is latitude {latitude} and longitude {longitude}.",
+        "At your service, boss. Latitude {latitude}, longitude {longitude}.",
+        "Mr. Stark, your coordinates read latitude {latitude} and longitude {longitude}.",
+        "Position confirmed, boss. Latitude {latitude}, longitude {longitude}.",
+        "Coordinates logged, sir. Latitude {latitude}, longitude {longitude}.",
+        "Sir, marking your location with latitude {latitude} and longitude {longitude}.",
+        "Understood, boss. Your coordinates: latitude {latitude}, longitude {longitude}."
+      ]
+    },
+    {
+      "tag": "mute_command_tsk",
       "patterns": [
         "Please mute.",
         "friday, quiet please.",
@@ -454,7 +599,7 @@
       "responses": []
     },
     {
-      "tag": "location_inquiry",
+      "tag": "location_inquiry_tsk",
       "patterns": [
         "Where am I?",
         "Where are we?",
@@ -479,6 +624,34 @@
         "Sir, your coordinates indicate {city}, {state}, {country}.",
         "If I may provide a geographical update, sir, you're positioned in {city}, {state}, {country}.",
         "According to my calculations, your current location is {city}, {state}, {country}, sir."
+      ]
+    },
+    {
+      "tag": "address_inquiry_tsk",
+      "patterns": [
+        "What's the address?",
+        "what is my address",
+        "Could you tell me the address?",
+        "What's our current address?",
+        "Do you know the address?",
+        "Please provide the address.",
+        "I need to know the address.",
+        "Tell me the address, Friday.",
+        "Friday, what's the address?",
+        "Could you give me the address, Friday?",
+        "What's my location address?",
+        "Location address, please.",
+        "address, please",
+        "what is the address?"
+      ],
+      "responses": [
+        "Your current address is {address}.",
+        "The address you're at is {address}.",
+        "Based on my analysis, your address is {address}.",
+        "Certainly, your present address is {address}.",
+        "Your coordinates indicate {address}.",
+        "Allow me to assist, you're located at {address}.",
+        "According to my calculations, your current address is {address}."
       ]
     },
     {
@@ -518,6 +691,7 @@
         "what time do we have",
         "do you have the time",
         "time, please",
+        "tell me the time",
         "any idea what time it is",
         "i need to know the time.",
         "tell me the current time.",
@@ -561,6 +735,7 @@
         "any idea what day it is?",
         "i need to know the day.",
         "tell me the current day.",
+        "tell me the day",
         "what day is today?",
         "do you know the day of the week?"
       ],
