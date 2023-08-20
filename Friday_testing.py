@@ -404,17 +404,6 @@ class Friday:
                 if prob.item() > 0.95:
                     for intent in self.intents["intents"]:
                         if tag == intent["tag"]:
-                            # if "tsk" in intent["tag"]:
-                            #     self.task_tag_count += 1
-                            #     if self.task_tag_count == 3:
-                            #         for intent in self.intents["intents"]:
-                            #             if intent["tag"] == "anything_else_sir":
-                            #                 response_tsk = random.choice(
-                            #                     intent["responses"]
-                            #                 )
-                            #                 self.get_intent_response(intent, response_tsk)
-                            #                 self.task_tag_count = 0
-
                             if intent["tag"] == "background_acknowledgment":
                                 pass
 
@@ -437,7 +426,13 @@ class Friday:
                                 response = get_long_and_lati(response)
                                 self.get_intent_response(intent, response)
 
-                            elif intent["tag"] == "simulate_interference_tsk":
+                            elif intent[
+                                "tag"
+                            ] == "simulate_interference_tsk" and self.has_mathematical_function_or_x(
+                                self.extract_function_from_input(
+                                    self.convert_textual_numbers(user_input)
+                                )
+                            ):
                                 user_input = self.convert_textual_numbers(user_input)
                                 user_input = self.extract_function_from_input(
                                     user_input
@@ -514,7 +509,22 @@ class Friday:
                             else:
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response)
+
+                            if "tsk" in intent["tag"]:
+                                self.task_tag_count += 1
+                                if self.task_tag_count == 3:
+                                    for intent in self.intents["intents"]:
+                                        if intent["tag"] == "anything_else_sir":
+                                            response_tsk = random.choice(
+                                                intent["responses"]
+                                            )
+                                            self.get_intent_response(
+                                                intent, response_tsk
+                                            )
+                                            self.task_tag_count = 0
+
                     self.prev_input = user_input.lower()
+
                 else:
                     for intent in self.intents["intents"]:
                         if intent["tag"] == "technical":
