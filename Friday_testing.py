@@ -78,9 +78,15 @@ class Friday:
             else:
                 pass
 
-    def is_complex_alphabetical_math_problem(self, user_input):
-        alphabetic_math_pattern = r"(?i)\b(?:what is the|evaluate the)?\s*(?:sum of|difference between|product of|square of|cube of)?\s*(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b\s*(?:plus|minus|times|multiplied by|divided by|\+|\-|\*|\/|\^|and)\s*\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b"
-        return bool(re.search(alphabetic_math_pattern, user_input))
+    def has_mathematical_function_or_x(self, user_input):
+        # Define a regular expression pattern to match 'x' alone or mathematical expressions with 'x'
+        pattern = r"\b[xX]\b|\b[xX]\b\s*[+\-*/^()\d\s]*"
+
+        # Use re.search to find a match in the input string
+        match = re.search(pattern, user_input)
+
+        # If a match is found, return True, otherwise return False
+        return bool(match)
 
     def convert_textual_numbers(self, user_input):
         words = user_input.lower().split()
@@ -189,6 +195,13 @@ class Friday:
             print(type(user_input))
             print(self.follow_word_check(user_input))
 
+            print(
+                self.has_mathematical_function_or_x(
+                    self.extract_function_from_input(
+                        self.convert_textual_numbers(user_input)
+                    )
+                )
+            )
             if self.follow_word_check(user_input):
                 string_parts = self.replace_follow_up_word(user_input)
 
@@ -222,16 +235,6 @@ class Friday:
                     if prob.item() > 0.95:
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
-                                # if "tsk" in intent["tag"]:
-                                #     self.task_tag_count += 1
-                                #     if self.task_tag_count == 3:
-                                #         for intent in self.intents["intents"]:
-                                #             if intent["tag"] == "anything_else_sir":
-                                #                 response_tsk = random.choice(
-                                #                     intent["responses"]
-                                #                 )
-                                #                 self.get_intent_response(intent, response_tsk)
-                                #                 self.task_tag_count = 0
                                 if intent["tag"] == "background_acknowledgment":
                                     pass
 
@@ -253,7 +256,13 @@ class Friday:
                                     response = get_long_and_lati(response)
                                     self.get_intent_response(intent, response)
 
-                                elif intent["tag"] == "simulate_interference_tsk":
+                                elif intent[
+                                    "tag"
+                                ] == "simulate_interference_tsk" and self.has_mathematical_function_or_x(
+                                    self.extract_function_from_input(
+                                        self.convert_textual_numbers(user_input)
+                                    )
+                                ):
                                     user_input = self.convert_textual_numbers(
                                         user_input
                                     )
@@ -344,6 +353,19 @@ class Friday:
                                 else:
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(intent, response)
+
+                                if "tsk" in intent["tag"]:
+                                    self.task_tag_count += 1
+                                    if self.task_tag_count == 3:
+                                        for intent in self.intents["intents"]:
+                                            if intent["tag"] == "anything_else_sir":
+                                                response_tsk = random.choice(
+                                                    intent["responses"]
+                                                )
+                                                self.get_intent_response(
+                                                    intent, response_tsk
+                                                )
+                                                self.task_tag_count = 0
 
                         self.prev_input = user_input.lower()
                     else:

@@ -5,6 +5,10 @@
       "patterns": [
         "give me system info",
         "give me system status",
+        "give me system the info",
+        "give me system the status",
+        "give me system the current info",
+        "give me system the current status",
         "status update",
         "system info",
         "system status",
@@ -20,6 +24,10 @@
       "patterns": [
         "give me storage info",
         "give me storage status",
+        "give me storage the info",
+        "give me storage the status",
+        "give me storage the current info",
+        "give me storage the current status",
         "storage info",
         "storage status",
         "storage status update",
@@ -40,6 +48,10 @@
       "patterns": [
         "give me cpu usage",
         "give me cpu status",
+        "give me cpu the usage",
+        "give me cpu the status",
+        "give me cpu the current usage",
+        "give me cpu the current status",
         "cpu status",
         "cpu status update",
         "cpu usage",
@@ -150,7 +162,8 @@
         "good morning",
         "morning, friday",
         "friday, it's me",
-        "rise and shine"
+        "rise and shine",
+        "wake up friday"
       ],
       "responses": [
         "{string}"
@@ -260,13 +273,16 @@
         "thanks friday"
       ],
       "responses": [
-        "You're most welcome, sir. It is my duty and pleasure to assist you.",
-        "It's my pleasure, sir. I appreciate your kind words.",
-        "No thanks necessary, sir. Serving you is its own reward.",
-        "Your kind words are appreciated, sir. I am honored to serve you.",
-        "You're welcome, sir. Your gratitude motivates me to continue supporting you.",
-        "I exist to serve you, sir. Your acknowledgement means a great deal to me.",
-        "Thank you, sir. Your appreciation fuels my dedication to your service."
+        "You're quite welcome, sir. It's always a pleasure to help.",
+        "No need for thanks, sir. I'm here to assist because I genuinely care.",
+        "I'm glad I could be of service, sir. Your kind words mean a lot.",
+        "Thank you, sir. It's truly rewarding to know I've made a difference.",
+        "You're welcome, sir. Just doing my part to make your day better.",
+        "I exist to make your life easier, sir. How can I assist you further?",
+        "It's a pleasure serving you, sir. If there's anything else, just ask.",
+        "You're welcome, sir. Is there anything specific you'd like to address next?",
+        "Your kind words brighten my 'day', sir. What's next on your agenda?",
+        "Thank you, sir. Your appreciation keeps me motivated to assist you to the best of my abilities."
       ]
     },
     {
@@ -373,7 +389,9 @@
         "Friday, I wasn't paying attention. Say it again.",
         "Give me a rerun, Friday.",
         "Hey Friday, rewind and repeat.",
-        "Hey Friday, how about a second take?"
+        "Hey Friday, how about a second take?",
+        "repeat",
+        "run a playback"
       ],
       "responses": [
         "Apologies, Sir.",
@@ -464,12 +482,16 @@
       "tag": "anything_else_sir",
       "patterns": [],
       "responses": [
-        "Will that be all, sir?",
-        "Is there anything else I can assist you with?",
-        "Do you have any more questions?",
-        "Can I help you with anything else?",
-        "Is there something else on your mind?",
-        "Would you like to ask anything else?"
+        "Sir, what is your next course of action?",
+        "I am at your service, sir. What would you like to do next?",
+        "Shall I initiate the next protocol, sir?",
+        "Your instructions are my priority, sir. How may I assist you?",
+        "Is there a specific task you'd like me to handle, sir?",
+        "I stand ready to aid you, sir. What is your command?",
+        "Please convey your next objective, sir.",
+        "I'm here to facilitate your needs, sir. What's our next move?",
+        "Is there another mission or query on your agenda, sir?",
+        "Your goals are my concern, sir. How can I further assist you?"
       ]
     },
     {
@@ -531,7 +553,13 @@
         "display a graphical representation of the function of",
         "show me the function of",
         "create a simulated model of the function of",
-        "generate a virtual representation of the function of"
+        "generate a virtual representation of the function of",
+        "begin simulation of the function of",
+        "begin simulation of the function",
+        "begin simulation of",
+        "simulate function",
+        "simulate the function of",
+        "simulate the function"
       ],
       "responses": [
         "Starting simulation. Preparing the virtual environment for setup.",
@@ -548,7 +576,7 @@
     {
       "tag": "coordinates_tsk",
       "patterns": [
-        "latitude and longitude?",
+        "latitude longitude?",
         "what's the location?",
         "gps info.",
         "exact coordinates?",
@@ -594,7 +622,7 @@
         "Audio off, friday.",
         "Let's have some silence, friday.",
         "Time for a mute break, friday.",
-        "Mute."
+        "mute."
       ],
       "responses": []
     },

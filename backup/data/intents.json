@@ -5,6 +5,10 @@
       "patterns": [
         "give me system info",
         "give me system status",
+        "give me system the info",
+        "give me system the status",
+        "give me system the current info",
+        "give me system the current status",
         "status update",
         "system info",
         "system status",
@@ -20,6 +24,10 @@
       "patterns": [
         "give me storage info",
         "give me storage status",
+        "give me storage the info",
+        "give me storage the status",
+        "give me storage the current info",
+        "give me storage the current status",
         "storage info",
         "storage status",
         "storage status update",
@@ -40,6 +48,10 @@
       "patterns": [
         "give me cpu usage",
         "give me cpu status",
+        "give me cpu the usage",
+        "give me cpu the status",
+        "give me cpu the current usage",
+        "give me cpu the current status",
         "cpu status",
         "cpu status update",
         "cpu usage",
@@ -466,8 +478,6 @@
       "responses": [
         "Will that be all, sir?",
         "Is there anything else I can assist you with?",
-        "Do you have any more questions?",
-        "Can I help you with anything else?",
         "Is there something else on your mind?",
         "Would you like to ask anything else?"
       ]
@@ -531,7 +541,13 @@
         "display a graphical representation of the function of",
         "show me the function of",
         "create a simulated model of the function of",
-        "generate a virtual representation of the function of"
+        "generate a virtual representation of the function of",
+        "begin simulation of the function of",
+        "begin simulation of the function",
+        "begin simulation of",
+        "simulate function",
+        "simulate the function of",
+        "simulate the function"
       ],
       "responses": [
         "Starting simulation. Preparing the virtual environment for setup.",
@@ -548,7 +564,7 @@
     {
       "tag": "coordinates_tsk",
       "patterns": [
-        "latitude and longitude?",
+        "latitude longitude?",
         "what's the location?",
         "gps info.",
         "exact coordinates?",
@@ -594,7 +610,7 @@
         "Audio off, friday.",
         "Let's have some silence, friday.",
         "Time for a mute break, friday.",
-        "Mute."
+        "mute."
       ],
       "responses": []
     },
