@@ -219,17 +219,7 @@ class Friday:
                         probs = torch.softmax(output, dim=1)
                         prob = probs[0][predicted.item()]
 
-                    if self.is_complex_alphabetical_math_problem(user_input):
-                        result = solve_word_math_expression(user_input)
-                        for intent in self.intents["intents"]:
-                            if intent["tag"] == "math_tsk":
-                                response = random.choice(intent["responses"]).format(
-                                    answer=result
-                                )
-                                self.get_intent_response(intent, response)
-                                break
-
-                    elif prob.item() > 0.95:
+                    if prob.item() > 0.95:
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
                                 # if "tsk" in intent["tag"]:
@@ -262,6 +252,7 @@ class Friday:
                                     response = random.choice(intent["responses"])
                                     response = get_long_and_lati(response)
                                     self.get_intent_response(intent, response)
+
                                 elif intent["tag"] == "simulate_interference_tsk":
                                     user_input = self.convert_textual_numbers(
                                         user_input
@@ -388,49 +379,7 @@ class Friday:
                     probs = torch.softmax(output, dim=1)
                     prob = probs[0][predicted.item()]
 
-                if self.is_complex_alphabetical_math_problem(user_input):
-                    sentence = tokenize(user_input)
-                    X = bag_of_words(sentence, self.all_words)
-                    X = X.reshape(1, X.shape[0])
-                    X = torch.from_numpy(X)
-                    output = self.model(X)
-                    _, predicted = torch.max(output, dim=1)
-                    tag = self.tags[predicted.item()]
-                    probs = torch.softmax(output, dim=1)
-                    prob = probs[0][predicted.item()]
-
-                    if prob.item() > 0.95:
-                        for intent in self.intents["intents"]:
-                            if tag == intent["tag"]:
-                                if intent["tag"] == "simulate_interference_tsk":
-                                    user_input = self.convert_textual_numbers(
-                                        user_input
-                                    )
-                                    user_input = self.extract_function_from_input(
-                                        user_input
-                                    )
-                                    response = random.choice(intent["responses"])
-                                    self.get_intent_response(intent, response)
-                                    try:
-                                        subprocess.Popen(
-                                            [
-                                                "python",
-                                                "./functions/math/three_math_sim.py",
-                                                user_input,
-                                            ]
-                                        )
-                                    except FileNotFoundError:
-                                        print(
-                                            "The script three_math_sim.py was not found."
-                                        )
-                                        pass
-                                    except Exception as e:
-                                        print(e)
-                                        pass
-                                else:
-                                    pass
-
-                elif prob.item() > 0.95:
+                if prob.item() > 0.95:
                     for intent in self.intents["intents"]:
                         if tag == intent["tag"]:
                             # if "tsk" in intent["tag"]:
@@ -466,27 +415,27 @@ class Friday:
                                 response = get_long_and_lati(response)
                                 self.get_intent_response(intent, response)
 
-                            # elif intent["tag"] == "simulate_interference_tsk":
-                            #     user_input = self.convert_textual_numbers(user_input)
-                            #     user_input = self.extract_function_from_input(
-                            #         user_input
-                            #     )
-                            #     response = random.choice(intent["responses"])
-                            #     self.get_intent_response(intent, response)
-                            #     try:
-                            #         subprocess.Popen(
-                            #             [
-                            #                 "python",
-                            #                 "./functions/math/three_math_sim.py",
-                            #                 user_input,
-                            #             ]
-                            #         )
-                            #     except FileNotFoundError:
-                            #         print("The script three_math_sim.py was not found.")
-                            #         pass
-                            #     except Exception as e:
-                            #         print(e)
-                            #         pass
+                            elif intent["tag"] == "simulate_interference_tsk":
+                                user_input = self.convert_textual_numbers(user_input)
+                                user_input = self.extract_function_from_input(
+                                    user_input
+                                )
+                                response = random.choice(intent["responses"])
+                                self.get_intent_response(intent, response)
+                                try:
+                                    subprocess.Popen(
+                                        [
+                                            "python",
+                                            "./functions/math/three_math_sim.py",
+                                            user_input,
+                                        ]
+                                    )
+                                except FileNotFoundError:
+                                    print("The script three_math_sim.py was not found.")
+                                    pass
+                                except Exception as e:
+                                    print(e)
+                                    pass
 
                             elif intent["tag"] == "repeat_tsk":
                                 response = random.choice(intent["responses"])
