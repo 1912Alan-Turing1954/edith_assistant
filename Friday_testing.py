@@ -262,10 +262,8 @@ class Friday:
                                     self.get_intent_response(intent, response)
 
                                 elif intent["tag"] == "simulate_interference_tsk":
-                                    result = self.convert_textual_numbers(user_input)
-                                    result = self.extract_function_from_input(
-                                        user_input
-                                    )
+                                    result1 = self.convert_textual_numbers(user_input)
+                                    result = self.extract_function_from_input(result1)
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(intent, response)
 
@@ -428,8 +426,8 @@ class Friday:
                                 self.get_intent_response(intent, response)
 
                             elif intent["tag"] == "simulate_interference_tsk":
-                                result = self.convert_textual_numbers(user_input)
-                                result = self.extract_function_from_input(user_input)
+                                result1 = self.convert_textual_numbers(user_input)
+                                result = self.extract_function_from_input(result1)
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response)
 
