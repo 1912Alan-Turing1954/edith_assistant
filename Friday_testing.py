@@ -178,12 +178,12 @@ class Friday:
 
     def MainFrame(self):
         while True:
-            # if self.mute:
-            #     self.mute = False
-            #     print("break_mute")
-            #     pass
-            # else:
-            #     pass
+            if self.mute:
+                self.mute = False
+                print("break_mute")
+                pass
+            else:
+                pass
 
             user_input = input("friday is active: ")
             print(type(user_input))
@@ -200,6 +200,7 @@ class Friday:
                     cpu_usage = generate_cpu_usage_response(info_system)
                     memory_usage = generate_memory_usage_response(info_system)
                     disk_space = generate_disk_space_response(info_system)
+
                     if user_input == self.prev_input.lower():
                         tag = "repeat_string"
                     elif (
@@ -217,6 +218,7 @@ class Friday:
                         tag = self.tags[predicted.item()]
                         probs = torch.softmax(output, dim=1)
                         prob = probs[0][predicted.item()]
+
                     if self.is_complex_alphabetical_math_problem(user_input):
                         result = solve_word_math_expression(user_input)
                         for intent in self.intents["intents"]:
@@ -242,9 +244,11 @@ class Friday:
                                 #                 self.task_tag_count = 0
                                 if intent["tag"] == "background_acknowledgment":
                                     pass
-                                # elif intent["tag"] == "mute_command_tsk":
-                                #     self.mute = True
-                                #     pass
+
+                                elif intent["tag"] == "mute_command_tsk":
+                                    self.mute = True
+                                    pass
+
                                 elif intent["tag"] == "location_inquiry_tsk":
                                     response = random.choice(intent["responses"])
                                     response = get_location_description(response)
@@ -283,6 +287,7 @@ class Friday:
                                     except Exception as e:
                                         print(e)
                                         pass
+
                                 elif intent["tag"] == "repeat_tsk":
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(
@@ -364,6 +369,7 @@ class Friday:
                 cpu_usage = generate_cpu_usage_response(info_system)
                 memory_usage = generate_memory_usage_response(info_system)
                 disk_space = generate_disk_space_response(info_system)
+
                 if user_input == self.prev_input.lower():
                     tag = "repeat_string"
                 elif (
