@@ -282,63 +282,77 @@ class Friday:
                                     self.get_intent_response(
                                         intent, f"{response} {self.prev_response}"
                                     )
+
                                 elif intent["tag"] == "repeat_string":
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(intent, response)
+
                                 elif intent["tag"] == "good_morning":
                                     response = time_of_day_correct(user_input)
                                     self.get_intent_response(intent, response)
+
                                 elif intent["tag"] == "good_afternoon":
                                     response = time_of_day_correct(user_input)
                                     self.get_intent_response(intent, response)
+
                                 elif intent["tag"] == "good_night":
                                     response = time_of_day_correct(user_input)
                                     self.get_intent_response(intent, response)
+
                                 elif intent["tag"] == "generative_with_t5":
                                     response = random.choice(
                                         intent["responses"]
                                     ).format(string=generative_with_t5(user_input))
                                     self.get_intent_response(intent, response)
+
                                 elif intent["tag"] == "system_info_tsk":
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(
                                         intent, response, system_info
                                     )
+
                                 elif intent["tag"] == "storage_info_tsk":
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(
                                         intent, response, storage_info
                                     )
+
                                 elif intent["tag"] == "cpu_usage_tsk":
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(
                                         intent, response, cpu_usage
                                     )
+
                                 elif intent["tag"] == "memory_usage_tsk":
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(
                                         intent, response, memory_usage
                                     )
+
                                 elif intent["tag"] == "disk_space_tsk":
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(
                                         intent, response, disk_space
                                     )
+
                                 elif intent["tag"] == "time_tsk":
                                     response = random.choice(
                                         intent["responses"]
                                     ).replace("{time}", self.get_time())
                                     self.get_intent_response(intent, response)
+
                                 elif intent["tag"] == "date_tsk":
                                     response = random.choice(
                                         intent["responses"]
                                     ).replace("{date}", self.get_date())
                                     self.get_intent_response(intent, response)
+
                                 elif intent["tag"] == "day_tsk":
                                     response = random.choice(
                                         intent["responses"]
                                     ).replace("{day}", self.get_day())
                                     self.get_intent_response(intent, response)
+
                                 else:
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(intent, response)
@@ -432,53 +446,67 @@ class Friday:
                                 self.get_intent_response(
                                     intent, f"{response} {self.prev_response}"
                                 )
+
                             elif intent["tag"] == "repeat_string":
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response)
+
                             elif intent["tag"] == "good_morning":
                                 response = time_of_day_correct(user_input)
                                 self.get_intent_response(intent, response)
+
                             elif intent["tag"] == "good_afternoon":
                                 response = time_of_day_correct(user_input)
                                 self.get_intent_response(intent, response)
+
                             elif intent["tag"] == "good_night":
                                 response = time_of_day_correct(user_input)
                                 self.get_intent_response(intent, response)
+
                             elif intent["tag"] == "generative_with_t5":
                                 response = random.choice(intent["responses"]).format(
                                     string=generative_with_t5(user_input)
                                 )
                                 self.get_intent_response(intent, response)
+
                             elif intent["tag"] == "system_info_tsk":
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response, system_info)
+
                             elif intent["tag"] == "storage_info_tsk":
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response, storage_info)
+
                             elif intent["tag"] == "cpu_usage_tsk":
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response, cpu_usage)
+
                             elif intent["tag"] == "memory_usage_tsk":
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response, memory_usage)
+
                             elif intent["tag"] == "disk_space_tsk":
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response, disk_space)
+
                             elif intent["tag"] == "time_tsk":
                                 response = random.choice(intent["responses"]).replace(
                                     "{time}", self.get_time()
                                 )
                                 self.get_intent_response(intent, response)
+
                             elif intent["tag"] == "date_tsk":
                                 response = random.choice(intent["responses"]).replace(
                                     "{date}", self.get_date()
                                 )
                                 self.get_intent_response(intent, response)
+
                             elif intent["tag"] == "day_tsk":
                                 response = random.choice(intent["responses"]).replace(
                                     "{day}", self.get_day()
                                 )
                                 self.get_intent_response(intent, response)
+
                             else:
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response)
