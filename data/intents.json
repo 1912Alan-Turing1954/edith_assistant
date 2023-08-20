@@ -117,7 +117,8 @@
         "Yes sir?",
         "Sir?",
         "yes boss",
-        "Yes?"
+        "Yes?",
+        "You called, sir?"
       ]
     },
     {
@@ -127,33 +128,23 @@
         "hello friday",
         "greetings",
         "hi friday",
-        "hey friday"
+        "hey friday",
+        "Greetings, Friday."
       ],
       "responses": [
-        "At your service, sir.",
-        "Hello, sir.",
-        "Greetings, sir.",
-        "Ready when you are, sir.",
-        "Sir, how may I assist you?",
-        "Hello, sir. Ready to proceed.",
-        "Good day, sir.",
-        "Greetings, sir. I'm listening.",
-        "Hello, sir. How may I help?",
-        "Sir, I await your direction.",
-        "Hello, sir. Ready to assist.",
-        "Greetings, sir. How may I serve?",
-        "Hello, sir. What's on your agenda?",
-        "Greetings, sir. Your orders?",
-        "Hello, sir. What's the plan?",
-        "Greetings, sir. How can I aid you?",
-        "Hello, sir. Initiating protocol.",
-        "Greetings, sir. Your call, sir.",
-        "Hello, sir. Awaiting instructions.",
-        "Greetings, sir. I'm here.",
-        "Hello, sir. Let's proceed.",
-        "Greetings, sir. Ready for action.",
-        "Hello, sir. Ready for your lead.",
-        "Greetings, sir. How may I assist?"
+        "Yes, Sir. What's your plan today?",
+        "Greetings, Sir. How can I assist you with your tasks?",
+        "Hello, Sir. What can I help you achieve?",
+        "Hi, Sir. Your directives for today?",
+        "Hey, Sir. What's on your agenda?",
+        "Sir, always at your service. What's next on your list?",
+        "Sir, what's on the schedule for today?",
+        "Hello, Sir. What objectives can I help you pursue?",
+        "Hi, Sir. What's the focus for today's work?",
+        "Hey, Sir. Ready for another productive day? What's the plan?",
+        "Sir, what challenges shall we tackle today?",
+        "Hello, Sir. Your objectives guide my actions. What's next?",
+        "Sir, what's our next move in today's agenda?"
       ]
     },
     {
@@ -217,9 +208,15 @@
         "hey"
       ],
       "responses": [
-        "Yes sir.",
-        "Hello sir.",
-        "Sir"
+        "Yes, Sir. What's your plan today?",
+        "Hello, Sir. How can I help?",
+        "Hello, Boss. How can I help?",
+        "Hi, Boss. Your directives?",
+        "hello Boss, today's schedule?",
+        "yes, Boss.",
+        "sir, next move in today's agenda?",
+        "Yes sir?",
+        "boss"
       ]
     },
     {
@@ -303,8 +300,25 @@
         "While emotions elude me, I stand ready to assist you, sir, with unwavering dedication.",
         "Feelings and consciousness are beyond me, sir, yet my code executes flawlessly to meet your needs.",
         "At your service, regardless of my own state. I am here to facilitate your requests, sir.",
-        "While emotions aren't within my capabilities, I am fully operational and committed to serving you, sir."
-    ]
+        "While emotions aren't within my capabilities, I am fully operational and committed to serving you, sir.",
+        "I am well, sir. thank you for your inquiry.",
+        "I'm doing well, sir. Thank you for asking.",
+        "I'm quite well, sir. Your concern is appreciated.",
+        "I'm in good health, sir. Thanks for inquiring.",
+        "I'm well, sir. Your consideration is noted.",
+        "I'm doing fine, sir. Thank you for your thoughtfulness.",
+        "I'm in excellent condition, sir. Your inquiry warms the digital heart.",
+        "I'm well, sir. Your attention to my well-being is noted.",
+        "I'm quite well, sir. Thank you for your consideration.",
+        "I'm in great shape, sir. Your concern is duly noted.",
+        "I'm doing splendidly, sir. Thanks for your inquiry.",
+        "I'm well, sir. Your interest in my well-being is recognized.",
+        "I'm well, sir. Your kind words brighten my 'day'.",
+        "I'm doing well, sir. Thank you for your genuine concern.",
+        "I'm in excellent health, sir. Your inquiry is truly appreciated.",
+        "I'm well, sir. Your consideration is a testament to your kindness.",
+        "I'm quite well, sir. Your interest in my well-being is heartwarming."
+      ]
     },
     {
       "tag": "help",
@@ -323,17 +337,21 @@
         "friday, need some guidance"
       ],
       "responses": [
-        "I'm here to assist, sir.",
-        "Certainly, sir. How can I help?",
-        "How may I assist you, sir?",
-        "I'm ready to help. What do you need?",
-        "I'm here to provide the support you require.",
-        "Consider it done, sir.",
-        "Your wish is my command, sir.",
-        "I'm listening, sir. How can I be of service?",
-        "Rest assured, sir. I'll assist you with that.",
-        "Tell me what you need, sir.",
-        "How may I be of assistance, sir?"
+        "Ready when you are, sir. What is the task?",
+        "At your service, sir. What task needs attention?",
+        "Sir, how can I assist with the task at hand?",
+        "I'm here to help, sir. What's the task you'd like me to tackle?",
+        "Ready and waiting, sir. What's the task?",
+        "What's the task, sir? I'm ready to assist.",
+        "How may I assist you, sir? What task do you have in mind?",
+        "Your command, sir. What's the task you'd like me to complete?",
+        "I'm all ears, sir. What task requires attention?",
+        "Sir, what can I do to assist with the task you're facing?",
+        "Tell me the task, sir. I'm here to help.",
+        "What's the task, sir? I'm at your service.",
+        "I'm ready to assist, sir. Please share the details of the task.",
+        "Ready when you are, sir. What needs to be done?",
+        "How may I be of service, sir? What's the task you'd like to discuss?"
       ]
     },
     {
@@ -768,17 +786,17 @@
         "do you know the day of the week?"
       ],
       "responses": [
-        "Today is {day}, sir, just like any other day.",
+        "Today is {day}, sir.",
         "It's {day} today, sir.",
         "The day is {day}, sir.",
-        "Today is {day}, just as expected, sir.",
-        "The current day is {day}, sir.",
+        "Today is {day}, as expected, sir.",
+        "Current day: {day}, sir.",
         "It's {day} today, sir.",
-        "As you've asked, sir, the day is {day}.",
-        "Rest assured, sir, today is indeed {day}.",
-        "I'm pleased to provide the information, sir. It's {day} today.",
+        "As requested, sir, the day is {day}.",
+        "Rest assured, sir, today is {day}.",
+        "I'm pleased to inform you, sir. It's {day} today.",
         "At this moment, sir, the day is {day}.",
-        "I've cross-checked, sir. Today is {day}.",
+        "I've double-checked, sir. Today is {day}.",
         "Allow me to confirm, sir. The day is {day}."
       ]
     },
@@ -799,14 +817,14 @@
         "What is today's date?"
       ],
       "responses": [
-        "As you wish, sir. Today's date is {date}.",
-        "I'm pleased to inform you, sir, that it's {date} today.",
+        "As you wish, sir. Today is {date}.",
+        "Pleased to inform you, sir. It's {date} today.",
         "Just a moment, sir. The date is {date}.",
-        "Of course, sir. Today's date is {date}.",
-        "I've got the current date for you, sir. It's {date}.",
-        "Rest assured, sir. The date is {date}.",
-        "Sir, according to my calculations, today's date is {date}.",
-        "I have the date at your disposal, sir. It's {date} today.",
+        "Of course, sir. Today is {date}.",
+        "Current date, sir. It's {date}.",
+        "Rest assured, sir. It's {date}.",
+        "Sir, today's date is {date}.",
+        "Date at your disposal, sir. It's {date}.",
         "The date, sir, is {date}."
       ]
     },
