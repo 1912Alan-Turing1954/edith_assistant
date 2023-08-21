@@ -500,16 +500,14 @@
       "tag": "anything_else_sir",
       "patterns": [],
       "responses": [
-        "Sir, what is your next course of action?",
-        "I am at your service, sir. What would you like to do next?",
-        "Shall I initiate the next protocol, sir?",
-        "Your instructions are my priority, sir. How may I assist you?",
-        "Is there a specific task you'd like me to handle, sir?",
-        "I stand ready to aid you, sir. What is your command?",
-        "Please convey your next objective, sir.",
-        "I'm here to facilitate your needs, sir. What's our next move?",
-        "Is there another mission or query on your agenda, sir?",
-        "Your goals are my concern, sir. How can I further assist you?"
+        "will that be all sir.",
+        "Anything else, sir?",
+        "Need anything else, sir?",
+        "Can I assist with anything else, sir?",
+        "Is there more, sir?",
+        "Anything further, sir?",
+        "Want anything else, sir?",
+        "Need any help, sir?"
       ]
     },
     {

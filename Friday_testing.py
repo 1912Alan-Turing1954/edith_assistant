@@ -366,45 +366,39 @@ class Friday:
                                                     intent, response_tsk
                                                 )
                                                 self.task_tag_count = 0
-                                                try:
-                                                    user_input = input("Yes / No: ")
 
-                                                    sentence = tokenize(user_input)
-                                                    X = bag_of_words(
-                                                        sentence, self.all_words
-                                                    )
-                                                    X = X.reshape(1, X.shape[0])
-                                                    X = torch.from_numpy(X)
-                                                    output = self.model(X)
-                                                    _, predicted = torch.max(
-                                                        output, dim=1
-                                                    )
-                                                    tag = self.tags[predicted.item()]
-                                                    probs = torch.softmax(output, dim=1)
-                                                    prob = probs[0][predicted.item()]
+                                                user_input = input("Yes / No: ")
 
-                                                    if prob.item() > 0.95:
-                                                        for intent in self.intents[
-                                                            "intents"
-                                                        ]:
-                                                            if tag == intent["tag"]:
-                                                                if (
-                                                                    intent["tag"]
-                                                                    == "anything_else_sir_yes"
-                                                                ):
-                                                                    print(intent["tag"])
-                                                                    self.num = 5
-                                                                elif (
-                                                                    intent["tag"]
-                                                                    == "anything_else_sir_no"
-                                                                ):
-                                                                    print(intent["tag"])
-                                                                    self.num = self.num
-                                                                else:
-                                                                    pass
-                                                except Exception as e:
-                                                    print(e)
-                                                    pass
+                                                sentence = tokenize(user_input)
+                                                X = bag_of_words(
+                                                    sentence, self.all_words
+                                                )
+                                                X = X.reshape(1, X.shape[0])
+                                                X = torch.from_numpy(X)
+                                                output = self.model(X)
+                                                _, predicted = torch.max(output, dim=1)
+                                                tag = self.tags[predicted.item()]
+                                                probs = torch.softmax(output, dim=1)
+                                                prob = probs[0][predicted.item()]
+                                                if prob.item() > 0.95:
+                                                    for intent in self.intents[
+                                                        "intents"
+                                                    ]:
+                                                        if tag == intent["tag"]:
+                                                            if (
+                                                                intent["tag"]
+                                                                == "anything_else_sir_yes"
+                                                            ):
+                                                                print(intent["tag"])
+                                                                self.num = 5
+                                                            elif (
+                                                                intent["tag"]
+                                                                == "anything_else_sir_no"
+                                                            ):
+                                                                print(intent["tag"])
+                                                                self.num = self.num
+                                                            else:
+                                                                pass
 
                         self.prev_input = user_input.lower()
                     else:
