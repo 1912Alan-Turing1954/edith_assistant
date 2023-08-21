@@ -379,7 +379,7 @@ class Friday:
                                 self.get_intent_response(intent, response)
                                 break
 
-                if self.last_response is not None:
+                if self.last_response:
                     text_to_speech(self.last_response[0])
                     user_input = input("Yes / No: ")
 
@@ -397,13 +397,15 @@ class Friday:
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
                                 if intent["tag"] == "anything_else_sir_yes":
+                                    response = random.choice(intent["responses"])
+                                    self.get_intent_response(intent["responses"])
                                     print(intent["tag"])
                                     self.num = 5
-                                    print(self.num)
                                 elif intent["tag"] == "anything_else_sir_no":
-                                    print(intent["tag"])
-                                    self.num = self.num
+                                    response = random.choice(intent["responses"])
+                                    self.get_intent_response(intent["responses"])
                                     print(self.num)
+                                    self.num = self.num
                                 else:
                                     pass
 
@@ -565,7 +567,7 @@ class Friday:
                             self.get_intent_response(intent, response)
                             break
 
-                if self.last_response is not None:
+                if self.last_response:
                     text_to_speech(self.last_response[0])
                     user_input = input("Yes / No: ")
 
