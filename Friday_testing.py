@@ -394,9 +394,11 @@ class Friday:
                                 if intent["tag"] == "anything_else_sir_yes":
                                     print(intent["tag"])
                                     self.num = 5
+                                    print(self.num)
                                 elif intent["tag"] == "anything_else_sir_no":
                                     print(intent["tag"])
                                     self.num = self.num
+                                    print(self.num)
                                 else:
                                     pass
 
@@ -577,11 +579,11 @@ class Friday:
                                 if intent["tag"] == "anything_else_sir_yes":
                                     print(intent["tag"])
                                     self.num = 5
-
+                                    print(self.num)
                                 elif intent["tag"] == "anything_else_sir_no":
                                     print(intent["tag"])
                                     self.num = self.num
-
+                                    print(self.num)
                                 else:
                                     pass
 
