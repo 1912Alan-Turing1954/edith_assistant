@@ -366,39 +366,6 @@ class Friday:
                                                 last_response.append(response_tsk)
                                                 self.task_tag_count = 0
 
-                                                user_input = input("Yes / No: ")
-
-                                                sentence = tokenize(user_input)
-                                                X = bag_of_words(
-                                                    sentence, self.all_words
-                                                )
-                                                X = X.reshape(1, X.shape[0])
-                                                X = torch.from_numpy(X)
-                                                output = self.model(X)
-                                                _, predicted = torch.max(output, dim=1)
-                                                tag = self.tags[predicted.item()]
-                                                probs = torch.softmax(output, dim=1)
-                                                prob = probs[0][predicted.item()]
-                                                if prob.item() > 0.95:
-                                                    for intent in self.intents[
-                                                        "intents"
-                                                    ]:
-                                                        if tag == intent["tag"]:
-                                                            if (
-                                                                intent["tag"]
-                                                                == "anything_else_sir_yes"
-                                                            ):
-                                                                print(intent["tag"])
-                                                                self.num = 5
-                                                            elif (
-                                                                intent["tag"]
-                                                                == "anything_else_sir_no"
-                                                            ):
-                                                                print(intent["tag"])
-                                                                self.num = self.num
-                                                            else:
-                                                                pass
-
                         self.prev_input = user_input.lower()
                     else:
                         for intent in self.intents["intents"]:
@@ -409,6 +376,31 @@ class Friday:
 
                 if last_response is not None:
                     text_to_speech(last_response[0])
+                    user_input = input("Yes / No: ")
+
+                    sentence = tokenize(user_input)
+                    X = bag_of_words(sentence, self.all_words)
+                    X = X.reshape(1, X.shape[0])
+                    X = torch.from_numpy(X)
+                    output = self.model(X)
+                    _, predicted = torch.max(output, dim=1)
+                    tag = self.tags[predicted.item()]
+                    probs = torch.softmax(output, dim=1)
+                    prob = probs[0][predicted.item()]
+
+                    if prob.item() > 0.95:
+                        for intent in self.intents["intents"]:
+                            if tag == intent["tag"]:
+                                if intent["tag"] == "anything_else_sir_yes":
+                                    print(intent["tag"])
+                                    self.num = 5
+                                    return
+                                elif intent["tag"] == "anything_else_sir_no":
+                                    print(intent["tag"])
+                                    self.num = self.num
+                                    return
+                                else:
+                                    pass
 
             else:
                 last_response = []
@@ -558,35 +550,6 @@ class Friday:
                                             last_response.append(response_tsk)
                                             self.task_tag_count = 0
 
-                                            user_input = input("Yes / No: ")
-
-                                            sentence = tokenize(user_input)
-                                            X = bag_of_words(sentence, self.all_words)
-                                            X = X.reshape(1, X.shape[0])
-                                            X = torch.from_numpy(X)
-                                            output = self.model(X)
-                                            _, predicted = torch.max(output, dim=1)
-                                            tag = self.tags[predicted.item()]
-                                            probs = torch.softmax(output, dim=1)
-                                            prob = probs[0][predicted.item()]
-                                            if prob.item() > 0.95:
-                                                for intent in self.intents["intents"]:
-                                                    if tag == intent["tag"]:
-                                                        if (
-                                                            intent["tag"]
-                                                            == "anything_else_sir_yes"
-                                                        ):
-                                                            print(intent["tag"])
-                                                            self.num = 5
-                                                        elif (
-                                                            intent["tag"]
-                                                            == "anything_else_sir_no"
-                                                        ):
-                                                            print(intent["tag"])
-                                                            self.num = self.num
-                                                        else:
-                                                            pass
-
                     self.prev_input = user_input.lower()
 
                 else:
@@ -598,6 +561,31 @@ class Friday:
 
                 if last_response is not None:
                     text_to_speech(last_response[0])
+                    user_input = input("Yes / No: ")
+
+                    sentence = tokenize(user_input)
+                    X = bag_of_words(sentence, self.all_words)
+                    X = X.reshape(1, X.shape[0])
+                    X = torch.from_numpy(X)
+                    output = self.model(X)
+                    _, predicted = torch.max(output, dim=1)
+                    tag = self.tags[predicted.item()]
+                    probs = torch.softmax(output, dim=1)
+                    prob = probs[0][predicted.item()]
+
+                    if prob.item() > 0.95:
+                        for intent in self.intents["intents"]:
+                            if tag == intent["tag"]:
+                                if intent["tag"] == "anything_else_sir_yes":
+                                    print(intent["tag"])
+                                    self.num = 5
+                                    return
+                                elif intent["tag"] == "anything_else_sir_no":
+                                    print(intent["tag"])
+                                    self.num = self.num
+                                    return
+                                else:
+                                    pass
 
 
 if __name__ == "__main__":
