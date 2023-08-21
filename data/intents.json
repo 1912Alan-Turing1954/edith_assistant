@@ -208,13 +208,11 @@
         "hey"
       ],
       "responses": [
-        "Yes, Sir. What's your plan today?",
         "Hello, Sir. How can I help?",
         "Hello, Boss. How can I help?",
-        "Hi, Boss. Your directives?",
+        "Hello, Boss.",
         "hello Boss, today's schedule?",
         "yes, Boss.",
-        "sir, next move in today's agenda?",
         "Yes sir?",
         "boss"
       ]
