@@ -205,6 +205,7 @@ class Friday:
                 )
             )
             if self.follow_word_check(user_input):
+                last_response = []
                 string_parts = self.replace_follow_up_word(user_input)
 
                 for string_part in string_parts:
@@ -362,9 +363,7 @@ class Friday:
                                                 response_tsk = random.choice(
                                                     intent["responses"]
                                                 )
-                                                self.get_intent_response(
-                                                    intent, response_tsk
-                                                )
+                                                last_response.append(response_tsk)
                                                 self.task_tag_count = 0
 
                                                 user_input = input("Yes / No: ")
@@ -407,7 +406,12 @@ class Friday:
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response)
                                 break
+
+                if last_response is not None:
+                    text_to_speech(last_response[0])
+
             else:
+                last_response = []
                 user_input = user_input.lower()
                 info_system = self.get_updated_system_info()
                 system_info = generate_system_status_response(info_system)
@@ -545,16 +549,43 @@ class Friday:
 
                             if "tsk" in intent["tag"]:
                                 self.task_tag_count += 1
-                                if self.task_tag_count == 3:
+                                if self.task_tag_count == self.num:
                                     for intent in self.intents["intents"]:
                                         if intent["tag"] == "anything_else_sir":
                                             response_tsk = random.choice(
                                                 intent["responses"]
                                             )
-                                            self.get_intent_response(
-                                                intent, response_tsk
-                                            )
+                                            last_response.append(response_tsk)
                                             self.task_tag_count = 0
+
+                                            user_input = input("Yes / No: ")
+
+                                            sentence = tokenize(user_input)
+                                            X = bag_of_words(sentence, self.all_words)
+                                            X = X.reshape(1, X.shape[0])
+                                            X = torch.from_numpy(X)
+                                            output = self.model(X)
+                                            _, predicted = torch.max(output, dim=1)
+                                            tag = self.tags[predicted.item()]
+                                            probs = torch.softmax(output, dim=1)
+                                            prob = probs[0][predicted.item()]
+                                            if prob.item() > 0.95:
+                                                for intent in self.intents["intents"]:
+                                                    if tag == intent["tag"]:
+                                                        if (
+                                                            intent["tag"]
+                                                            == "anything_else_sir_yes"
+                                                        ):
+                                                            print(intent["tag"])
+                                                            self.num = 5
+                                                        elif (
+                                                            intent["tag"]
+                                                            == "anything_else_sir_no"
+                                                        ):
+                                                            print(intent["tag"])
+                                                            self.num = self.num
+                                                        else:
+                                                            pass
 
                     self.prev_input = user_input.lower()
 
@@ -564,6 +595,9 @@ class Friday:
                             response = random.choice(intent["responses"])
                             self.get_intent_response(intent, response)
                             break
+
+                if last_response is not None:
+                    text_to_speech(last_response[0])
 
 
 if __name__ == "__main__":
