@@ -11,7 +11,7 @@ from brain.nltk_utils import bag_of_words, tokenize
 from tts_.tts import text_to_speech
 from AI.flan_t5_large_model import generative_with_t5
 from functions.math._math import solve_word_math_expression
-from functions.math.three_math_sim import create_simlulation_function
+from functions.math.math_sim import create_simlulation_function
 from functions.system.time_of_day import time_of_day_correct
 from functions.system.location import (
     get_address_description,
@@ -275,14 +275,12 @@ class Friday:
                                         subprocess.Popen(
                                             [
                                                 "python",
-                                                "./functions/math/three_math_sim.py",
+                                                "./functions/math/math_sim.py",
                                                 user_input,
                                             ]
                                         )
                                     except FileNotFoundError:
-                                        print(
-                                            "The script three_math_sim.py was not found."
-                                        )
+                                        print("The script math_sim.py was not found.")
                                         pass
                                     except Exception as e:
                                         print(e)
@@ -443,12 +441,12 @@ class Friday:
                                     subprocess.Popen(
                                         [
                                             "python",
-                                            "./functions/math/three_math_sim.py",
+                                            "./functions/math/math_sim.py",
                                             user_input,
                                         ]
                                     )
                                 except FileNotFoundError:
-                                    print("The script three_math_sim.py was not found.")
+                                    print("The script math_sim.py was not found.")
                                     pass
                                 except Exception as e:
                                     print(e)
