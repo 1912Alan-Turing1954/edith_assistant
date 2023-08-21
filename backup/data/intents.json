@@ -208,13 +208,11 @@
         "hey"
       ],
       "responses": [
-        "Yes, Sir. What's your plan today?",
         "Hello, Sir. How can I help?",
         "Hello, Boss. How can I help?",
-        "Hi, Boss. Your directives?",
+        "Hello, Boss.",
         "hello Boss, today's schedule?",
         "yes, Boss.",
-        "sir, next move in today's agenda?",
         "Yes sir?",
         "boss"
       ]
@@ -500,17 +498,77 @@
       "tag": "anything_else_sir",
       "patterns": [],
       "responses": [
-        "Sir, what is your next course of action?",
-        "I am at your service, sir. What would you like to do next?",
-        "Shall I initiate the next protocol, sir?",
-        "Your instructions are my priority, sir. How may I assist you?",
-        "Is there a specific task you'd like me to handle, sir?",
-        "I stand ready to aid you, sir. What is your command?",
-        "Please convey your next objective, sir.",
-        "I'm here to facilitate your needs, sir. What's our next move?",
-        "Is there another mission or query on your agenda, sir?",
-        "Your goals are my concern, sir. How can I further assist you?"
+        "will that be all sir.",
+        "Anything else, sir?",
+        "Need anything else, sir?",
+        "Can I assist with anything else, sir?",
+        "Is there more, sir?",
+        "Anything further, sir?",
+        "Want anything else, sir?",
+        "Need any help, sir?"
       ]
+    },
+    {
+      "tag": "anything_else_sir_yes",
+      "patterns": [
+        "yes",
+        "certainly",
+        "of course",
+        "absolutely",
+        "indeed",
+        "sure thing",
+        "you bet",
+        "no problem",
+        "definitely",
+        "totally",
+        "for sure",
+        "agreed",
+        "by all means",
+        "without a doubt",
+        "without question",
+        "absolutely yes",
+        "without hesitation",
+        "without reservation",
+        "without a second thought",
+        "indubitably",
+        "in the affirmative",
+        "without a shadow of a doubt",
+        "friday, confirm",
+        "yes friday",
+        "yes please",
+        "confirm"
+      ],
+      "responses": []
+    },
+    {
+      "tag": "anything_else_sir_no",
+      "patterns": [
+        "no",
+        "not a chance",
+        "I don't think so",
+        "I'm afraid not",
+        "Sorry, but no",
+        "Absolutely not",
+        "Definitely not",
+        "No way",
+        "Not at all",
+        "By no means",
+        "In no way",
+        "Without a doubt, no",
+        "Without question, no",
+        "Without hesitation, no",
+        "Without reservation, no",
+        "Without a second thought, no",
+        "Indubitably no",
+        "In the negative",
+        "Without a shadow of a doubt, no",
+        "friday, deny",
+        "no friday",
+        "no thank you",
+        "no thank you friday",
+        "deny"
+      ],
+      "responses": []
     },
     {
       "tag": "simulate_interference_tsk",
@@ -582,13 +640,15 @@
       "responses": [
         "Starting simulation. Preparing the virtual environment for setup.",
         "Initializing simulation parameters. Virtual environment setup in progress.",
-        "Virtual environment loading for simulation. Stand by.",
+        "Virtual environment loading for simulation.",
         "Simulation initiation underway. Configuring virtual environment components.",
         "Commencing simulation process. Virtual environment setup in motion.",
         "Virtual environment activation for simulation. Initializing necessary resources.",
         "Engaging simulation protocol. Preparing the virtual environment.",
-        "Initiating virtual environment for simulation purposes. Please wait.",
-        "Setting the stage for simulation. Virtual environment activation in progress."
+        "Initiating virtual environment for simulation purposes.",
+        "Setting the stage for simulation.",
+        "Simulation sequence underway. Initialization of components ongoing.",
+        "Activating simulation environment. Resources being prepared."
       ]
     },
     {
@@ -755,16 +815,10 @@
         "Per my analysis, the time stands at {time}, sir.",
         "At this juncture, the clock displays {time}, sir.",
         "I have determined the time to be {time}, sir.",
-        "The current moment corresponds to {time}, sir.",
         "Sir, the temporal data indicates {time}.",
         "As of now, the clock indicates {time}, sir.",
-        "Your awareness of the time is appreciated; it's {time}, sir.",
-        "Timekeeping accuracy is paramount; it's {time}, sir.",
         "Temporal precision suggests it's {time}, sir.",
-        "Observing the chronometric data, it's {time}, sir.",        
-        "The temporal realm unveils {time}, sir.",
-        "Temporal calculations concur: it's {time}, sir.",
-        "Temporal metrics confirm that it's {time}, sir."
+        "Observing the chronometric data, it's {time}, sir."     
       ]
     },
     {

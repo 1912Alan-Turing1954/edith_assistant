@@ -640,13 +640,15 @@
       "responses": [
         "Starting simulation. Preparing the virtual environment for setup.",
         "Initializing simulation parameters. Virtual environment setup in progress.",
-        "Virtual environment loading for simulation. Stand by.",
+        "Virtual environment loading for simulation.",
         "Simulation initiation underway. Configuring virtual environment components.",
         "Commencing simulation process. Virtual environment setup in motion.",
         "Virtual environment activation for simulation. Initializing necessary resources.",
         "Engaging simulation protocol. Preparing the virtual environment.",
-        "Initiating virtual environment for simulation purposes. Please wait.",
-        "Setting the stage for simulation. Virtual environment activation in progress."
+        "Initiating virtual environment for simulation purposes.",
+        "Setting the stage for simulation.",
+        "Simulation sequence underway. Initialization of components ongoing.",
+        "Activating simulation environment. Resources being prepared."
       ]
     },
     {

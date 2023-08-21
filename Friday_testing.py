@@ -53,6 +53,7 @@ class Friday:
         self.prev_response = ""
         self.task_tag_count = 0
         self.num = 3
+        self.last_response = []
         self.mute = False
 
         self.follow_words = [
@@ -62,7 +63,6 @@ class Friday:
             " and also ",
             " and by the way ",
             " additionally ",
-            " i need you to ",
         ]
 
     def follow_word_check(self, user_input):
@@ -72,13 +72,18 @@ class Friday:
         return False
 
     def replace_follow_up_word(self, user_input):
+        parts = [user_input]
         for word in self.follow_words:
-            if word in user_input:
-                user_input = user_input.split(word)
-                print(user_input)
-                return user_input
-            else:
-                pass
+            new_parts = []
+            for part in parts:
+                new_parts.extend(part.split(word))
+            parts = new_parts
+
+        # Print the split parts
+        for part in parts:
+            print(part.strip())  # .strip() to remove leading/trailing whitespace
+
+        return parts
 
     def has_mathematical_function_or_x(self, user_input):
         # Define a regular expression pattern to match 'x' alone or mathematical expressions with 'x'
@@ -204,8 +209,8 @@ class Friday:
                     )
                 )
             )
+
             if self.follow_word_check(user_input):
-                last_response = []
                 string_parts = self.replace_follow_up_word(user_input)
 
                 for string_part in string_parts:
@@ -363,7 +368,7 @@ class Friday:
                                                 response_tsk = random.choice(
                                                     intent["responses"]
                                                 )
-                                                last_response.append(response_tsk)
+                                                self.last_response.append(response_tsk)
                                                 self.task_tag_count = 0
 
                         self.prev_input = user_input.lower()
@@ -374,8 +379,8 @@ class Friday:
                                 self.get_intent_response(intent, response)
                                 break
 
-                if last_response is not None:
-                    text_to_speech(last_response[0])
+                if self.last_response is not None:
+                    text_to_speech(self.last_response[0])
                     user_input = input("Yes / No: ")
 
                     sentence = tokenize(user_input)
@@ -402,8 +407,9 @@ class Friday:
                                 else:
                                     pass
 
+                    self.last_response.clear()
+
             else:
-                last_response = []
                 user_input = user_input.lower()
                 info_system = self.get_updated_system_info()
                 system_info = generate_system_status_response(info_system)
@@ -547,7 +553,7 @@ class Friday:
                                             response_tsk = random.choice(
                                                 intent["responses"]
                                             )
-                                            last_response.append(response_tsk)
+                                            self.last_response.append(response_tsk)
                                             self.task_tag_count = 0
 
                     self.prev_input = user_input.lower()
@@ -559,8 +565,8 @@ class Friday:
                             self.get_intent_response(intent, response)
                             break
 
-                if last_response is not None:
-                    text_to_speech(last_response[0])
+                if self.last_response is not None:
+                    text_to_speech(self.last_response[0])
                     user_input = input("Yes / No: ")
 
                     sentence = tokenize(user_input)
@@ -586,6 +592,8 @@ class Friday:
                                     print(self.num)
                                 else:
                                     pass
+
+                    self.last_response.clear()
 
 
 if __name__ == "__main__":
