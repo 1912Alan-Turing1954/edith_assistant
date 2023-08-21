@@ -21,7 +21,7 @@ def plot_custom_function(user_function_str):
 
     y_custom = user_function(x_values, y_values)
 
-    fig = plt.figure(figsize=(16, 7))
+    fig = plt.figure(figsize=(17, 8))
 
     # Adjust the width of the 2D subplot here
     ax2d = fig.add_subplot(131)
