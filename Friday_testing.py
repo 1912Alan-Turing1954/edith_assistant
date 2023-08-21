@@ -61,6 +61,7 @@ class Friday:
             " and also ",
             " and by the way ",
             " additionally ",
+            " i need you to ",
         ]
 
     def follow_word_check(self, user_input):
