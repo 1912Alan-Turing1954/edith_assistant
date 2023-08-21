@@ -513,6 +513,68 @@
       ]
     },
     {
+      "tag": "anything_else_sir_yes",
+      "patterns": [
+        "yes",
+        "certainly",
+        "of course",
+        "absolutely",
+        "indeed",
+        "sure thing",
+        "you bet",
+        "no problem",
+        "definitely",
+        "totally",
+        "for sure",
+        "agreed",
+        "by all means",
+        "without a doubt",
+        "without question",
+        "absolutely yes",
+        "without hesitation",
+        "without reservation",
+        "without a second thought",
+        "indubitably",
+        "in the affirmative",
+        "without a shadow of a doubt",
+        "friday, confirm",
+        "yes friday",
+        "yes please",
+        "confirm"
+      ],
+      "responses": []
+    },
+    {
+      "tag": "anything_else_sir_no",
+      "patterns": [
+        "no",
+        "not a chance",
+        "I don't think so",
+        "I'm afraid not",
+        "Sorry, but no",
+        "Absolutely not",
+        "Definitely not",
+        "No way",
+        "Not at all",
+        "By no means",
+        "In no way",
+        "Without a doubt, no",
+        "Without question, no",
+        "Without hesitation, no",
+        "Without reservation, no",
+        "Without a second thought, no",
+        "Indubitably no",
+        "In the negative",
+        "Without a shadow of a doubt, no",
+        "friday, deny",
+        "no friday",
+        "no thank you",
+        "no thank you friday",
+        "deny"
+      ],
+      "responses": []
+    },
+    {
       "tag": "simulate_interference_tsk",
       "patterns": [
         "emulate the function of",
@@ -755,16 +817,10 @@
         "Per my analysis, the time stands at {time}, sir.",
         "At this juncture, the clock displays {time}, sir.",
         "I have determined the time to be {time}, sir.",
-        "The current moment corresponds to {time}, sir.",
         "Sir, the temporal data indicates {time}.",
         "As of now, the clock indicates {time}, sir.",
-        "Your awareness of the time is appreciated; it's {time}, sir.",
-        "Timekeeping accuracy is paramount; it's {time}, sir.",
         "Temporal precision suggests it's {time}, sir.",
-        "Observing the chronometric data, it's {time}, sir.",        
-        "The temporal realm unveils {time}, sir.",
-        "Temporal calculations concur: it's {time}, sir.",
-        "Temporal metrics confirm that it's {time}, sir."
+        "Observing the chronometric data, it's {time}, sir."     
       ]
     },
     {

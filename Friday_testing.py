@@ -11,7 +11,7 @@ from brain.nltk_utils import bag_of_words, tokenize
 from tts_.tts import text_to_speech
 from AI.flan_t5_large_model import generative_with_t5
 from functions.math._math import solve_word_math_expression
-from functions.math.math_sim import create_simlulation_function
+from functions.math.math_sim import create_simulation_function
 from functions.system.time_of_day import time_of_day_correct
 from functions.system.location import (
     get_address_description,
@@ -52,6 +52,7 @@ class Friday:
         self.prev_input = ""
         self.prev_response = ""
         self.task_tag_count = 0
+        self.num = 3
         self.mute = False
 
         self.follow_words = [
@@ -355,7 +356,7 @@ class Friday:
 
                                 if "tsk" in intent["tag"]:
                                     self.task_tag_count += 1
-                                    if self.task_tag_count == 3:
+                                    if self.task_tag_count == self.num:
                                         for intent in self.intents["intents"]:
                                             if intent["tag"] == "anything_else_sir":
                                                 response_tsk = random.choice(
@@ -365,6 +366,45 @@ class Friday:
                                                     intent, response_tsk
                                                 )
                                                 self.task_tag_count = 0
+                                                try:
+                                                    user_input = input("Yes / No: ")
+
+                                                    sentence = tokenize(user_input)
+                                                    X = bag_of_words(
+                                                        sentence, self.all_words
+                                                    )
+                                                    X = X.reshape(1, X.shape[0])
+                                                    X = torch.from_numpy(X)
+                                                    output = self.model(X)
+                                                    _, predicted = torch.max(
+                                                        output, dim=1
+                                                    )
+                                                    tag = self.tags[predicted.item()]
+                                                    probs = torch.softmax(output, dim=1)
+                                                    prob = probs[0][predicted.item()]
+
+                                                    if prob.item() > 0.95:
+                                                        for intent in self.intents[
+                                                            "intents"
+                                                        ]:
+                                                            if tag == intent["tag"]:
+                                                                if (
+                                                                    intent["tag"]
+                                                                    == "anything_else_sir_yes"
+                                                                ):
+                                                                    print(intent["tag"])
+                                                                    self.num = 5
+                                                                elif (
+                                                                    intent["tag"]
+                                                                    == "anything_else_sir_no"
+                                                                ):
+                                                                    print(intent["tag"])
+                                                                    self.num = self.num
+                                                                else:
+                                                                    pass
+                                                except Exception as e:
+                                                    print(e)
+                                                    pass
 
                         self.prev_input = user_input.lower()
                     else:
