@@ -538,7 +538,26 @@
         "yes please",
         "confirm"
       ],
-      "responses": []
+      "responses": [
+        "Understood, boss.",
+        "Affirmative, boss.",
+        "Acknowledged, boss.",
+        "Of course, boss.",
+        "Certainly, boss.",
+        "Absolutely, boss.",
+        "Very well, boss.",
+        "Copy that, boss.",
+        "Message received, boss.",
+        "Understood, sir.",
+        "Affirmative, sir.",
+        "Acknowledged, sir.",
+        "Of course, sir.",
+        "Certainly, sir.",
+        "Absolutely, sir.",
+        "Very well, sir.",
+        "Copy that, sir.",
+        "Message received, sir."
+      ]
     },
     {
       "tag": "anything_else_sir_no",
@@ -568,7 +587,26 @@
         "no thank you friday",
         "deny"
       ],
-      "responses": []
+      "responses": [
+        "Understood, boss.",
+        "Affirmative, boss.",
+        "Acknowledged, boss.",
+        "Of course, boss.",
+        "Certainly, boss.",
+        "Absolutely, boss.",
+        "Very well, boss.",
+        "Copy that, boss.",
+        "Message received, boss.",
+        "Understood, sir.",
+        "Affirmative, sir.",
+        "Acknowledged, sir.",
+        "Of course, sir.",
+        "Certainly, sir.",
+        "Absolutely, sir.",
+        "Very well, sir.",
+        "Copy that, sir.",
+        "Message received, sir."
+      ]
     },
     {
       "tag": "simulate_interference_tsk",
