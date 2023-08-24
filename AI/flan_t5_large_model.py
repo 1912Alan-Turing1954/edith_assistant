@@ -21,7 +21,9 @@ def generative_with_t5(input_text):
 
     # tokenize the input text
     input_ids = tokenizer(type_(input_text), return_tensors="pt").input_ids
-    outputs = model.generate(input_ids, max_length=1024, do_sample=False)
+    outputs = model.generate(
+        input_ids, max_length=1024, do_sample=False, temperature=0.8, top_k=50
+    )
 
     # Decode the generated translation
     decoded_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
