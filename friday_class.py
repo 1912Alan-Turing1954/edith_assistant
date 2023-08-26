@@ -4,22 +4,22 @@ import datetime
 import json
 import subprocess
 import torch
+from word2number import w2n
 import concurrent.futures
 from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
 from tts_.tts import text_to_speech
-from functions.opinion import opinion
 from AI.flan_t5_large_model import generative_with_t5
-from functions._math import solve_word_math_expression
-from functions.time_of_day import time_of_day_correct
-from functions.three_math_sim import create_simlulation_function
-from functions.location import (
+from functions.math._math import solve_word_math_expression
+from functions.math.math_sim import create_simulation_function
+from functions.system.time_of_day import time_of_day_correct
+from functions.system.location import (
     get_address_description,
     get_location_description,
     get_long_and_lati,
 )
 
-from functions.system_info import (
+from functions.system.system_info import (
     get_system_info,
     generate_system_status_response,
     generate_storage_status_response,
@@ -52,6 +52,8 @@ class Friday:
         self.prev_input = ""
         self.prev_response = ""
         self.task_tag_count = 0
+        self.num = 3
+        self.last_response = []
         self.mute = False
 
         self.follow_words = [
@@ -70,17 +72,28 @@ class Friday:
         return False
 
     def replace_follow_up_word(self, user_input):
+        parts = [user_input]
         for word in self.follow_words:
-            if word in user_input:
-                user_input = user_input.split(word)
-                print(user_input)
-                return user_input
-            else:
-                pass
+            new_parts = []
+            for part in parts:
+                new_parts.extend(part.split(word))
+            parts = new_parts
 
-    def is_complex_alphabetical_math_problem(self, user_input):
-        alphabetic_math_pattern = r"(?i)\b(?:what is the|evaluate the)?\s*(?:sum of|difference between|product of|square of|cube of)?\s*(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b\s*(?:plus|minus|times|multiplied by|divided by|\+|\-|\*|\/|\^|and)\s*\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten)\b"
-        return bool(re.search(alphabetic_math_pattern, user_input))
+        # Print the split parts
+        for part in parts:
+            print(part.strip())  # .strip() to remove leading/trailing whitespace
+
+        return parts
+
+    def has_mathematical_function_or_x(self, user_input):
+        # Define a regular expression pattern to match 'x' alone or mathematical expressions with 'x'
+        pattern = r"\b[xX]\b|\b[xX]\b\s*[+\-*/^()\d\s]*"
+
+        # Use re.search to find a match in the input string
+        match = re.search(pattern, user_input)
+
+        # If a match is found, return True, otherwise return False
+        return bool(match)
 
     def convert_textual_numbers(self, user_input):
         words = user_input.lower().split()
@@ -141,7 +154,6 @@ class Friday:
         return user_input.strip()
 
     def get_tag_from_response(self, response):
-        # Find the tag associated with the given response in the intents
         for intent in self.intents["intents"]:
             if response in intent["responses"]:
                 return intent["tag"]
@@ -153,8 +165,6 @@ class Friday:
             time_ = time_.replace("PM", "P M")
         elif "AM" in time_:
             time_ = time_.replace("AM", "A M")
-        else:
-            pass
         return time_
 
     def get_date(self):
@@ -169,7 +179,7 @@ class Friday:
         return get_system_info()
 
     def process_user_input(self, user_input):
-        return user_input.lower()
+        user_input = user_input.lower()
 
     def get_intent_response(self, intent, response, replacement=None):
         if replacement:
@@ -190,10 +200,15 @@ class Friday:
         user_input = input("friday is active: ")
         print(type(user_input))
         print(self.follow_word_check(user_input))
-
+        print(
+            self.has_mathematical_function_or_x(
+                self.extract_function_from_input(
+                    self.convert_textual_numbers(user_input)
+                )
+            )
+        )
         if self.follow_word_check(user_input):
             string_parts = self.replace_follow_up_word(user_input)
-
             for string_part in string_parts:
                 user_input = string_part.lower()
                 info_system = self.get_updated_system_info()
@@ -219,36 +234,14 @@ class Friday:
                     tag = self.tags[predicted.item()]
                     probs = torch.softmax(output, dim=1)
                     prob = probs[0][predicted.item()]
-                if self.is_complex_alphabetical_math_problem(user_input):
-                    result = solve_word_math_expression(user_input)
-                    for intent in self.intents["intents"]:
-                        if intent["tag"] == "math_tsk":
-                            response = random.choice(intent["responses"]).format(
-                                answer=result
-                            )
-                            self.get_intent_response(intent, response)
-                            break
-
-                elif prob.item() > 0.95:
+                if prob.item() > 0.95:
                     for intent in self.intents["intents"]:
                         if tag == intent["tag"]:
-                            # if "tsk" in intent["tag"]:
-                            #     self.task_tag_count += 1
-                            #     if self.task_tag_count == 3:
-                            #         for intent in self.intents["intents"]:
-                            #             if intent["tag"] == "anything_else_sir":
-                            #                 response_tsk = random.choice(
-                            #                     intent["responses"]
-                            #                 )
-                            #                 self.get_intent_response(intent, response_tsk)
-                            #                 self.task_tag_count = 0
                             if intent["tag"] == "background_acknowledgment":
-                                continue
-
+                                pass
                             elif intent["tag"] == "mute_command_tsk":
                                 self.mute = True
-                                continue
-
+                                pass
                             elif intent["tag"] == "location_inquiry_tsk":
                                 response = random.choice(intent["responses"])
                                 response = get_location_description(response)
@@ -257,12 +250,17 @@ class Friday:
                                 response = random.choice(intent["responses"])
                                 response = get_address_description(response)
                                 self.get_intent_response(intent, response)
-
                             elif intent["tag"] == "coordinates_tsk":
                                 response = random.choice(intent["responses"])
                                 response = get_long_and_lati(response)
                                 self.get_intent_response(intent, response)
-                            elif intent["tag"] == "simulate_interference_tsk":
+                            elif intent[
+                                "tag"
+                            ] == "simulate_interference_tsk" and self.has_mathematical_function_or_x(
+                                self.extract_function_from_input(
+                                    self.convert_textual_numbers(user_input)
+                                )
+                            ):
                                 user_input = self.convert_textual_numbers(user_input)
                                 user_input = self.extract_function_from_input(
                                     user_input
@@ -273,16 +271,16 @@ class Friday:
                                     subprocess.Popen(
                                         [
                                             "python",
-                                            "./functions/math/three_math_sim.py",
+                                            "./functions/math/math_sim.py",
                                             user_input,
                                         ]
                                     )
                                 except FileNotFoundError:
-                                    print("The script three_math_sim.py was not found.")
-                                    continue
+                                    print("The script math_sim.py was not found.")
+                                    pass
                                 except Exception as e:
                                     print(e)
-                                    continue
+                                    pass
                             elif intent["tag"] == "repeat_tsk":
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(
@@ -338,7 +336,16 @@ class Friday:
                             else:
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response)
-
+                            if "tsk" in intent["tag"]:
+                                self.task_tag_count += 1
+                                if self.task_tag_count == self.num:
+                                    for intent in self.intents["intents"]:
+                                        if intent["tag"] == "anything_else_sir":
+                                            response_tsk = random.choice(
+                                                intent["responses"]
+                                            )
+                                            self.last_response.append(response_tsk)
+                                            self.task_tag_count = 0
                     self.prev_input = user_input.lower()
                 else:
                     for intent in self.intents["intents"]:
@@ -346,6 +353,34 @@ class Friday:
                             response = random.choice(intent["responses"])
                             self.get_intent_response(intent, response)
                             break
+            if self.last_response:
+                text_to_speech(self.last_response[0])
+                user_input = input("Yes / No: ")
+                sentence = tokenize(user_input)
+                X = bag_of_words(sentence, self.all_words)
+                X = X.reshape(1, X.shape[0])
+                X = torch.from_numpy(X)
+                output = self.model(X)
+                _, predicted = torch.max(output, dim=1)
+                tag = self.tags[predicted.item()]
+                probs = torch.softmax(output, dim=1)
+                prob = probs[0][predicted.item()]
+                if prob.item() > 0.95:
+                    for intent in self.intents["intents"]:
+                        if tag == intent["tag"]:
+                            if intent["tag"] == "anything_else_sir_yes":
+                                response = random.choice(intent["responses"])
+                                self.get_intent_response(intent["responses"])
+                                print(intent["tag"])
+                                self.num = 5
+                            elif intent["tag"] == "anything_else_sir_no":
+                                response = random.choice(intent["responses"])
+                                self.get_intent_response(intent["responses"])
+                                print(self.num)
+                                self.num = self.num
+                            else:
+                                pass
+                self.last_response.clear()
         else:
             user_input = user_input.lower()
             info_system = self.get_updated_system_info()
@@ -371,54 +406,33 @@ class Friday:
                 tag = self.tags[predicted.item()]
                 probs = torch.softmax(output, dim=1)
                 prob = probs[0][predicted.item()]
-
-            if self.is_complex_alphabetical_math_problem(user_input):
-                result = solve_word_math_expression(user_input)
-                for intent in self.intents["intents"]:
-                    if intent["tag"] == "math_tsk":
-                        response = random.choice(intent["responses"]).format(
-                            answer=result
-                        )
-                        self.get_intent_response(intent, response)
-                        break
-
-            elif prob.item() > 0.95:
+            if prob.item() > 0.95:
                 for intent in self.intents["intents"]:
                     if tag == intent["tag"]:
-                        # if "tsk" in intent["tag"]:
-                        #     self.task_tag_count += 1
-                        #     if self.task_tag_count == 3:
-                        #         for intent in self.intents["intents"]:
-                        #             if intent["tag"] == "anything_else_sir":
-                        #                 response_tsk = random.choice(
-                        #                     intent["responses"]
-                        #                 )
-                        #                 self.get_intent_response(intent, response_tsk)
-                        #                 self.task_tag_count = 0
-
                         if intent["tag"] == "background_acknowledgment":
-                            continue
-
+                            pass
                         elif intent["tag"] == "mute_command_tsk":
                             self.mute = True
-                            continue
-
+                            pass
                         elif intent["tag"] == "location_inquiry_tsk":
                             response = random.choice(intent["responses"])
                             response = get_location_description(response)
                             self.get_intent_response(intent, response)
-
                         elif intent["tag"] == "address_inquiry_tsk":
                             response = random.choice(intent["responses"])
                             response = get_address_description(response)
                             self.get_intent_response(intent, response)
-
                         elif intent["tag"] == "coordinates_tsk":
                             response = random.choice(intent["responses"])
                             response = get_long_and_lati(response)
                             self.get_intent_response(intent, response)
-
-                        elif intent["tag"] == "simulate_interference_tsk":
+                        elif intent[
+                            "tag"
+                        ] == "simulate_interference_tsk" and self.has_mathematical_function_or_x(
+                            self.extract_function_from_input(
+                                self.convert_textual_numbers(user_input)
+                            )
+                        ):
                             user_input = self.convert_textual_numbers(user_input)
                             user_input = self.extract_function_from_input(user_input)
                             response = random.choice(intent["responses"])
@@ -427,16 +441,16 @@ class Friday:
                                 subprocess.Popen(
                                     [
                                         "python",
-                                        "./functions/math/three_math_sim.py",
+                                        "./functions/math/math_sim.py",
                                         user_input,
                                     ]
                                 )
                             except FileNotFoundError:
-                                print("The script three_math_sim.py was not found.")
-                                continue
+                                print("The script math_sim.py was not found.")
+                                pass
                             except Exception as e:
                                 print(e)
-                                continue
+                                pass
                         elif intent["tag"] == "repeat_tsk":
                             response = random.choice(intent["responses"])
                             self.get_intent_response(
@@ -492,6 +506,16 @@ class Friday:
                         else:
                             response = random.choice(intent["responses"])
                             self.get_intent_response(intent, response)
+                        if "tsk" in intent["tag"]:
+                            self.task_tag_count += 1
+                            if self.task_tag_count == self.num:
+                                for intent in self.intents["intents"]:
+                                    if intent["tag"] == "anything_else_sir":
+                                        response_tsk = random.choice(
+                                            intent["responses"]
+                                        )
+                                        self.last_response.append(response_tsk)
+                                        self.task_tag_count = 0
                 self.prev_input = user_input.lower()
             else:
                 for intent in self.intents["intents"]:
@@ -499,3 +523,29 @@ class Friday:
                         response = random.choice(intent["responses"])
                         self.get_intent_response(intent, response)
                         break
+            if self.last_response:
+                text_to_speech(self.last_response[0])
+                user_input = input("Yes / No: ")
+                sentence = tokenize(user_input)
+                X = bag_of_words(sentence, self.all_words)
+                X = X.reshape(1, X.shape[0])
+                X = torch.from_numpy(X)
+                output = self.model(X)
+                _, predicted = torch.max(output, dim=1)
+                tag = self.tags[predicted.item()]
+                probs = torch.softmax(output, dim=1)
+                prob = probs[0][predicted.item()]
+                if prob.item() > 0.95:
+                    for intent in self.intents["intents"]:
+                        if tag == intent["tag"]:
+                            if intent["tag"] == "anything_else_sir_yes":
+                                print(intent["tag"])
+                                self.num = 5
+                                print(self.num)
+                            elif intent["tag"] == "anything_else_sir_no":
+                                print(intent["tag"])
+                                self.num = self.num
+                                print(self.num)
+                            else:
+                                pass
+                self.last_response.clear()
