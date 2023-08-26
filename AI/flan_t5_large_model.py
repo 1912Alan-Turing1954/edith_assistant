@@ -27,3 +27,6 @@ def generative_with_t5(input_text):
     decoded_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
     return decoded_text
+
+
+print(generative_with_t5("what is plasma"))

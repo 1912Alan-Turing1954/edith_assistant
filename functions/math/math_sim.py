@@ -107,6 +107,3 @@ if __name__ == "__main__":
     else:
         user_function_description = sys.argv[1]
         create_simulation_function(user_function_description)
-
-
-create_simulation_function(indefinite_integral)
