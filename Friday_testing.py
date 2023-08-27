@@ -10,13 +10,16 @@ from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
 from tts_.tts import text_to_speech
 from AI.flan_t5_large_model import generative_with_t5
-from functions.math._math import solve_word_math_expression
-from functions.math.math_sim import create_simulation_function
+
+# from functions.math._math import solve_word_math_expression
 from functions.system.time_of_day import time_of_day_correct
+from functions.system.maps.three_d_map import create_3d_map
 from functions.system.location import (
     get_address_description,
     get_location_description,
     get_long_and_lati,
+    long,
+    lat,
 )
 
 from functions.system.system_info import (
@@ -254,6 +257,7 @@ class Friday:
                                     response = random.choice(intent["responses"])
                                     response = get_location_description(response)
                                     self.get_intent_response(intent, response)
+
                                 elif intent["tag"] == "address_inquiry_tsk":
                                     response = random.choice(intent["responses"])
                                     response = get_address_description(response)
@@ -263,6 +267,15 @@ class Friday:
                                     response = random.choice(intent["responses"])
                                     response = get_long_and_lati(response)
                                     self.get_intent_response(intent, response)
+
+                                elif intent["tag"] == "show_visualization" and (
+                                    self.prev_tag == "location_inquiry_tsk"
+                                    or self.prev_tag == "address_inquiry_tsk"
+                                    or self.prev_tag == "coordinates_tsk"
+                                ):
+                                    response = random.choice(intent["responses"])
+                                    self.get_intent_response(intent, response)
+                                    create_3d_map(long, lat)
 
                                 elif intent[
                                     "tag"
@@ -372,6 +385,7 @@ class Friday:
                                                 self.task_tag_count = 0
 
                         self.prev_input = user_input.lower()
+
                     else:
                         for intent in self.intents["intents"]:
                             if intent["tag"] == "technical":
@@ -379,37 +393,37 @@ class Friday:
                                 self.get_intent_response(intent, response)
                                 break
 
-                if self.last_response:
-                    text_to_speech(self.last_response[0])
-                    user_input = input("Yes / No: ")
+                    if self.last_response:
+                        text_to_speech(self.last_response[0])
+                        user_input = input("Yes / No: ")
 
-                    sentence = tokenize(user_input)
-                    X = bag_of_words(sentence, self.all_words)
-                    X = X.reshape(1, X.shape[0])
-                    X = torch.from_numpy(X)
-                    output = self.model(X)
-                    _, predicted = torch.max(output, dim=1)
-                    tag = self.tags[predicted.item()]
-                    probs = torch.softmax(output, dim=1)
-                    prob = probs[0][predicted.item()]
+                        sentence = tokenize(user_input)
+                        X = bag_of_words(sentence, self.all_words)
+                        X = X.reshape(1, X.shape[0])
+                        X = torch.from_numpy(X)
+                        output = self.model(X)
+                        _, predicted = torch.max(output, dim=1)
+                        tag = self.tags[predicted.item()]
+                        probs = torch.softmax(output, dim=1)
+                        prob = probs[0][predicted.item()]
 
-                    if prob.item() > 0.95:
-                        for intent in self.intents["intents"]:
-                            if tag == intent["tag"]:
-                                if intent["tag"] == "anything_else_sir_yes":
-                                    response = random.choice(intent["responses"])
-                                    self.get_intent_response(intent["responses"])
-                                    print(intent["tag"])
-                                    self.num = 5
-                                elif intent["tag"] == "anything_else_sir_no":
-                                    response = random.choice(intent["responses"])
-                                    self.get_intent_response(intent["responses"])
-                                    print(self.num)
-                                    self.num = self.num
-                                else:
-                                    pass
+                        if prob.item() > 0.95:
+                            for intent in self.intents["intents"]:
+                                if tag == intent["tag"]:
+                                    if intent["tag"] == "anything_else_sir_yes":
+                                        response = random.choice(intent["responses"])
+                                        self.get_intent_response(intent, response)
+                                        print(intent["tag"])
+                                        self.num = 5
+                                    elif intent["tag"] == "anything_else_sir_no":
+                                        response = random.choice(intent["responses"])
+                                        self.get_intent_response(intent, response)
+                                        print(self.num)
+                                        self.num = self.num
+                                    else:
+                                        pass
 
-                    self.last_response.clear()
+                        self.last_response.clear()
 
             else:
                 user_input = user_input.lower()
@@ -448,15 +462,6 @@ class Friday:
                                 self.mute = True
                                 pass
 
-                            elif (
-                                intent["tag"] == "show_visualization"
-                                and self.prev_tag == "location_inquiry_tsk"
-                                or "address_inquiry_tsk"
-                                or "coordinates_tsk"
-                            ):
-                                response = random.choice(intent["responses"])
-                                text_to_speech(response)
-
                             elif intent["tag"] == "location_inquiry_tsk":
                                 response = random.choice(intent["responses"])
                                 response = get_location_description(response)
@@ -471,6 +476,15 @@ class Friday:
                                 response = random.choice(intent["responses"])
                                 response = get_long_and_lati(response)
                                 self.get_intent_response(intent, response)
+
+                            elif intent["tag"] == "show_visualization" and (
+                                self.prev_tag == "location_inquiry_tsk"
+                                or self.prev_tag == "address_inquiry_tsk"
+                                or self.prev_tag == "coordinates_tsk"
+                            ):
+                                response = random.choice(intent["responses"])
+                                self.get_intent_response(intent, response)
+                                create_3d_map(long, lat)
 
                             elif intent[
                                 "tag"
@@ -594,13 +608,14 @@ class Friday:
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
                                 if intent["tag"] == "anything_else_sir_yes":
-                                    print(intent["tag"])
+                                    response = random.choice(intent["responses"])
+                                    self.get_intent_response(intent, response)
                                     self.num = 5
-                                    print(self.num)
                                 elif intent["tag"] == "anything_else_sir_no":
-                                    print(intent["tag"])
-                                    self.num = self.num
+                                    response = random.choice(intent["responses"])
+                                    self.get_intent_response(intent, response)
                                     print(self.num)
+                                    self.num = self.num
                                 else:
                                     pass
 
