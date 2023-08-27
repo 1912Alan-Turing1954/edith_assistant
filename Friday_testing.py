@@ -13,7 +13,7 @@ from AI.flan_t5_large_model import generative_with_t5
 
 # from functions.math._math import solve_word_math_expression
 from functions.system.time_of_day import time_of_day_correct
-from functions.system.maps.three_d_map import create_3d_map
+from functions.system.maps.three_d_map import create_three_d_map
 from functions.system.location import (
     get_address_description,
     get_location_description,
@@ -275,7 +275,7 @@ class Friday:
                                 ):
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(intent, response)
-                                    create_3d_map(long, lat)
+                                    create_three_d_map(long, lat)
 
                                 elif intent[
                                     "tag"
@@ -484,7 +484,7 @@ class Friday:
                             ):
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response)
-                                create_3d_map(long, lat)
+                                create_three_d_map(long, lat)
 
                             elif intent[
                                 "tag"

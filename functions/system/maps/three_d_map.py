@@ -2,7 +2,7 @@ import pydeck as pdk
 import webbrowser
 
 
-def create_3d_map(longitude, latitude):
+def create_three_d_map(longitude, latitude):
     # Define your data with custom coordinates and elevation for Moscow, Russia
     data = [{"lon": longitude, "lat": latitude, "elevation": 200}]
 
