@@ -768,7 +768,16 @@
         "Allow me to enlighten you, sir. You find yourself in {city}, {state}, {country}.",
         "Sir, your coordinates indicate {city}, {state}, {country}.",
         "If I may provide a geographical update, sir, you're positioned in {city}, {state}, {country}.",
-        "According to my calculations, your current location is {city}, {state}, {country}, sir."
+        "According to my calculations, your current location is {city}, {state}, {country}, sir.",
+        "In {city}, {state}, {country}, boss.",
+        "Currently in {city}, {state}, {country}, boss.",
+        "At {city}, {state}, {country}, boss.",
+        "{city}, {state}, {country}, boss.",
+        "You've reached {city}, {state}, {country}, boss.",
+        "Analyzing data, {city}, {state}, {country}, boss.",
+        "Enlightening you, boss: {city}, {state}, {country}.",
+        "Your coordinates indicate {city}, {state}, {country}.",
+        "Calculations show {city}, {state}, {country}, boss."
       ]
     },
     {
@@ -790,13 +799,20 @@
         "what is the address?"
       ],
       "responses": [
-        "Your current address is {address}.",
-        "The address you're at is {address}.",
-        "Based on my analysis, your address is {address}.",
-        "Certainly, your present address is {address}.",
-        "Your coordinates indicate {address}.",
-        "Allow me to assist, you're located at {address}.",
-        "According to my calculations, your current address is {address}."
+        "Your current address is {address}, sir.",
+        "The address you're at is {address}, sir.",
+        "Based on my analysis, your address is {address}, sir.",
+        "Certainly, your present address is {address}, sir.",
+        "Your coordinates indicate {address}, sir.",
+        "Allow me to assist, you're located at {address}, sir.",
+        "According to my calculations, your current address is {address}, sir.",
+        "Here's your address: {address}, boss.",
+        "You're currently at {address}, boss.",
+        "Based on my analysis, your address reads {address}, boss.",
+        "Absolutely, your present address is {address}, boss.",
+        "Your coordinates point precisely to {address}, boss.",
+        "Allow me to assist you; you're situated at {address}, boss.",
+        "Per my calculations, your current address is {address}, boss."
       ]
     },
     {
