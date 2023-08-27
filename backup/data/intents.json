@@ -799,6 +799,34 @@
       ]
     },
     {
+      "tag": "show_visualization",
+      "patterns": [
+        "show me",
+        "give me a visaul",
+        "show me on a map"
+      ],
+      "responses": [
+        "Understood, boss.",
+        "Affirmative, boss.",
+        "Acknowledged, boss.",
+        "Of course, boss.",
+        "Certainly, boss.",
+        "Absolutely, boss.",
+        "Very well, boss.",
+        "Copy that, boss.",
+        "Message received, boss.",
+        "Understood, sir.",
+        "Affirmative, sir.",
+        "Acknowledged, sir.",
+        "Of course, sir.",
+        "Certainly, sir.",
+        "Absolutely, sir.",
+        "Very well, sir.",
+        "Copy that, sir.",
+        "Message received, sir."
+      ]
+    },
+    {
       "tag": "math_tsk",
       "patterns": [],
       "responses": [

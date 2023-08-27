@@ -448,6 +448,15 @@ class Friday:
                                 self.mute = True
                                 pass
 
+                            elif (
+                                intent["tag"] == "show_visualization"
+                                and self.prev_tag == "location_inquiry_tsk"
+                                or "address_inquiry_tsk"
+                                or "coordinates_tsk"
+                            ):
+                                response = random.choice(intent["responses"])
+                                text_to_speech(response)
+
                             elif intent["tag"] == "location_inquiry_tsk":
                                 response = random.choice(intent["responses"])
                                 response = get_location_description(response)
