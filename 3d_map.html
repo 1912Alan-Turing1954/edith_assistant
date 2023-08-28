@@ -37,11 +37,55 @@
     "latitude": 55.7558,
     "longitude": 37.6176,
     "pitch": 60,
-    "zoom": 12
+    "zoom": 15
   },
   "layers": [
     {
       "@@type": "HeatmapLayer",
+      "colorRange": [
+        [
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          255,
+          50
+        ],
+        [
+          0,
+          0,
+          255,
+          100
+        ],
+        [
+          0,
+          191,
+          255,
+          150
+        ],
+        [
+          0,
+          255,
+          255,
+          200
+        ],
+        [
+          255,
+          255,
+          0,
+          100
+        ],
+        [
+          255,
+          0,
+          0,
+          50
+        ]
+      ],
       "data": [
         {
           "elevation": 200,
@@ -50,7 +94,7 @@
         }
       ],
       "getPosition": "@@=[lon, lat]",
-      "id": "0435dcae-fc6e-4dcd-810e-3133c8a79946",
+      "id": "70217b07-f16e-48bd-9818-1e19fe2b598f",
       "intensity": 1,
       "opacity": 0.8,
       "radius": 2000
@@ -69,11 +113,11 @@
         0,
         255,
         255,
-        150
+        80
       ],
       "getPosition": "@@=[lon, lat, elevation]",
-      "getRadius": 2000,
-      "id": "3a269359-947a-460f-b1bd-c0349136c29d",
+      "getRadius": 200,
+      "id": "648292a1-3989-41c4-87cb-e624ea6103a8",
       "pickable": true
     }
   ],
