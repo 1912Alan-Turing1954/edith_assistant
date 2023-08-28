@@ -277,6 +277,11 @@ class Friday:
                                     self.get_intent_response(intent, response)
                                     create_three_d_map(long, lat)
 
+                                elif intent["tag"] == "show_location":
+                                    response = random.choice(intent["responses"])
+                                    self.get_intent_response(intent, response)
+                                    create_three_d_map(long, lat)
+
                                 elif intent[
                                     "tag"
                                 ] == "simulate_interference_tsk" and self.has_mathematical_function_or_x(
@@ -482,6 +487,11 @@ class Friday:
                                 or self.prev_tag == "address_inquiry_tsk"
                                 or self.prev_tag == "coordinates_tsk"
                             ):
+                                response = random.choice(intent["responses"])
+                                self.get_intent_response(intent, response)
+                                create_three_d_map(long, lat)
+
+                            elif intent["tag"] == "show_location":
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response)
                                 create_three_d_map(long, lat)
