@@ -34,29 +34,46 @@
     const jsonInput = {
   "initialViewState": {
     "bearing": -30,
-    "latitude": 34.1446,
-    "longitude": -117.3013,
+    "latitude": 55.7558,
+    "longitude": 37.6176,
     "pitch": 60,
-    "zoom": 6
+    "zoom": 12
   },
   "layers": [
     {
-      "@@type": "ScatterplotLayer",
+      "@@type": "HeatmapLayer",
       "data": [
         {
           "elevation": 200,
-          "lat": 34.1446,
-          "lon": -117.3013
+          "lat": 55.7558,
+          "lon": 37.6176
+        }
+      ],
+      "getPosition": "@@=[lon, lat]",
+      "id": "7504f3ce-ce7a-496d-acbe-09bb8e2099c5",
+      "intensity": 1,
+      "opacity": 0.8,
+      "radius": 2000
+    },
+    {
+      "@@type": "ScatterplotLayer",
+      "autoHighlight": true,
+      "data": [
+        {
+          "elevation": 200,
+          "lat": 55.7558,
+          "lon": 37.6176
         }
       ],
       "getFillColor": [
         0,
         255,
-        255
+        255,
+        150
       ],
       "getPosition": "@@=[lon, lat, elevation]",
-      "getRadius": 1000,
-      "id": "ea32fd0a-d214-4b41-9a3c-b5f568c38504",
+      "getRadius": 2000,
+      "id": "184ea7c4-e2ee-4cfc-be24-a1d8051f26da",
       "pickable": true
     }
   ],
@@ -69,7 +86,7 @@
     }
   ]
 };
-    const tooltip = true;
+    const tooltip = {'text': 'Elevation: {elevation} meters'};
     const customLibraries = null;
     const configuration = null;
 
