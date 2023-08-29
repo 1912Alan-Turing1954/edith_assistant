@@ -1,5 +1,6 @@
 import json
 import re
+import sys
 import time
 import threading
 
@@ -135,4 +136,9 @@ def set_timer_or_alarm(user_input):
             pass
 
 
-set_timer_or_alarm("set a timer for 8 seconds")
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python your_script.py <user_function_description>")
+    else:
+        _time_ = sys.argv[1]
+        set_timer_or_alarm(_time_)
