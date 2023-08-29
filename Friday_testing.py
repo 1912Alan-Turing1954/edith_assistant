@@ -227,8 +227,7 @@ class Friday:
 
                     if user_input == self.prev_input.lower():
                         tag = "repeat_string"
-                    elif self.prev_tag == "background_acknowledgment":
-                        pass
+
                     else:
                         sentence = tokenize(user_input)
                         X = bag_of_words(sentence, self.all_words)
@@ -438,9 +437,6 @@ class Friday:
 
                 if user_input == self.prev_input.lower():
                     tag = "repeat_string"
-
-                elif self.prev_tag == "background_acknowledgment":
-                    pass
 
                 else:
                     sentence = tokenize(user_input)
