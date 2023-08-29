@@ -1,3 +1,4 @@
+import json
 import re
 import time
 import threading
@@ -5,9 +6,9 @@ import threading
 
 # Function to set a timer
 def set_timer(seconds):
-    print(f"Setting a timer for {seconds} seconds.")
+    # print(f"Setting a timer for {seconds} seconds.")
     time.sleep(seconds)
-    print("Timer is up!")
+    # print("Timer is up!")
 
 
 def set_alarm(hour, minute, am_pm=None):
@@ -45,12 +46,11 @@ def set_alarm(hour, minute, am_pm=None):
     # Ensure alarm_seconds is non-negative
     alarm_seconds = max(alarm_seconds, 0)
 
-    print(f"Setting an alarm for {hour}:{minute} {am_pm}.")
+    # print(f"Setting an alarm for {hour}:{minute} {am_pm}.")
     time.sleep(alarm_seconds)
-    print("Alarm is ringing!")
+    # print("Alarm is ringing!")
 
 
-# Function to parse time units
 def parse_time_units(command):
     time_units = {
         "second": 1,
@@ -58,12 +58,17 @@ def parse_time_units(command):
         "hour": 3600,
     }
 
+    total_seconds = 0
+
     for unit in time_units:
-        if unit in command:
-            match = re.search(r"(\d+)\s*" + unit, command)
-            if match:
-                return int(match.group(1)) * time_units[unit]
-    return None
+        pattern = r"(\d+)\s*" + unit
+        matches = re.findall(pattern, command)
+
+        if matches:
+            for match in matches:
+                total_seconds += int(match) * time_units[unit]
+
+    return total_seconds if total_seconds > 0 else None
 
 
 def parse_time(command):
@@ -105,20 +110,20 @@ def parse_time(command):
 
 
 # Listen to text-based commands
-def listen_for_commands():
-    print("Enter a command (e.g., 'set timer 10 minutes' or 'set alarm 10:00 AM'):")
-    command = input().lower()
+def set_timer_or_alarm(user_input):
+    user_input = user_input.strip().lower()
 
-    if "set timer" in command:
-        seconds = parse_time_units(command)
+    if "timer" in user_input:
+        print(parse_time_units(user_input))
+        seconds = parse_time_units(user_input)
         if seconds is not None:
             timer_thread = threading.Thread(target=set_timer, args=(seconds,))
             timer_thread.start()
         else:
-            print("Invalid timer format. Please use 'set timer [number] [unit].'")
+            pass
 
-    elif "set alarm" in command:
-        alarm_time = parse_time(command)
+    elif "alarm" in user_input:
+        alarm_time = parse_time(user_input)
 
         if alarm_time:
             hour, minute, am_pm = alarm_time
@@ -127,6 +132,7 @@ def listen_for_commands():
             )
             alarm_thread.start()
         else:
-            print(
-                "Invalid alarm format. Please use 'set alarm [hour]:[minute] [AM/PM].'"
-            )
+            pass
+
+
+set_timer_or_alarm("set a timer for 8 seconds")
