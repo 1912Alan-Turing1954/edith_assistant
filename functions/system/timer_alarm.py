@@ -12,7 +12,6 @@ with open("./data/intents.json", "r") as data:
 
 # Function to set a timer
 def set_timer(seconds):
-    # print(f"Setting a timer for {seconds} seconds.")
     time.sleep(seconds)
     for intent in intents["intents"]:
         if intent["tag"] == "timer_done":
@@ -56,7 +55,6 @@ def set_alarm(hour, minute, am_pm=None):
     # Ensure alarm_seconds is non-negative
     alarm_seconds = max(alarm_seconds, 0)
 
-    # print(f"Setting an alarm for {hour}:{minute} {am_pm}.")
     time.sleep(alarm_seconds)
     for intent in intents["intents"]:
         if intent["tag"] == "alarm_done":
