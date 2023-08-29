@@ -12,41 +12,42 @@ def set_timer(seconds):
 
 def set_alarm(hour, minute, am_pm=None):
     print(hour, minute, am_pm)
-    print(type(hour, minute, am_pm))
-    # current_time = time.localtime()
+    print(type(hour), type(minute), type(am_pm))  # Fixed the type checking
 
-    # if am_pm is None:
-    #     am_pm = "AM" if current_time.tm_hour < 12 else "PM"
+    current_time = time.localtime()
 
-    # if am_pm.lower() == "pm" and hour != 12:
-    #     hour += 12
-    # elif am_pm.lower() == "am" and hour == 12:
-    #     hour = 0
+    if am_pm is None:
+        am_pm = "AM" if current_time.tm_hour < 12 else "PM"
 
-    # # Create a struct_time object for the alarm time
-    # alarm_time = time.struct_time(
-    #     (
-    #         current_time.tm_year,
-    #         current_time.tm_mon,
-    #         current_time.tm_mday,
-    #         hour,
-    #         minute,
-    #         0,  # seconds
-    #         -1,  # weekday (not used)
-    #         -1,  # yearday (not used)
-    #         current_time.tm_isdst,
-    #     )
-    # )
+    if am_pm.lower() == "pm" and hour != 12:
+        hour += 12
+    elif am_pm.lower() == "am" and hour == 12:
+        hour = 0
 
-    # # Calculate the time difference in seconds
-    # alarm_seconds = time.mktime(alarm_time) - time.mktime(current_time)
+    # Create a struct_time object for the alarm time
+    alarm_time = time.struct_time(
+        (
+            current_time.tm_year,
+            current_time.tm_mon,
+            current_time.tm_mday,
+            hour,
+            minute,
+            0,  # seconds
+            -1,  # weekday (not used)
+            -1,  # yearday (not used)
+            current_time.tm_isdst,
+        )
+    )
 
-    # # Ensure alarm_seconds is non-negative
-    # alarm_seconds = max(alarm_seconds, 0)
+    # Calculate the time difference in seconds
+    alarm_seconds = time.mktime(alarm_time) - time.mktime(current_time)
 
-    # print(f"Setting an alarm for {hour}:{minute} {am_pm}.")
-    # time.sleep(alarm_seconds)
-    # print("Alarm is ringing!")
+    # Ensure alarm_seconds is non-negative
+    alarm_seconds = max(alarm_seconds, 0)
+
+    print(f"Setting an alarm for {hour}:{minute} {am_pm}.")
+    time.sleep(alarm_seconds)
+    print("Alarm is ringing!")
 
 
 # Function to parse time units
@@ -74,29 +75,30 @@ def parse_time(command):
     match = re.search(time_pattern, command)
 
     if match:
-        alarm_time = match.groups()[0]
-        am_pm = match.groups()[1]
+        alarm_time = match.group(1)  # Use group(1) instead of groups()[0]
+        am_pm = match.group(2)  # Use group(2) instead of groups()[1]
         hour, minute = alarm_time.split(":")
 
         if am_pm:
-            return hour, minute, am_pm
+            return int(hour), int(minute), am_pm
         else:
             current_time = time.localtime()
             am_pm = "AM" if current_time.tm_hour < 12 else "PM"
-            return hour, minute, am_pm
+            return int(hour), int(minute), am_pm
 
-    elif len(hour_match.groups()) == 1 and len(hour_match_plus_ampm.groups()) != 3:
-        if hour_match:
-            # Handle cases where only the hour is provided (Assume "AM" as default)
-            hour = int(hour_match.group(1))
-            am_pm = "AM" if hour < 12 else "PM"
-            return hour, 0, am_pm
-
-        # Access the first group from the match object
+    elif (
+        hour_match
+        and len(hour_match.groups()) == 1
+        and len(hour_match_plus_ampm.groups()) != 3
+    ):
+        # Handle cases where only the hour is provided (Assume "AM" as default)
+        hour = int(hour_match.group(1))
+        am_pm = "AM" if hour < 12 else "PM"
+        return hour, 0, am_pm
 
     elif len(hour_match_plus_ampm.groups()) == 3:
-        hour = hour_match_plus_ampm.groups()[0]
-        time_ = hour_match_plus_ampm.groups()[1]
+        hour = int(hour_match_plus_ampm.group(1))  # Use group(1) instead of groups()[0]
+        time_ = hour_match_plus_ampm.group(2)  # Use group(2) instead of groups()[1]
         return hour, 0, time_
 
     return None
@@ -128,8 +130,3 @@ def listen_for_commands():
             print(
                 "Invalid alarm format. Please use 'set alarm [hour]:[minute] [AM/PM].'"
             )
-
-
-# Main loop
-if __name__ == "__main__":
-    listen_for_commands()
