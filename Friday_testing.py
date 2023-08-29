@@ -461,6 +461,7 @@ class Friday:
                         if tag == intent["tag"]:
                             if intent["tag"] == "background_acknowledgment":
                                 pass
+
                             elif intent["tag"] == "mute_command_tsk":
                                 self.mute = True
                                 pass

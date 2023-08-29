@@ -28,13 +28,19 @@ def generative_with_t5(input_text):
     outputs = model.generate(
         input_ids,
         do_sample=True,
-        max_new_tokens=100,
+        max_new_tokens=200,
         min_length=50,
         temperature=0.7,
         top_k=0,
+        no_repeat_ngram_size=4,  # Avoid repeating the same bigram
     )
 
     # Decode the generated translation
     decoded_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
-    return decoded_text
+    clean_text = decoded_text.capitalize().replace("br>", "").replace("br>", "").strip()
+
+    return clean_text
+
+
+print(generative_with_t5("what is plasma"))
