@@ -185,8 +185,3 @@ def text_to_speech(text):
     play_obj = wave_obj.play()
     play_obj.wait_done()
     os.remove("tts_/output.wav")
-
-
-# Example usage:
-text = "The AC and DC are types of circuit breakers."
-text_to_speech(text)
