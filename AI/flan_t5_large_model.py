@@ -14,7 +14,11 @@ def generative_with_t5(input_text):
     _prompt_yes_no = f"Answer the following yes/no question. {input_text}?"
 
     def type_(input_text):
-        if input_text.startswith("do"):
+        if (
+            input_text.startswith("do")
+            or input_text.startswith("does")
+            or input_text.startswith("is")
+        ):
             return _prompt_yes_no
         else:
             return _prompt
@@ -34,6 +38,3 @@ def generative_with_t5(input_text):
     decoded_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
     return decoded_text
-
-
-print(generative_with_t5("what is plasma"))
