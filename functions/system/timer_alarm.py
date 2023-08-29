@@ -1,15 +1,24 @@
 import json
+import random
 import re
 import sys
 import time
 import threading
+from tts_.tts import text_to_speech
+
+with open("./data/intents.json", "r") as data:
+    intents = json.load(data)
 
 
 # Function to set a timer
 def set_timer(seconds):
     # print(f"Setting a timer for {seconds} seconds.")
     time.sleep(seconds)
-    # print("Timer is up!")
+    for intent in intents["intents"]:
+        if intent["tag"] == "timer_done":
+            response = random.choice(intents["response"])
+            text_to_speech(response)
+            break
 
 
 def set_alarm(hour, minute, am_pm=None):
@@ -49,7 +58,11 @@ def set_alarm(hour, minute, am_pm=None):
 
     # print(f"Setting an alarm for {hour}:{minute} {am_pm}.")
     time.sleep(alarm_seconds)
-    # print("Alarm is ringing!")
+    for intent in intents["intents"]:
+        if intent["tag"] == "alarm_done":
+            response = random.choice(intents["response"])
+            text_to_speech(response)
+            break
 
 
 def parse_time_units(command):
