@@ -392,7 +392,7 @@ class Friday:
                         for intent in self.intents["intents"]:
                             if intent["tag"] == "technical":
                                 response = random.choice(intent["responses"])
-                                text_to_speech(intent, response)
+                                text_to_speech(response)
                                 break
 
                     if self.last_response:
@@ -439,10 +439,7 @@ class Friday:
                 if user_input == self.prev_input.lower():
                     tag = "repeat_string"
 
-                elif (
-                    self.prev_tag == "technical"
-                    or self.prev_tag == "background_acknowledgment"
-                ):
+                elif self.prev_tag == "background_acknowledgment":
                     pass
 
                 else:
