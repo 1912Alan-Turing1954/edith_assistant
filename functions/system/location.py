@@ -36,7 +36,7 @@ def get_location():
 location_data = get_location()
 
 long = location_data["longitude"]
-lat = location_data["latitude"]
+latit = location_data["latitude"]
 
 
 def get_location_description(response):
