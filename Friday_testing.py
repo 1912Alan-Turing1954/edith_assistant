@@ -3,6 +3,7 @@ import random
 import datetime
 import json
 import subprocess
+import time
 import torch
 from word2number import w2n
 import concurrent.futures
@@ -308,48 +309,6 @@ class Friday:
                                         print(e)
                                         pass
 
-                                elif intent["tag"] == "timer":
-                                    for intent in self.intents["intents"]:
-                                        if intent["tag"] == "anything_else_sir_yes":
-                                            response = random.choice(
-                                                intent["responses"]
-                                            )
-                                            self.get_intent_response(intent, response)
-                                    # response = random.choice(intent["responses"])
-                                    # self.get_intent_response(intent, response)
-                                    # try:
-                                    #     subprocess.Popen(
-                                    #         [
-                                    #             "python",
-                                    #             "./functions/system/timer_alarm.py",
-                                    #             user_input,
-                                    #         ]
-                                    #     )
-                                    # except FileNotFoundError:
-                                    #     print("The script math_sim.py was not found.")
-                                    #     pass
-                                    # except Exception as e:
-                                    #     print(e)
-                                    #     pass
-
-                                elif intent["tag"] == "alarm":
-                                    response = random.choice(intent["responses"])
-                                    self.get_intent_response(intent, response)
-                                    try:
-                                        subprocess.Popen(
-                                            [
-                                                "python",
-                                                "./functions/system/timer_alarm.py",
-                                                user_input,
-                                            ]
-                                        )
-                                    except FileNotFoundError:
-                                        print("The script math_sim.py was not found.")
-                                        pass
-                                    except Exception as e:
-                                        print(e)
-                                        pass
-
                                 elif intent["tag"] == "repeat_tsk":
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(
@@ -558,20 +517,21 @@ class Friday:
                             elif intent["tag"] == "timer":
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response)
-                                try:
-                                    subprocess.Popen(
-                                        [
-                                            "python",
-                                            "./functions/system/timer_alarm.py",
-                                            user_input,
-                                        ]
-                                    )
-                                except FileNotFoundError:
-                                    print("The script math_sim.py was not found.")
-                                    pass
-                                except Exception as e:
-                                    print(e)
-                                    pass
+
+                                # try:
+                                #     subprocess.Popen(
+                                #         [
+                                #             "python",
+                                #             "./functions/system/timer_alarm.py",
+                                #             user_input,
+                                #         ]
+                                #     )
+                                # except FileNotFoundError:
+                                #     print("The script math_sim.py was not found.")
+                                #     pass
+                                # except Exception as e:
+                                #     print(e)
+                                #     pass
 
                             elif intent["tag"] == "alarm":
                                 response = random.choice(intent["responses"])

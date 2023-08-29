@@ -920,7 +920,7 @@
       ]
     },
     {
-      "tag": "timer",
+      "tag": "timer_tsk",
       "patterns": [
         "start a timer for",
         "set a timer for",
@@ -943,12 +943,8 @@
         "Timer sequence activated, sir.",
         "Timer is now running, boss.",
         "Timer begun, sir.",
-        "Timer engaged, boss.",
-        "Timer launched, sir.",
-        "Timer triggered, boss.",
         "Timer initialized, sir.",
         "Timer commenced, boss.",
-        "Timer activated, sir.",
         "I have initiated a timer, as per your request, sir.",
         "The timer has commenced its operation, just as you wanted, boss.",
         "The timer is now in motion, following your instructions, sir.",
@@ -963,15 +959,28 @@
     },
     {
       "tag": "timer_done",
-      "patterns": [
-        
-      ],
+      "patterns": [],
       "responses": [
-  
+        "The timer has concluded.",
+        "Timer completed, sir.",
+        "The timer is done, boss.",
+        "The timer has finished, sir.",
+        "Timer's completed, boss.",
+        "The timer has concluded its operation, sir.",
+        "The timer has completed its task, boss.",
+        "Boss, the timer is finished.",
+        "Sir, the timer has completed.",
+        "Boss, the timer's done.",
+        "Sir, the timer is concluded.",
+        "The timer has ended, boss.",
+        "Timer completed successfully, sir.",
+        "The timer has reached its conclusion, boss.",
+        "Sir, the timer has fulfilled its duty.",
+        "Boss, the timer is now idle."
       ]
     },
     {
-      "tag": "alarm",
+      "tag": "alarm_tsk",
       "patterns": [
         "set an alarm for",
         "initiate an alarm for",
@@ -992,12 +1001,8 @@
         "Alarm sequence activated, sir.",
         "Alarm is now running, boss.",
         "Alarm begun, sir.",
-        "Alarm engaged, boss.",
-        "Alarm launched, sir.",
-        "Alarm triggered, boss.",
         "Alarm initialized, sir.",
         "Alarm commenced, boss.",
-        "Alarm activated, sir.",
         "I have initiated an alarm, as per your request, sir.",
         "The alarm has commenced its operation, just as you wanted, boss.",
         "The alarm is now in motion, following your instructions, sir.",
@@ -1012,11 +1017,19 @@
     },
     {
       "tag": "alarm_done",
-      "patterns": [
-        
-      ],
+      "patterns": [],
       "responses": [
-  
+        "The alarm has concluded.",
+        "Alarm completed.",
+        "The alarm is done.",
+        "The alarm has finished.",
+        "Alarm's completed.",
+        "The alarm has concluded its operation.",
+        "The alarm has completed its task.",
+        "Boss, the alarm is finished.",
+        "Sir, the alarm has completed.",
+        "Boss, the alarm's done.",
+        "Sir, the alarm is concluded."
       ]
     },
     {
