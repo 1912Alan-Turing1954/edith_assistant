@@ -1,7 +1,7 @@
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
-tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-xl")
-model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-xl")
+tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-large")
+model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-large")
 
 
 def generative_with_t5(input_text):
@@ -21,9 +21,19 @@ def generative_with_t5(input_text):
 
     # tokenize the input text
     input_ids = tokenizer(type_(input_text), return_tensors="pt").input_ids
-    outputs = model.generate(input_ids, max_length=1024, do_sample=False)
+    outputs = model.generate(
+        input_ids,
+        do_sample=True,
+        max_new_tokens=100,
+        min_length=50,
+        temperature=0.7,
+        top_k=0,
+    )
 
     # Decode the generated translation
     decoded_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
     return decoded_text
+
+
+print(generative_with_t5("what is plasma"))
