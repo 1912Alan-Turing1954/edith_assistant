@@ -962,6 +962,15 @@
       ]
     },
     {
+      "tag": "timer_done",
+      "patterns": [
+        
+      ],
+      "responses": [
+  
+      ]
+    },
+    {
       "tag": "alarm",
       "patterns": [
         "set an alarm for",
@@ -999,6 +1008,15 @@
         "The alarm has been elegantly activated, just the way you like it, boss.",
         "I have formally commenced the alarm for your use, sir.",
         "The alarm is now operational and ready, as you desired, boss."
+      ]
+    },
+    {
+      "tag": "alarm_done",
+      "patterns": [
+        
+      ],
+      "responses": [
+  
       ]
     },
     {

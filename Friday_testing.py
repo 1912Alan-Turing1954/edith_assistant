@@ -512,6 +512,7 @@ class Friday:
                                 response = random.choice(intent["responses"])
                                 response = get_long_and_lati(response)
                                 self.get_intent_response(intent, response)
+
                             elif intent["tag"] == "show_visualization" and (
                                 self.prev_tag == "location_inquiry_tsk"
                                 or self.prev_tag == "address_inquiry_tsk"
@@ -520,10 +521,12 @@ class Friday:
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response)
                                 create_three_d_map(longitude, latitude)
+
                             elif intent["tag"] == "show_location":
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response)
                                 create_three_d_map(longitude, latitude)
+
                             elif intent[
                                 "tag"
                             ] == "simulate_interference_tsk" and self.has_mathematical_function_or_x(
@@ -553,38 +556,26 @@ class Friday:
                                     pass
 
                             elif intent["tag"] == "timer":
-                                response_timer = random.choice(intent["responses"])
-                                for intent in self.intents["intents"]:
-                                    if intent["tag"] == "anything_else_sir_yes":
-                                        response = random.choice(intent["responses"])
-                                self.get_intent_response(
-                                    intent, f"{response} {response_timer}"
-                                )
+                                response = random.choice(intent["responses"])
+                                self.get_intent_response(intent, response)
+                                try:
+                                    subprocess.Popen(
+                                        [
+                                            "python",
+                                            "./functions/system/timer_alarm.py",
+                                            user_input,
+                                        ]
+                                    )
+                                except FileNotFoundError:
+                                    print("The script math_sim.py was not found.")
+                                    pass
+                                except Exception as e:
+                                    print(e)
+                                    pass
 
-                                # try:
-                                #     subprocess.Popen(
-                                #         [
-                                #             "python",
-                                #             "./functions/system/timer_alarm.py",
-                                #             user_input,
-                                #         ]
-                                #     )
-                                # except FileNotFoundError:
-                                #     print("The script math_sim.py was not found.")
-                                #     pass
-                                # except Exception as e:
-                                #     print(e)
-                                #     pass
-
-                            elif intent["tag"] == "timer":
-                                response_alarm = random.choice(intent["responses"])
-                                for intent in self.intents["intents"]:
-                                    if intent["tag"] == "anything_else_sir_yes":
-                                        response = random.choice(intent["responses"])
-                                        intent["tag"] == "alarm"
-                                        self.get_intent_response(
-                                            intent, f"{response} {response_alarm}"
-                                        )
+                            elif intent["tag"] == "alarm":
+                                response = random.choice(intent["responses"])
+                                self.get_intent_response(intent, response)
                                 try:
                                     subprocess.Popen(
                                         [
