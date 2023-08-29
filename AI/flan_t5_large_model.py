@@ -41,6 +41,3 @@ def generative_with_t5(input_text):
     clean_text = decoded_text.capitalize().replace("br>", "").replace("br>", "").strip()
 
     return clean_text
-
-
-print(generative_with_t5("what is plasma"))

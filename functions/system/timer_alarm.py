@@ -3,8 +3,6 @@ import random
 import re
 import sys
 import time
-import threading
-from tts_.tts import text_to_speech
 
 with open("./data/intents.json", "r") as data:
     intents = json.load(data)
@@ -16,8 +14,7 @@ def set_timer(seconds):
     for intent in intents["intents"]:
         if intent["tag"] == "timer_done":
             response = random.choice(intents["response"])
-            text_to_speech(response)
-            break
+            return response
 
 
 def set_alarm(hour, minute, am_pm=None):
@@ -59,8 +56,7 @@ def set_alarm(hour, minute, am_pm=None):
     for intent in intents["intents"]:
         if intent["tag"] == "alarm_done":
             response = random.choice(intents["response"])
-            text_to_speech(response)
-            break
+            return response
 
 
 def parse_time_units(command):
@@ -129,8 +125,7 @@ def set_timer_or_alarm(user_input):
         print(parse_time_units(user_input))
         seconds = parse_time_units(user_input)
         if seconds is not None:
-            timer_thread = threading.Thread(target=set_timer, args=(seconds,))
-            timer_thread.start()
+            set_timer(seconds)
         else:
             pass
 
@@ -139,10 +134,7 @@ def set_timer_or_alarm(user_input):
 
         if alarm_time:
             hour, minute, am_pm = alarm_time
-            alarm_thread = threading.Thread(
-                target=set_alarm, args=(hour, minute, am_pm)
-            )
-            alarm_thread.start()
+            set_alarm(hour, minute, am_pm)
         else:
             pass
 
