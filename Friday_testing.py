@@ -18,8 +18,8 @@ from functions.system.location import (
     get_address_description,
     get_location_description,
     get_long_and_lati,
-    long,
-    latit,
+    longitude,
+    latitude,
 )
 
 from functions.system.system_info import (
@@ -275,12 +275,12 @@ class Friday:
                                 ):
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(intent, response)
-                                    create_three_d_map(long, latit)
+                                    create_three_d_map(longitude, latitude)
 
                                 elif intent["tag"] == "show_location":
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(intent, response)
-                                    create_three_d_map(long, latit)
+                                    create_three_d_map(longitude, latitude)
 
                                 elif intent[
                                     "tag"
@@ -489,12 +489,12 @@ class Friday:
                             ):
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response)
-                                create_three_d_map(long, latit)
+                                create_three_d_map(longitude, latitude)
 
                             elif intent["tag"] == "show_location":
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response)
-                                create_three_d_map(long, latit)
+                                create_three_d_map(longitude, latitude)
 
                             elif intent[
                                 "tag"
