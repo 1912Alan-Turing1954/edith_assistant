@@ -227,10 +227,7 @@ class Friday:
 
                     if user_input == self.prev_input.lower():
                         tag = "repeat_string"
-                    elif (
-                        self.prev_tag == "technical"
-                        or self.prev_tag == "background_acknowledgment"
-                    ):
+                    elif self.prev_tag == "background_acknowledgment":
                         pass
                     else:
                         sentence = tokenize(user_input)
@@ -395,7 +392,7 @@ class Friday:
                         for intent in self.intents["intents"]:
                             if intent["tag"] == "technical":
                                 response = random.choice(intent["responses"])
-                                self.get_intent_response(intent, response)
+                                text_to_speech(intent, response)
                                 break
 
                     if self.last_response:
@@ -441,11 +438,13 @@ class Friday:
 
                 if user_input == self.prev_input.lower():
                     tag = "repeat_string"
+
                 elif (
                     self.prev_tag == "technical"
                     or self.prev_tag == "background_acknowledgment"
                 ):
                     pass
+
                 else:
                     sentence = tokenize(user_input)
                     X = bag_of_words(sentence, self.all_words)
@@ -462,26 +461,21 @@ class Friday:
                         if tag == intent["tag"]:
                             if intent["tag"] == "background_acknowledgment":
                                 pass
-
                             elif intent["tag"] == "mute_command_tsk":
                                 self.mute = True
                                 pass
-
                             elif intent["tag"] == "location_inquiry_tsk":
                                 response = random.choice(intent["responses"])
                                 response = get_location_description(response)
                                 self.get_intent_response(intent, response)
-
                             elif intent["tag"] == "address_inquiry_tsk":
                                 response = random.choice(intent["responses"])
                                 response = get_address_description(response)
                                 self.get_intent_response(intent, response)
-
                             elif intent["tag"] == "coordinates_tsk":
                                 response = random.choice(intent["responses"])
                                 response = get_long_and_lati(response)
                                 self.get_intent_response(intent, response)
-
                             elif intent["tag"] == "show_visualization" and (
                                 self.prev_tag == "location_inquiry_tsk"
                                 or self.prev_tag == "address_inquiry_tsk"
@@ -490,12 +484,10 @@ class Friday:
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response)
                                 create_three_d_map(longitude, latitude)
-
                             elif intent["tag"] == "show_location":
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response)
                                 create_three_d_map(longitude, latitude)
-
                             elif intent[
                                 "tag"
                             ] == "simulate_interference_tsk" and self.has_mathematical_function_or_x(
@@ -523,7 +515,6 @@ class Friday:
                                 except Exception as e:
                                     print(e)
                                     pass
-
                             elif intent["tag"] == "repeat_tsk":
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(
@@ -579,7 +570,6 @@ class Friday:
                             else:
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response)
-
                             if "tsk" in intent["tag"]:
                                 self.task_tag_count += 1
                                 if self.task_tag_count == self.num:
@@ -597,13 +587,12 @@ class Friday:
                     for intent in self.intents["intents"]:
                         if intent["tag"] == "technical":
                             response = random.choice(intent["responses"])
-                            self.get_intent_response(intent, response)
+                            text_to_speech(response)
                             break
 
                 if self.last_response:
                     text_to_speech(self.last_response[0])
                     user_input = input("Yes / No: ")
-
                     sentence = tokenize(user_input)
                     X = bag_of_words(sentence, self.all_words)
                     X = X.reshape(1, X.shape[0])
@@ -613,13 +602,13 @@ class Friday:
                     tag = self.tags[predicted.item()]
                     probs = torch.softmax(output, dim=1)
                     prob = probs[0][predicted.item()]
-
                     if prob.item() > 0.95:
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
                                 if intent["tag"] == "anything_else_sir_yes":
                                     response = random.choice(intent["responses"])
                                     self.get_intent_response(intent, response)
+                                    print(intent["tag"])
                                     self.num = 5
                                 elif intent["tag"] == "anything_else_sir_no":
                                     response = random.choice(intent["responses"])
