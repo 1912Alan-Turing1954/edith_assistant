@@ -3,20 +3,25 @@ import random
 import datetime
 import json
 import subprocess
+import time
 import torch
 from word2number import w2n
+import speech_recognition as sr  # Import the speech_recognition library
 import concurrent.futures
 from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
 from tts_.tts import text_to_speech
 from AI.flan_t5_large_model import generative_with_t5
-from functions.math._math import solve_word_math_expression
-from functions.math.math_sim import create_simulation_function
+
+# from functions.math._math import solve_word_math_expression
 from functions.system.time_of_day import time_of_day_correct
+from functions.system.maps.three_d_map import create_three_d_map
 from functions.system.location import (
     get_address_description,
     get_location_description,
     get_long_and_lati,
+    longitude,
+    latitude,
 )
 
 from functions.system.system_info import (
@@ -27,6 +32,8 @@ from functions.system.system_info import (
     generate_memory_usage_response,
     generate_disk_space_response,
 )
+
+recognizer = sr.Recognizer()
 
 
 class Friday:
@@ -189,17 +196,16 @@ class Friday:
         self.prev_tag = intent["tag"]
         self.prev_response = response
 
-    def MainFrame(self, user_input):
+    def MainFrame(self):
         if self.mute:
             self.mute = False
             print("break_mute")
-            return
+            pass
         else:
             pass
 
-        user_input = input("friday is active: ")
-        print(type(user_input))
         print(self.follow_word_check(user_input))
+
         print(
             self.has_mathematical_function_or_x(
                 self.extract_function_from_input(
@@ -207,8 +213,10 @@ class Friday:
                 )
             )
         )
+
         if self.follow_word_check(user_input):
             string_parts = self.replace_follow_up_word(user_input)
+
             for string_part in string_parts:
                 user_input = string_part.lower()
                 info_system = self.get_updated_system_info()
@@ -217,13 +225,10 @@ class Friday:
                 cpu_usage = generate_cpu_usage_response(info_system)
                 memory_usage = generate_memory_usage_response(info_system)
                 disk_space = generate_disk_space_response(info_system)
+
                 if user_input == self.prev_input.lower():
                     tag = "repeat_string"
-                elif (
-                    self.prev_tag == "technical"
-                    or self.prev_tag == "background_acknowledgment"
-                ):
-                    pass
+
                 else:
                     sentence = tokenize(user_input)
                     X = bag_of_words(sentence, self.all_words)
@@ -234,26 +239,46 @@ class Friday:
                     tag = self.tags[predicted.item()]
                     probs = torch.softmax(output, dim=1)
                     prob = probs[0][predicted.item()]
+
                 if prob.item() > 0.95:
                     for intent in self.intents["intents"]:
                         if tag == intent["tag"]:
                             if intent["tag"] == "background_acknowledgment":
                                 pass
+
                             elif intent["tag"] == "mute_command_tsk":
                                 self.mute = True
                                 pass
+
                             elif intent["tag"] == "location_inquiry_tsk":
                                 response = random.choice(intent["responses"])
                                 response = get_location_description(response)
                                 self.get_intent_response(intent, response)
+
                             elif intent["tag"] == "address_inquiry_tsk":
                                 response = random.choice(intent["responses"])
                                 response = get_address_description(response)
                                 self.get_intent_response(intent, response)
+
                             elif intent["tag"] == "coordinates_tsk":
                                 response = random.choice(intent["responses"])
                                 response = get_long_and_lati(response)
                                 self.get_intent_response(intent, response)
+
+                            elif intent["tag"] == "show_visualization" and (
+                                self.prev_tag == "location_inquiry_tsk"
+                                or self.prev_tag == "address_inquiry_tsk"
+                                or self.prev_tag == "coordinates_tsk"
+                            ):
+                                response = random.choice(intent["responses"])
+                                self.get_intent_response(intent, response)
+                                create_three_d_map(longitude, latitude)
+
+                            elif intent["tag"] == "show_location":
+                                response = random.choice(intent["responses"])
+                                self.get_intent_response(intent, response)
+                                create_three_d_map(longitude, latitude)
+
                             elif intent[
                                 "tag"
                             ] == "simulate_interference_tsk" and self.has_mathematical_function_or_x(
@@ -281,6 +306,7 @@ class Friday:
                                 except Exception as e:
                                     print(e)
                                     pass
+
                             elif intent["tag"] == "repeat_tsk":
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(
@@ -336,6 +362,7 @@ class Friday:
                             else:
                                 response = random.choice(intent["responses"])
                                 self.get_intent_response(intent, response)
+
                             if "tsk" in intent["tag"]:
                                 self.task_tag_count += 1
                                 if self.task_tag_count == self.num:
@@ -346,41 +373,63 @@ class Friday:
                                             )
                                             self.last_response.append(response_tsk)
                                             self.task_tag_count = 0
+
                     self.prev_input = user_input.lower()
+
                 else:
                     for intent in self.intents["intents"]:
                         if intent["tag"] == "technical":
                             response = random.choice(intent["responses"])
-                            self.get_intent_response(intent, response)
+                            text_to_speech(response)
                             break
-            if self.last_response:
-                text_to_speech(self.last_response[0])
-                user_input = input("Yes / No: ")
-                sentence = tokenize(user_input)
-                X = bag_of_words(sentence, self.all_words)
-                X = X.reshape(1, X.shape[0])
-                X = torch.from_numpy(X)
-                output = self.model(X)
-                _, predicted = torch.max(output, dim=1)
-                tag = self.tags[predicted.item()]
-                probs = torch.softmax(output, dim=1)
-                prob = probs[0][predicted.item()]
-                if prob.item() > 0.95:
-                    for intent in self.intents["intents"]:
-                        if tag == intent["tag"]:
-                            if intent["tag"] == "anything_else_sir_yes":
-                                response = random.choice(intent["responses"])
-                                self.get_intent_response(intent["responses"])
-                                print(intent["tag"])
-                                self.num = 5
-                            elif intent["tag"] == "anything_else_sir_no":
-                                response = random.choice(intent["responses"])
-                                self.get_intent_response(intent["responses"])
-                                print(self.num)
-                                self.num = self.num
-                            else:
-                                pass
-                self.last_response.clear()
+
+                if self.last_response:
+                    text_to_speech(self.last_response[0])
+                    with sr.Microphone() as source:
+                        print("Listening...")
+                        audio = recognizer.listen(
+                            source, timeout=5, phrase_time_limit=5, energy_threshold=300
+                        )
+
+                    try:
+                        user_input = recognizer.recognize_google(audio).lower()
+                        print(f"You said: {user_input}")
+
+                    except sr.UnknownValueError:
+                        print("Sorry, I could not understand you.")
+                    except sr.RequestError as e:
+                        print(
+                            f"Error occurred while requesting results from Google Speech Recognition service: {e}"
+                        )
+
+                    sentence = tokenize(user_input)
+                    X = bag_of_words(sentence, self.all_words)
+                    X = X.reshape(1, X.shape[0])
+                    X = torch.from_numpy(X)
+                    output = self.model(X)
+                    _, predicted = torch.max(output, dim=1)
+                    tag = self.tags[predicted.item()]
+                    probs = torch.softmax(output, dim=1)
+                    prob = probs[0][predicted.item()]
+
+                    if prob.item() > 0.95:
+                        for intent in self.intents["intents"]:
+                            if tag == intent["tag"]:
+                                if intent["tag"] == "anything_else_sir_yes":
+                                    response = random.choice(intent["responses"])
+                                    self.get_intent_response(intent, response)
+                                    print(intent["tag"])
+                                    self.num = 5
+                                elif intent["tag"] == "anything_else_sir_no":
+                                    response = random.choice(intent["responses"])
+                                    self.get_intent_response(intent, response)
+                                    print(self.num)
+                                    self.num = self.num
+                                else:
+                                    pass
+
+                    self.last_response.clear()
+
         else:
             user_input = user_input.lower()
             info_system = self.get_updated_system_info()
@@ -389,13 +438,10 @@ class Friday:
             cpu_usage = generate_cpu_usage_response(info_system)
             memory_usage = generate_memory_usage_response(info_system)
             disk_space = generate_disk_space_response(info_system)
+
             if user_input == self.prev_input.lower():
                 tag = "repeat_string"
-            elif (
-                self.prev_tag == "technical"
-                or self.prev_tag == "background_acknowledgment"
-            ):
-                pass
+
             else:
                 sentence = tokenize(user_input)
                 X = bag_of_words(sentence, self.all_words)
@@ -406,11 +452,13 @@ class Friday:
                 tag = self.tags[predicted.item()]
                 probs = torch.softmax(output, dim=1)
                 prob = probs[0][predicted.item()]
+
             if prob.item() > 0.95:
                 for intent in self.intents["intents"]:
                     if tag == intent["tag"]:
                         if intent["tag"] == "background_acknowledgment":
                             pass
+
                         elif intent["tag"] == "mute_command_tsk":
                             self.mute = True
                             pass
@@ -426,6 +474,21 @@ class Friday:
                             response = random.choice(intent["responses"])
                             response = get_long_and_lati(response)
                             self.get_intent_response(intent, response)
+
+                        elif intent["tag"] == "show_visualization" and (
+                            self.prev_tag == "location_inquiry_tsk"
+                            or self.prev_tag == "address_inquiry_tsk"
+                            or self.prev_tag == "coordinates_tsk"
+                        ):
+                            response = random.choice(intent["responses"])
+                            self.get_intent_response(intent, response)
+                            create_three_d_map(longitude, latitude)
+
+                        elif intent["tag"] == "show_location":
+                            response = random.choice(intent["responses"])
+                            self.get_intent_response(intent, response)
+                            create_three_d_map(longitude, latitude)
+
                         elif intent[
                             "tag"
                         ] == "simulate_interference_tsk" and self.has_mathematical_function_or_x(
@@ -451,6 +514,7 @@ class Friday:
                             except Exception as e:
                                 print(e)
                                 pass
+
                         elif intent["tag"] == "repeat_tsk":
                             response = random.choice(intent["responses"])
                             self.get_intent_response(
@@ -516,16 +580,35 @@ class Friday:
                                         )
                                         self.last_response.append(response_tsk)
                                         self.task_tag_count = 0
+
                 self.prev_input = user_input.lower()
+
             else:
                 for intent in self.intents["intents"]:
                     if intent["tag"] == "technical":
                         response = random.choice(intent["responses"])
-                        self.get_intent_response(intent, response)
+                        text_to_speech(response)
                         break
+
             if self.last_response:
                 text_to_speech(self.last_response[0])
-                user_input = input("Yes / No: ")
+                with sr.Microphone() as source:
+                    print("Listening...")
+                    audio = recognizer.listen(
+                        source, timeout=5, phrase_time_limit=5, energy_threshold=300
+                    )
+
+                try:
+                    user_input = recognizer.recognize_google(audio).lower()
+                    print(f"You said: {user_input}")
+
+                except sr.UnknownValueError:
+                    print("Sorry, I could not understand you.")
+                except sr.RequestError as e:
+                    print(
+                        f"Error occurred while requesting results from Google Speech Recognition service: {e}"
+                    )
+
                 sentence = tokenize(user_input)
                 X = bag_of_words(sentence, self.all_words)
                 X = X.reshape(1, X.shape[0])
@@ -539,13 +622,16 @@ class Friday:
                     for intent in self.intents["intents"]:
                         if tag == intent["tag"]:
                             if intent["tag"] == "anything_else_sir_yes":
+                                response = random.choice(intent["responses"])
+                                self.get_intent_response(intent, response)
                                 print(intent["tag"])
                                 self.num = 5
-                                print(self.num)
                             elif intent["tag"] == "anything_else_sir_no":
-                                print(intent["tag"])
-                                self.num = self.num
+                                response = random.choice(intent["responses"])
+                                self.get_intent_response(intent, response)
                                 print(self.num)
+                                self.num = self.num
                             else:
                                 pass
+
                 self.last_response.clear()
