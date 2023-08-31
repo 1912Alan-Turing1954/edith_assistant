@@ -83,7 +83,6 @@ acronyms_dict = {
     "Wattmeter": "Wattmeter",
     "Grounding": "Grounding",
     "Electrical Shock": "Electrical Shock",
-    "AC": "Alternating Current",
     "DC": "Direct Current",
     "V": "Volt (Voltage)",
     "A": "Ampere (Current)",
