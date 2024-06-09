@@ -6,7 +6,7 @@ import json
 
 from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
-from tts_.tts import text_to_speech
+from tts_function.tts import text_to_speech
 
 # from AI.flan_t5_large_model import generative_with_t5
 from functions.system.system_info import (
