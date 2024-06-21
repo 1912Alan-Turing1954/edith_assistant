@@ -1,7 +1,6 @@
 model
 jenny-tts-dataset
-TTS/TTS
-models
-AI/Llama-2-7b-chat-hf
-AI/bin
+TTS
 Meta-Llama-3-8B-Instruct
+models
+AI/bin
