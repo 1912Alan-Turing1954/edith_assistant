@@ -13,12 +13,6 @@ RESET = "\033[0m"
 
 # Simulated module loading statuses and additional data
 modules = {
-    # "Neural network model": {
-    #     "loaded": False,
-    #     "progress": 0,
-    #     "size": "50MB",
-    #     "file_path": "./Meta-Llama-3-8B-Instruct/config.json",
-    # },
     "Text-to-speech Model": {
         "loaded": False,
         "progress": 0,
@@ -77,7 +71,7 @@ modules = {
         "loaded": False,
         "progress": 0,
         "size": "8MB",
-        "file_path": "./edith/modules/guardian_protocol.py",
+        "file_path": "./edith/modules/barn_door_protocol.py",
     },
     "Data analytics": {
         "loaded": False,
@@ -161,21 +155,22 @@ def load_modules():
         print_red(f"\nERROR: {e}")
         print("INFO: Continuing with initialization despite errors.")
 
+
 # Connect to SQLite database
 def fetch_and_copy_files():
     # Connect to SQLite database
-    conn = sqlite3.connect('./data/database/edith_matrix.db')
+    conn = sqlite3.connect("./data/database/edith_matrix.db")
     cursor = conn.cursor()
 
     try:
         # Fetch models data
-        cursor.execute('SELECT Name, FilePath, Destination FROM Models')
+        cursor.execute("SELECT Name, FilePath, Destination FROM Models")
         models = cursor.fetchall()
-        
+
         print("Copying models:")
         for model in tqdm(models, desc="Models", unit="model"):
             name, file_path, destination = model
-            if destination == 'unchanged':
+            if destination == "unchanged":
                 tqdm.write(f"Skipping model '{name}' as destination is 'unchanged'")
                 continue
 
@@ -191,14 +186,16 @@ def fetch_and_copy_files():
                 tqdm.write(f"File '{file_path}' for model '{name}' not found.")
 
         # Fetch configurations data
-        cursor.execute('SELECT Name, FilePath, Destination FROM Configurations')
+        cursor.execute("SELECT Name, FilePath, Destination FROM Configurations")
         configurations = cursor.fetchall()
-        
+
         print("Copying configurations:")
         for config in tqdm(configurations, desc="Configurations", unit="config"):
             name, file_path, destination = config
-            if destination == 'unchanged':
-                tqdm.write(f"Skipping configuration '{name}' as destination is 'unchanged'")
+            if destination == "unchanged":
+                tqdm.write(
+                    f"Skipping configuration '{name}' as destination is 'unchanged'"
+                )
                 continue
 
             # Check if file_path exists
@@ -229,6 +226,7 @@ def fetch_and_copy_files():
             conn.close()
             return True
 
+
 # Function to simulate running a script after successful boot
 def run_script():
     print("\nRunning edith...")
@@ -248,7 +246,10 @@ def bios_boot():
         load_modules()
         fetch_and_copy_files()
         time.sleep(2)
-        if all(module["loaded"] for module in modules.values()) and fetch_and_copy_files():
+        if (
+            all(module["loaded"] for module in modules.values())
+            and fetch_and_copy_files()
+        ):
             run_script()
     except Exception as e:
         print_red(f"An unexpected error occurred during boot: {e}")

@@ -15,8 +15,7 @@
         "Can you quickly test the internet speed?",
         "Do you mind running a speed test for me?",
         "edith i need you to run a speedtest for me",
-        "check internet speed please?",
-        ""
+        "check internet speed please?"
       ],
       "responses": [
         "{string}"
