@@ -41,7 +41,6 @@ class Friday:
         self.prev_tag = ""
         self.prev_response = ""
         self.stop_response = ""
-        self.num = 3
 
         self.play_obj = None
         self.output_path = None
