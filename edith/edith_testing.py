@@ -8,7 +8,6 @@ import random
 import torch
 import json
 import subprocess
-import speech_recognition as sr
 
 from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize

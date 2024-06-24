@@ -17,73 +17,73 @@ modules = {
         "loaded": False,
         "progress": 0,
         "size": "50MB",
-        "file_path": "./data/database/models/jenny_model/model.pt",
+        "file_path": "data/database/models/jenny_model/model.pt",
     },
     "Speech recognition": {
         "loaded": False,
         "progress": 0,
         "size": "30MB",
-        "file_path": "./edith/speech_to_text.py",  # Example path, replace with actual
+        "file_path": "edith/speech_to_text.py",  # Example path, replace with actual
     },
     "Text-to-speech (TTS)": {
         "loaded": False,
         "progress": 0,
         "size": "20MB",
-        "file_path": "./edith/jenny_tts.py",  # Example path, replace with actual
+        "file_path": "edith/jenny_tts.py",  # Example path, replace with actual
     },
     "Natural language processing": {
         "loaded": False,
         "progress": 0,
         "size": "40MB",
-        "file_path": "./edith/brain/model.py",  # Example path, replace with actual
+        "file_path": "edith/brain/model.py",  # Example path, replace with actual
     },
     "Network tools": {
         "loaded": False,
         "progress": 0,
         "size": "15MB",
-        "file_path": "./edith/modules/network_tools.py",
+        "file_path": "edith/modules/network_tools.py",
     },
     "Database connection": {
         "loaded": False,
         "progress": 0,
         "size": "5MB",
-        "file_path": "./edith/modules/database_connection.py",
+        "file_path": "edith/modules/database_connection.py",
     },
     "Hardware diagnostics": {
         "loaded": False,
         "progress": 0,
         "size": "25MB",
-        "file_path": "./edith/modules/system_info.py",
+        "file_path": "edith/modules/system_info.py",
     },
     "Peripheral devices": {
         "loaded": False,
         "progress": 0,
         "size": "12MB",
-        "file_path": "./edith/modules/system_info.py",
+        "file_path": "edith/modules/system_info.py",
     },
     "Audio processing": {
         "loaded": False,
         "progress": 0,
         "size": "18MB",
-        "file_path": "./edith/edith_testing.py",  # Example path, replace with actual
+        "file_path": "edith/edith_testing.py",  # Example path, replace with actual
     },
     "Security modules": {
         "loaded": False,
         "progress": 0,
         "size": "8MB",
-        "file_path": "./edith/modules/barn_door_protocol.py",
+        "file_path": "edith/modules/barn_door_protocol.py",
     },
     "Data analytics": {
         "loaded": False,
         "progress": 0,
         "size": "22MB",
-        "file_path": "./edith/modules/data_analytics.py",  # Example path, replace with actual
+        "file_path": "edith/modules/data_analytics.py",  # Example path, replace with actual
     },
     "Virtual Assistant": {
         "loaded": False,
         "progress": 0,
         "size": "22MB",
-        "file_path": "./edith/edith_testing.py",  # Example path, replace with actual
+        "file_path": "edith/edith_testing.py",  # Example path, replace with actual
     },
 }
 

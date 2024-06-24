@@ -4,20 +4,23 @@ from TTS.utils.manage import ModelManager
 from TTS.utils.synthesizer import Synthesizer
 import simpleaudio as sa
 from textblob import TextBlob
+import sys
 
-# Initialize ModelManager globally for caching
+
+sys.path.append("./TTS/TTS")
+# Get the absolute path of the 'TTS' directory
 model_manager = ModelManager("TTS/TTS/.models.json")
 
 # Global variables for model paths
 MODEL_NAME = "tts_models/en/jenny/jenny"
-SAVE_PATH = "data/database/models/jenny_model/"
+SAVE_PATH = "./mainframe/scripts/data/database/models/jenny_model/"
 CHECKPOINT_PATH = os.path.join(SAVE_PATH, "model.pt")
 CONFIG_PATH = os.path.join(SAVE_PATH, "config.json")
 
 # Initialize or load the TTS model on script start
 if os.path.exists(CHECKPOINT_PATH) and os.path.exists(CONFIG_PATH):
     # If the model files exist locally, load them
-    print("Loading model locally: success")
+    print("Loading jenny model: success")
 else:
     # If the model files do not exist, download the model
     model_path, config_path, model_item = model_manager.download_model(MODEL_NAME)
