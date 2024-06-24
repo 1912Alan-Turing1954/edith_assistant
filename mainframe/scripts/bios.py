@@ -17,73 +17,73 @@ modules = {
         "loaded": False,
         "progress": 0,
         "size": "50MB",
-        "file_path": "data/database/models/jenny_model/model.pt",
+        "file_path": "mainframe/scripts/data/database/models/jenny_model/model.pt",
     },
     "Speech recognition": {
         "loaded": False,
         "progress": 0,
         "size": "30MB",
-        "file_path": "edith/speech_to_text.py",  # Example path, replace with actual
+        "file_path": "mainframe/scripts/edith/speech_to_text.py",  # Example path, replace with actual
     },
     "Text-to-speech (TTS)": {
         "loaded": False,
         "progress": 0,
         "size": "20MB",
-        "file_path": "edith/jenny_tts.py",  # Example path, replace with actual
+        "file_path": "mainframe/scripts/edith/jenny_tts.py",  # Example path, replace with actual
     },
     "Natural language processing": {
         "loaded": False,
         "progress": 0,
         "size": "40MB",
-        "file_path": "edith/brain/model.py",  # Example path, replace with actual
+        "file_path": "mainframe/scripts/edith/brain/model.py",  # Example path, replace with actual
     },
     "Network tools": {
         "loaded": False,
         "progress": 0,
         "size": "15MB",
-        "file_path": "edith/modules/network_tools.py",
+        "file_path": "mainframe/scripts/edith/modules/network_tools.py",
     },
     "Database connection": {
         "loaded": False,
         "progress": 0,
         "size": "5MB",
-        "file_path": "edith/modules/database_connection.py",
+        "file_path": "mainframe/scripts/edith/modules/database_connection.py",
     },
     "Hardware diagnostics": {
         "loaded": False,
         "progress": 0,
         "size": "25MB",
-        "file_path": "edith/modules/system_info.py",
+        "file_path": "mainframe/scripts/edith/modules/system_info.py",
     },
     "Peripheral devices": {
         "loaded": False,
         "progress": 0,
         "size": "12MB",
-        "file_path": "edith/modules/system_info.py",
+        "file_path": "mainframe/scripts/edith/modules/system_info.py",
     },
     "Audio processing": {
         "loaded": False,
         "progress": 0,
         "size": "18MB",
-        "file_path": "edith/edith_testing.py",  # Example path, replace with actual
+        "file_path": "mainframe/scripts/edith/edith_testing.py",  # Example path, replace with actual
     },
     "Security modules": {
         "loaded": False,
         "progress": 0,
         "size": "8MB",
-        "file_path": "edith/modules/barn_door_protocol.py",
+        "file_path": "mainframe/scripts/edith/modules/barn_door_protocol.py",
     },
     "Data analytics": {
         "loaded": False,
         "progress": 0,
         "size": "22MB",
-        "file_path": "edith/modules/data_analytics.py",  # Example path, replace with actual
+        "file_path": "mainframe/scripts/edith/modules/data_analytics.py",  # Example path, replace with actual
     },
     "Virtual Assistant": {
         "loaded": False,
         "progress": 0,
         "size": "22MB",
-        "file_path": "edith/edith_testing.py",  # Example path, replace with actual
+        "file_path": "mainframe/scripts/edith/edith_testing.py",  # Example path, replace with actual
     },
 }
 
@@ -159,7 +159,7 @@ def load_modules():
 # Connect to SQLite database
 def fetch_and_copy_files():
     # Connect to SQLite database
-    conn = sqlite3.connect("./data/database/edith_matrix.db")
+    conn = sqlite3.connect("mainframe/scripts/data/database/edith_matrix.db")
     cursor = conn.cursor()
 
     try:
@@ -231,7 +231,7 @@ def fetch_and_copy_files():
 def run_script():
     print("\nRunning edith...")
     try:
-        script_path = "./edith/edith_testing.py"  # Replace with your actual script path
+        script_path = "mainframe/scripts/edith/edith_testing.py"  # Replace with your actual script path
         subprocess.run(["python", script_path], check=True)
         print("Script execution completed.")
     except subprocess.CalledProcessError as e:

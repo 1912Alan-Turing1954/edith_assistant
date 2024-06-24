@@ -20,10 +20,10 @@ from modules.network_tools import *
 
 class Friday:
     def __init__(self):
-        with open("edith/data/intents.json", "r") as json_data:
+        with open("mainframe/scripts/edith/data/intents.json", "r") as json_data:
             self.intents = json.load(json_data)
 
-        FILE = "edith/data/data.pth"
+        FILE = "mainframe/scripts/edith/data/data.pth"
         data = torch.load(FILE)
 
         self.all_words = data["all_words"]
