@@ -16,6 +16,7 @@ from jenny_tts import text_to_speech  # Importing modified text_to_speech functi
 
 from modules.system_info import *
 from modules.network_tools import *
+from file_system_nlu import *
 
 
 class Friday:
@@ -52,6 +53,16 @@ class Friday:
         elif "AM" in time_:
             time_ = time_.replace("AM", "A M")
         return time_
+
+    def filesystem(self, user_input):
+        # Extract entities from user input
+        entities_ = extract_entities(user_input)
+        print("Entities:", entities_)
+
+        # Classify user intent
+        intent_ = classify_intent(user_input, intent_classifier, tokenizer)
+        print(f"Detected intent: {intent_}")
+        return intent
 
     def get_date(self):
         date_ = datetime.datetime.now().date().strftime("%B %d, %Y")
@@ -133,9 +144,7 @@ class Friday:
                     for intent in self.intents["intents"]:
                         if tag == intent["tag"]:
                             if intent["tag"] == "repeat_tsk" and self.stopped:
-                                # if self.stopped:
                                 print(self.stop_response)
-                                # self.prev_response.pop(0)
                                 self.get_intent_response(
                                     intent,
                                     f"{random.choice(intent['responses'])} {self.stop_response}",

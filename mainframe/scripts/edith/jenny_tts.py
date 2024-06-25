@@ -1,15 +1,22 @@
 import os
 import threading
-from TTS.utils.manage import ModelManager
-from TTS.utils.synthesizer import Synthesizer
-import simpleaudio as sa
-from textblob import TextBlob
+import sys
 import sys
 
+sys.path.append(r"C:\Users\1912a\Edith\mainframe\scripts")  # Adjust path as necessary
 
-sys.path.append("./TTS/TTS")
+
+from TTS.utils.manage import ModelManager
+from TTS.utils.synthesizer import Synthesizer
+
+
+# from TTS.utils.manage import ModelManager
+import simpleaudio as sa
+from textblob import TextBlob
+
+
 # Get the absolute path of the 'TTS' directory
-model_manager = ModelManager("TTS/TTS/.models.json")
+model_manager = ModelManager("mainframe/scripts/TTS/.models.json")
 
 # Global variables for model paths
 MODEL_NAME = "tts_models/en/jenny/jenny"
