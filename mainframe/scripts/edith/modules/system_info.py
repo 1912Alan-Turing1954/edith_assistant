@@ -244,7 +244,7 @@ def generate_storage_status_response(system_info):
         response = "Your storage looks good—plenty of space available!"
 
     else:
-        response = "Your storage usage is a bit high. Organizing your files could improve performance sir"
+        response = "Your storage usage is a bit high. Organizing your files could improve performance sir."
 
     response += f" Currently, you have {free_disk_space} of free space, with {disk_usage}% usage."
 
@@ -293,49 +293,46 @@ def generate_disk_space_response(info_system):
 
 
 def generate_system_status_response(system_info):
-    if not isinstance(system_info, dict):
-        raise ValueError("Expected 'system_info' to be a dictionary.")
-
-    response_type = "positive"  # Assume positive response by default
+    response_type = "positive"
     response = ""
 
-    if "CPU Info" in system_info:
-        cpu_usage = max(system_info["CPU Info"]["CPU Usage"])
-        if cpu_usage > 80:
-            response += " " + random.choice(witty_phrases["cpu"])
-            response_type = "concerned"
+    cpu_usage = max(system_info["CPU Info"]["CPU Usage"])
+    memory_usage = float(system_info["Memory Usage"][:-1])
 
-    if "Memory Usage" in system_info:
-        memory_usage = float(system_info["Memory Usage"][:-1])
-        if memory_usage > 65:
-            response += " " + random.choice(witty_phrases["memory"])
-            response_type = "concerned"
+    if cpu_usage > 80:
+        response += " " + random.choice(witty_phrases["cpu"])
+        response_type = "concerned"
 
-    if "Disk Info" in system_info:
-        disk_usage = float(system_info["Disk Info"][0]["Disk Usage"][:-1])
+    if memory_usage > 65:
+        response += " " + random.choice(witty_phrases["memory"])
+        response_type = "concerned"
+
+    # Check disk usage from 'Disk Info'
+    for disk in system_info["Disk Info"]:
+        disk_usage = float(disk["Disk Usage"][:-1])
         if disk_usage > 90:
             response += " " + random.choice(witty_phrases["disk"])
             response_type = "concerned"
+            break  # Stop after the first occurrence
 
     network_status = system_info.get("Network Status", "")
     if network_status == "Disconnected":
         response += " " + random.choice(witty_phrases["network"])
         response_type = "concerned"
 
+    # Check if 'Battery Status' exists
     battery_status = system_info.get("Battery Status", "")
     if battery_status == "Low":
-        response += " " + random.choice(witty_phrases["battery"])
-        if random.random() < 0.0:  # Adjust the probability as needed
-            response += " Sir."
+        battery_response = random.choice(witty_phrases["battery"])
+        if random.random() < 0.3:  # Adjust the probability as needed
+            battery_response += " Sir."
+        response += " " + battery_response
         response_type = "concerned"
 
     if response_type == "positive":
         response = random.choice(positive_phrases)
     else:
-        response = random.choice(concerned_phrases) + response
-
-    if random.random() < 0.4:
-        response += " " + random.choice(follow_up_questions)
+        response = random.choice(concerned_phrases)
 
     return response
 
@@ -376,3 +373,6 @@ storage_info = get_live_storage_status_response()
 cpu_usage = get_live_cpu_usage_response()
 memory_usage = get_live_memory_usage_response()
 disk_space = get_live_disk_space_response()
+
+
+print(get_live_system_status_response()[1])

@@ -167,14 +167,14 @@ class Edith_Mainframe(object):
 
                 if "edith" == user_input.lower():
                     self.inturupt()
-                elif prob > 0.98:
+                elif prob > 0.90:
                     for intent in self.intents["intents"]:
                         if tag == intent["tag"]:
                             if intent["tag"] == "repeat_tsk" and self.stopped:
 
                                 self.stopped = True
 
-                if prob > 0.98:
+                if prob > 0.90:
                     intent_found = False
                     for intent in self.intents["intents"]:
                         if tag == intent["tag"]:
@@ -195,7 +195,9 @@ class Edith_Mainframe(object):
                                 self.get_intent_response(
                                     intent,
                                     random.choice(intent["responses"]),
-                                    self.get_updated_system_info(),
+                                    get_live_system_status_response(
+                                        self.get_updated_system_info()
+                                    ),
                                 )
                             elif intent["tag"] == "storage_info_tsk":
                                 self.get_intent_response(
