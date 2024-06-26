@@ -2,8 +2,7 @@ model
 jenny-tts-dataset
 TTS
 Meta-Llama-3-8B-Instruct
-mainframe/scripts/data/database/models/jenny_model
-mainframe/scripts/data/database/models/wav2vec2-base-960h
+models
 AI/bin
 Emotional-llama-8B
 venv

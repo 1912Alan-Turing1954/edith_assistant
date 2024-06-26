@@ -1,8 +1,5 @@
 import datetime
-import glob
-import pickle
 import re
-import shutil
 import torch
 import json
 
@@ -41,19 +38,8 @@ class Edith_Mainframe(object):
         self.output_path = None
         self.stopped = False
         self.response = None
-        self.dialogue_archive = (
-            "mainframe/scripts/data/database/archives/dialogue/dialogue_archives.bin"
-        )
-        self.backup_dir = "mainframe/scripts/data/database/archives/dialogue"
-
-    def LLM(self, user_input):
-        if user_input:
-            return "ai response"
-        else:
-            return
 
     def classify_intent(self, user_input):
-
         sentence = tokenize(user_input.lower())
         X = bag_of_words(sentence, self.all_words)
         X = X.reshape(1, X.shape[0])
@@ -119,41 +105,6 @@ class Edith_Mainframe(object):
         cleaned_input = re.sub(pattern, r"\1 point \2", user_input)
 
         return cleaned_input
-
-    def save_dialogue_archive(self, user_input, bot_response):
-        chat_entry = {
-            "User": user_input,
-            "Bot": bot_response,
-            "Timestamp": datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
-        }
-
-        # Append new entry to the existing binary file
-        with open(self.dialogue_archive, "ab") as file:
-            pickle.dump(chat_entry, file)
-
-    def backup_dialogue_archive(self):
-        # Ensure backup directory exists
-        os.makedirs(self.backup_dir, exist_ok=True)
-
-        # Search for existing backup files in backup directory
-        existing_backups = glob.glob(
-            os.path.join(self.backup_dir, "dialogue_archive_backup*.bin")
-        )
-
-        # Delete previous backup(s) if exist
-        for backup_file in existing_backups:
-            os.remove(backup_file)
-            print(f"Deleted previous backup: {backup_file}")
-
-        # Generate new backup file name
-        backup_file = os.path.join(
-            self.backup_dir,
-            f"dialogue_archive_backup_{datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')}.bin",
-        )
-
-        # Copy current dialogue archive file to backup
-        shutil.copyfile(self.dialogue_archive, backup_file)
-        print(f"Backup created: {backup_file}")
 
     def Matrix(self):
         while True:
@@ -286,18 +237,9 @@ class Edith_Mainframe(object):
                 if self.response is None:
                     self.stop_audio()
 
-                    response = self.LLM(user_input)
-
                     self.thread, self.play_obj, self.output_path = text_to_speech(
-                        response
+                        "ai response"
                     )
-
-                if self.response is None:
-                    self.save_dialogue_archive(user_input, response)
-                    self.backup_dialogue_archive()
-                else:
-                    self.save_dialogue_archive(user_input, self.response)
-                    self.backup_dialogue_archive()
 
             except Exception as e:
                 print("An error occurred:", e)
