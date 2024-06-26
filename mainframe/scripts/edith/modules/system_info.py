@@ -1,3 +1,4 @@
+import os
 import psutil
 import platform
 import socket
@@ -75,80 +76,78 @@ def get_system_info():
 
 
 system_status_phrases = [
-    "I have extracted your machine details.",
-    "Here are your system specifications.",
+    "I have extracted your machine details sir.",
+    "Here are your system specifications sir.",
     "Your machine's information has been retrieved.",
     "Your PC's current status has been analyzed.",
     "I've collected the necessary data about your system.",
 ]
 
 cpu_usage_phrases = [
-    "Your CPU usage is currently at {cpu_usage}%",
-    "CPU utilization stands at {cpu_usage}%",
-    "The CPU load is around {cpu_usage}%",
-    "Currently, your CPU is operating at {cpu_usage}%",
+    "Your CPU usage is currently at {cpu_usage}%, sir.",
+    "CPU utilization stands at {cpu_usage}%.",
+    "The CPU load is around {cpu_usage}%, sir.",
+    "Currently, your CPU is operating at {cpu_usage}%, sir.",
 ]
 
 memory_usage_phrases = [
-    "Your memory usage is currently at {memory_usage}%",
-    "Memory utilization stands at {memory_usage}%",
-    "Your RAM is currently used up to {memory_usage}%",
-    "Currently, your memory usage is {memory_usage}%",
+    "Your memory usage is currently at {memory_usage}%, sir.",
+    "Memory utilization stands at {memory_usage}%, sir.",
+    "Your RAM is currently used up to {memory_usage}%.",
+    "Currently, your memory usage is {memory_usage}%, sir.",
 ]
 
 storage_status_phrases = [
-    "I have obtained your storage details.",
-    "Here is your storage information.",
+    "I have obtained your storage details sir.",
+    "Here is your storage information sir.",
     "Your storage status has been retrieved.",
-    "I've gathered information about your storage.",
+    "I've gathered information about your storage sir",
 ]
 
-
-# Define lists of phrases for different response types
 positive_phrases = [
     "Your system is operating within normal parameters.",
-    "No issues detected with your system performance.",
-    "Everything appears to be functioning properly.",
+    "No issues detected with your system performance, sir.",
+    "Everything appears to be functioning properly, sir.",
 ]
 
 concerned_phrases = [
     "I've identified a few concerns with your system's performance.",
-    "Your system requires attention to optimize performance.",
-    "There are issues that need addressing in your system.",
+    "Your system requires attention to optimize performance, sir.",
+    "There are issues that need addressing in your system, sir.",
 ]
 
 witty_phrases = {
     "cpu": [
-        "Your CPU usage is quite high at the moment.",
+        "Your CPU usage is quite high at the moment, sir.",
         "CPU resources are under heavy load.",
-        "Monitoring shows high CPU activity.",
+        "Monitoring shows high CPU activity, sir.",
     ],
     "memory": [
-        "Memory usage is approaching critical levels.",
+        "Memory usage is approaching critical levels, sir.",
         "Your system is running low on available memory.",
-        "Memory resources are being heavily utilized.",
+        "Memory resources are being heavily utilized, sir.",
     ],
     "disk": [
-        "Disk space is nearing capacity and may impact performance.",
+        "Disk space is nearing capacity and may impact performance, sir.",
         "The available disk space is running low.",
-        "Disk usage is high, consider freeing up space.",
+        "Disk usage is high, consider freeing up space, sir.",
     ],
     "network": [
-        "The network connection is unstable.",
+        "The network connection is unstable, sir.",
         "There are issues with the network connectivity.",
-        "Network performance is currently degraded.",
+        "Network performance is currently degraded, sir.",
     ],
     "positive_network": [
-        "Your network is functioning perfectly.",
+        "Your network is functioning perfectly, sir.",
         "The network is stable and operational.",
-        "No issues detected with your network.",
-        "Everything seems fine with your network.",
+        "No issues detected with your network, sir.",
+        "Everything seems fine with your network, sir.",
         "Your network is up and running smoothly.",
     ],
     "battery": [
-        "Battery is running low. Please connect the charger.",
+        "Battery is running low. Please connect the charger, sir.",
         "Your device battery is critically low.",
-        "Battery level is below optimal. Charging is recommended.",
+        "Battery level is below optimal. Charging is recommended, sir.",
     ],
 }
 
@@ -245,7 +244,7 @@ def generate_storage_status_response(system_info):
         response = "Your storage looks good—plenty of space available!"
 
     else:
-        response = "Your storage usage is a bit high. Organizing your files could improve performance."
+        response = "Your storage usage is a bit high. Organizing your files could improve performance sir"
 
     response += f" Currently, you have {free_disk_space} of free space, with {disk_usage}% usage."
 
@@ -377,5 +376,3 @@ storage_info = get_live_storage_status_response()
 cpu_usage = get_live_cpu_usage_response()
 memory_usage = get_live_memory_usage_response()
 disk_space = get_live_disk_space_response()
-
-print(get_live_system_status_response())
