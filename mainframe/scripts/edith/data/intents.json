@@ -468,6 +468,139 @@
       ]
     },
     {
+      "tag": "follow_up_why_high_cpu",
+      "patterns": [
+        "why is CPU usage so high",
+        "why is CPU high",
+        "what's causing CPU to be high",
+        "explain CPU usage",
+        "what's wrong with CPU",
+        "reason for high CPU",
+        "CPU usage too high",
+        "CPU utilization high",
+        "why is the CPU working so hard",
+        "CPU hogging resources",
+        "what is the reason for the cpu hogging resources"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
+      "tag": "follow_up_why_low_cpu",
+      "patterns": [
+        "why is CPU usage so low",
+        "why is CPU low",
+        "what's causing CPU to be low",
+        "explain CPU usage",
+        "what's right with CPU",
+        "reason for low CPU",
+        "CPU usage too low",
+        "CPU utilization low",
+        "why is the CPU not working hard",
+        "CPU not using resources"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
+      "tag": "follow_up_why_high_ram",
+      "patterns": [
+        "why is RAM usage so high",
+        "why is RAM high",
+        "what's causing RAM to be high",
+        "explain RAM usage",
+        "what's wrong with RAM",
+        "reason for high RAM",
+        "RAM usage too high",
+        "RAM utilization high",
+        "why is the RAM working so hard",
+        "RAM hogging resources",
+        "what is the reason for the RAM hogging resources"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
+      "tag": "follow_up_why_low_ram",
+      "patterns": [
+        "why is RAM usage so low",
+        "why is RAM low",
+        "what's causing RAM to be low",
+        "explain RAM usage",
+        "what's right with RAM",
+        "reason for low RAM",
+        "RAM usage too low",
+        "RAM utilization low",
+        "why is the RAM not working hard",
+        "RAM not using resources"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
+      "tag": "follow_up_why_high_storage",
+      "patterns": [
+        "why is storage usage so high",
+        "why is disk space high",
+        "what's causing storage to be high",
+        "explain storage usage",
+        "what's wrong with storage",
+        "reason for high storage",
+        "disk space too high",
+        "disk utilization high",
+        "why is the disk space working so hard",
+        "disk space hogging resources",
+        "what is the reason for the disk space hogging resources"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
+      "tag": "follow_up_why_low_storage",
+      "patterns": [
+        "why is storage usage so low",
+        "why is disk space low",
+        "what's causing storage to be low",
+        "explain storage usage",
+        "what's right with storage",
+        "reason for low storage",
+        "disk space too low",
+        "disk utilization low",
+        "why is the disk space not working hard",
+        "disk space not using resources"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
+      "tag": "follow_up_concerns",
+      "patterns": [
+        "what is wrong",
+        "what's wrong",
+        "what's the matter",
+        "what's the issue",
+        "what seems to be the problem",
+        "any problems",
+        "any concerns",
+        "is something wrong",
+        "problems detected",
+        "unexpected behavior",
+        "error message",
+        "unusual activity",
+        "issue with",
+        "concerned about"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
       "tag": "edith_you_there",
       "patterns": [
         "edith you there",

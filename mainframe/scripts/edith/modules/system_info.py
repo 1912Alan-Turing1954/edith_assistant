@@ -12,13 +12,23 @@ def get_system_info():
     system_info["Operating System"] = f"{platform.system()} {platform.release()}"
 
     # Computer Name
-    system_info["Computer Name"] = psutil.users()[0].name
+    system_info["Computer Name"] = platform.node()
 
     # CPU Information
+    if platform.system() == "Windows":
+        cpu_count_logical = psutil.cpu_count(logical=True)
+        cpu_count_physical = psutil.cpu_count(logical=False)
+    elif platform.system() == "Linux":
+        cpu_count_logical = os.cpu_count()
+        cpu_count_physical = psutil.cpu_count(logical=False)
+    else:
+        cpu_count_logical = None
+        cpu_count_physical = None
+
     cpu_usage = psutil.cpu_percent(interval=1, percpu=True)
     system_info["CPU Info"] = {
-        "Physical Cores": psutil.cpu_count(logical=False),
-        "Total Cores": psutil.cpu_count(logical=True),
+        "Physical Cores": cpu_count_physical,
+        "Total Cores": cpu_count_logical,
         "CPU Usage": cpu_usage,
     }
 
@@ -73,10 +83,10 @@ system_status_phrases = [
 ]
 
 cpu_usage_phrases = [
-    "Your C P U usage is currently at {cpu_usage}%",
-    "C P U utilization stands at {cpu_usage}%",
-    "The C P U load is around {cpu_usage}%",
-    "Currently, your C P U is operating at {cpu_usage}%",
+    "Your CPU usage is currently at {cpu_usage}%",
+    "CPU utilization stands at {cpu_usage}%",
+    "The CPU load is around {cpu_usage}%",
+    "Currently, your CPU is operating at {cpu_usage}%",
 ]
 
 memory_usage_phrases = [
@@ -126,7 +136,7 @@ witty_phrases = {
     "network": [
         "The network connection is unstable.",
         "There are issues with the network connectivity.",
-        "Network performance is currently degraded logan.",
+        "Network performance is currently degraded.",
     ],
     "positive_network": [
         "Your network is functioning perfectly.",
@@ -142,7 +152,14 @@ witty_phrases = {
     ],
 }
 
-import socket
+follow_up_questions = [
+    "Is there anything else I can assist with?",
+    "Do you need further information on anything specific?",
+    "Is there something specific you're working on that I can help with?",
+    "Is there anything else on your mind?",
+    "Do you have any other questions or concerns?",
+    "Will that be all, sir?",
+]
 
 
 def check_internet(host="8.8.8.8", port=53, timeout=2):
@@ -160,60 +177,59 @@ def check_internet(host="8.8.8.8", port=53, timeout=2):
         network = False
 
     if network:
-        repsonse = random.choice(witty_phrases["positive_network"])
-        return repsonse
-    if network == False:
-        repsonse = random.choice(witty_phrases["network"])
-        return repsonse
+        response = random.choice(witty_phrases["positive_network"])
+        return response
+    else:
+        response = random.choice(witty_phrases["network"])
+        return response
 
 
 def generate_system_status_response(system_info):
-    response_type = random.choice(["positive", "concerned"])
+    if not isinstance(system_info, dict):
+        raise ValueError("Expected 'system_info' to be a dictionary.")
 
-    if response_type == "positive":
-        response = random.choice(positive_phrases)
-    else:
-        response = random.choice(concerned_phrases)
+    response_type = "positive"  # Assume positive response by default
+    response = ""
 
-    cpu_usage = max(system_info["CPU Info"]["CPU Usage"])
-    memory_usage = float(system_info["Memory Usage"][:-1])
+    if "CPU Info" in system_info:
+        cpu_usage = max(system_info["CPU Info"]["CPU Usage"])
+        if cpu_usage > 80:
+            response += " " + random.choice(witty_phrases["cpu"])
+            response_type = "concerned"
 
-    if cpu_usage > 80:
-        response += " " + random.choice(witty_phrases["cpu"])
+    if "Memory Usage" in system_info:
+        memory_usage = float(system_info["Memory Usage"][:-1])
+        if memory_usage > 65:
+            response += " " + random.choice(witty_phrases["memory"])
+            response_type = "concerned"
 
-    if memory_usage > 65:
-        response += " " + random.choice(witty_phrases["memory"])
-
-    # Check disk usage from 'Disk Info'
-    for disk in system_info["Disk Info"]:
-        disk_usage = float(disk["Disk Usage"][:-1])
+    if "Disk Info" in system_info:
+        disk_usage = float(system_info["Disk Info"][0]["Disk Usage"][:-1])
         if disk_usage > 90:
             response += " " + random.choice(witty_phrases["disk"])
-            break  # Stop after the first occurrence
+            response_type = "concerned"
 
     network_status = system_info.get("Network Status", "")
     if network_status == "Disconnected":
         response += " " + random.choice(witty_phrases["network"])
+        response_type = "concerned"
 
-    # Check if 'Battery Status' exists
     battery_status = system_info.get("Battery Status", "")
     if battery_status == "Low":
-        battery_response = random.choice(witty_phrases["battery"])
+        response += " " + random.choice(witty_phrases["battery"])
         if random.random() < 0.3:  # Adjust the probability as needed
-            battery_response += " Sir."
-        response += " " + battery_response
+            response += " Sir."
+        response_type = "concerned"
+
+    if response_type == "positive":
+        response = random.choice(positive_phrases)
+    else:
+        response = random.choice(concerned_phrases) + response
+
+    if random.random() < 0.7:
+        response += " " + random.choice(follow_up_questions)
 
     return response
-
-
-follow_up_questions = [
-    "Is there anything else I can assist with?",
-    "Do you need further information on anything specific?",
-    "Is there something specific you're working on that I can help with?",
-    "Is there anything else on your mind?",
-    "Do you have any other questions or concerns?",
-    "Will that be all sir?",
-]
 
 
 def generate_storage_status_response(system_info):
@@ -271,7 +287,7 @@ def generate_disk_space_response(info_system):
         free_disk_space=free_disk_space, disk_usage=disk_usage
     )
     if (
-        random.random() < 0.5
+        random.random() < 0.4
     ):  # Randomly decide to ask for more interaction 50% of the time
         response += f" {random.choice(follow_up_questions)}"
     return response
@@ -281,44 +297,46 @@ def generate_system_status_response(system_info):
     if not isinstance(system_info, dict):
         raise ValueError("Expected 'system_info' to be a dictionary.")
 
-    response_type = random.choice(["positive", "concerned"])
+    response_type = "positive"  # Assume positive response by default
     response = ""
-
-    if response_type == "positive":
-        response = random.choice(positive_phrases)
-    else:
-        response = random.choice(concerned_phrases)
 
     if "CPU Info" in system_info:
         cpu_usage = max(system_info["CPU Info"]["CPU Usage"])
         if cpu_usage > 80:
             response += " " + random.choice(witty_phrases["cpu"])
+            response_type = "concerned"
 
     if "Memory Usage" in system_info:
         memory_usage = float(system_info["Memory Usage"][:-1])
         if memory_usage > 65:
             response += " " + random.choice(witty_phrases["memory"])
+            response_type = "concerned"
 
     if "Disk Info" in system_info:
         disk_usage = float(system_info["Disk Info"][0]["Disk Usage"][:-1])
         if disk_usage > 90:
             response += " " + random.choice(witty_phrases["disk"])
+            response_type = "concerned"
 
     network_status = system_info.get("Network Status", "")
     if network_status == "Disconnected":
         response += " " + random.choice(witty_phrases["network"])
+        response_type = "concerned"
 
     battery_status = system_info.get("Battery Status", "")
     if battery_status == "Low":
-        battery_response = random.choice(witty_phrases["battery"])
-        if random.random() < 0.3:  # Adjust the probability as needed
-            battery_response += " Sir."
-        response += " " + battery_response
+        response += " " + random.choice(witty_phrases["battery"])
+        if random.random() < 0.0:  # Adjust the probability as needed
+            response += " Sir."
+        response_type = "concerned"
 
-    if (
-        random.random() < 0.4
-    ):  # Randomly decide to ask for more interaction 40% of the time
-        response += f" {random.choice(follow_up_questions)}"
+    if response_type == "positive":
+        response = random.choice(positive_phrases)
+    else:
+        response = random.choice(concerned_phrases) + response
+
+    if random.random() < 0.4:
+        response += " " + random.choice(follow_up_questions)
 
     return response
 
@@ -359,3 +377,5 @@ storage_info = get_live_storage_status_response()
 cpu_usage = get_live_cpu_usage_response()
 memory_usage = get_live_memory_usage_response()
 disk_space = get_live_disk_space_response()
+
+print(get_live_system_status_response())
