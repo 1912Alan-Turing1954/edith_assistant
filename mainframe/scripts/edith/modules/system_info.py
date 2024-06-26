@@ -205,28 +205,37 @@ def check_internet(host="8.8.8.8", port=53, timeout=2):
 
 #     return response
 
+follow_up_questions = [
+    "Is there anything else I can assist with?",
+    "Do you need further information on anything specific?",
+    "Is there something specific you're working on that I can help with?",
+    "Is there anything else on your mind?",
+    "Do you have any other questions or concerns?",
+    "Will that be all sir?",
+]
+
 
 def generate_storage_status_response(system_info):
-    response = random.choice(storage_status_phrases)
-    free_disk_space = system_info["Disk Info"][0]["Free Space"]
-    free_disk_space = free_disk_space.replace("GB", "gigabytes")
+    free_disk_space = system_info["Disk Info"][0]["Free Space"].replace(
+        "GB", "gigabytes"
+    )
     disk_usage = float(system_info["Disk Info"][0]["Disk Usage"][:-1])
-    overall_wellbeing = "healthy"
 
     if disk_usage > 75:
-        overall_wellbeing = "concerned"
-        response += " I must express my concern as your PC's storage is currently under considerable strain."
-        response += " To ensure optimal performance, it is highly advisable to uninstall any unnecessary programs or games that are taking up excessive space."
+        response = "Your storage is almost full. To keep things running smoothly, it might help to clear some space by removing unnecessary files."
 
-    if disk_usage < 50:
-        overall_wellbeing = "healthy"
-        response += " Your PC's storage exhibits an exemplary state of operation."
+    elif disk_usage < 50:
+        response = "Your storage looks good—plenty of space available!"
 
-    if overall_wellbeing == "healthy":
-        response += f" At the moment, your PC has {free_disk_space} of free space, and your storage usage is at {str(disk_usage)}%."
     else:
-        response += f" I am a tad concerned about your PC's storage health. Your storage usage is at {str(disk_usage)}. It would be prudent to follow the aforementioned recommendations to enhance its overall storage performance."
+        response = "Your storage usage is a bit high. Organizing your files could improve performance."
 
+    response += f" Currently, you have {free_disk_space} of free space, with {disk_usage}% usage."
+
+    if (
+        random.random() < 0.4
+    ):  # Randomly decide to ask for more interaction 40% of the time
+        response += f" {random.choice(follow_up_questions)}"
     return response
 
 
@@ -234,6 +243,10 @@ def generate_cpu_usage_response(info_system):
     cpu_usage = max(info_system["CPU Info"]["CPU Usage"])
     cpu_usage = round(cpu_usage, 2)
     response = random.choice(cpu_usage_phrases).format(cpu_usage=cpu_usage)
+    if (
+        random.random() < 0.4
+    ):  # Randomly decide to ask for more interaction 40% of the time
+        response += f" {random.choice(follow_up_questions)}"
     return response
 
 
@@ -241,6 +254,10 @@ def generate_memory_usage_response(info_system):
     memory_usage = float(info_system["Memory Usage"][:-1])
     memory_usage = round(memory_usage, 2)
     response = random.choice(memory_usage_phrases).format(memory_usage=memory_usage)
+    if (
+        random.random() < 0.4
+    ):  # Randomly decide to ask for more interaction 40% of the time
+        response += f" {random.choice(follow_up_questions)}"
     return response
 
 
@@ -252,6 +269,10 @@ def generate_disk_space_response(info_system):
     response = random.choice(storage_status_phrases).format(
         free_disk_space=free_disk_space, disk_usage=disk_usage
     )
+    if (
+        random.random() < 0.5
+    ):  # Randomly decide to ask for more interaction 50% of the time
+        response += f" {random.choice(follow_up_questions)}"
     return response
 
 
@@ -267,38 +288,36 @@ def generate_system_status_response(system_info):
     else:
         response = random.choice(concerned_phrases)
 
-    # Ensure 'CPU Info' is correctly accessed
     if "CPU Info" in system_info:
         cpu_usage = max(system_info["CPU Info"]["CPU Usage"])
         if cpu_usage > 80:
             response += " " + random.choice(witty_phrases["cpu"])
 
-    # Ensure 'Memory Usage' is correctly accessed
     if "Memory Usage" in system_info:
         memory_usage = float(system_info["Memory Usage"][:-1])
         if memory_usage > 65:
             response += " " + random.choice(witty_phrases["memory"])
 
-    # Check disk usage from 'Disk Info'
     if "Disk Info" in system_info:
-        for disk in system_info["Disk Info"]:
-            disk_usage = float(disk["Disk Usage"][:-1])
-            if disk_usage > 90:
-                response += " " + random.choice(witty_phrases["disk"])
-                break  # Stop after the first occurrence
+        disk_usage = float(system_info["Disk Info"][0]["Disk Usage"][:-1])
+        if disk_usage > 90:
+            response += " " + random.choice(witty_phrases["disk"])
 
-    # Ensure 'Network Status' is correctly accessed
     network_status = system_info.get("Network Status", "")
     if network_status == "Disconnected":
         response += " " + random.choice(witty_phrases["network"])
 
-    # Ensure 'Battery Status' is correctly accessed
     battery_status = system_info.get("Battery Status", "")
     if battery_status == "Low":
         battery_response = random.choice(witty_phrases["battery"])
         if random.random() < 0.3:  # Adjust the probability as needed
             battery_response += " Sir."
         response += " " + battery_response
+
+    if (
+        random.random() < 0.4
+    ):  # Randomly decide to ask for more interaction 40% of the time
+        response += f" {random.choice(follow_up_questions)}"
 
     return response
 
