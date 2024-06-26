@@ -3,7 +3,7 @@ import torch
 from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
 
 # Path to the directory containing locally stored model and tokenizer
-model_path = "./data/database/models/wav2vec2-base-960h"
+model_path = "mainframe/scripts/data/database/models/wav2vec2-base-960h"
 
 # Load pre-trained model and tokenizer from local directory
 tokenizer = Wav2Vec2Processor.from_pretrained(model_path)

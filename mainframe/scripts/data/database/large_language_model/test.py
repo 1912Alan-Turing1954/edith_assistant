@@ -126,21 +126,24 @@
 import torch
 from transformers import LlamaTokenizer, LlamaForCausalLM
 
-## v2 models
+# Check if CUDA is available
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Using device: {device}")
+
+## Model path
 model_path = "openlm-research/open_llama_7b_v2"
-# model_path = 'openlm-research/open_llama_7b_v2'
 
-## v1 models
-# model_path = 'openlm-research/open_llama_3b'
-# model_path = 'openlm-research/open_llama_7b'
-# model_path = 'openlm-research/open_llama_13b'
-
-# Initialize LLAMA tokenizer and model
+# Load tokenizer and model
 tokenizer = LlamaTokenizer.from_pretrained(model_path)
 model = LlamaForCausalLM.from_pretrained(model_path)
 
-prompt = "What is the largest animal?\n"
-input_ids = tokenizer(prompt, return_tensors="pt").input_ids
+# Move model to CUDA if available
+model.to(device)
 
+# Example prompt and generation
+prompt = "Q: What is the largest animal?\nA:"
+input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
+
+# Generate output
 generation_output = model.generate(input_ids=input_ids, max_new_tokens=32)
 print(tokenizer.decode(generation_output[0]))
