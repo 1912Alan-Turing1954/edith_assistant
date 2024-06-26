@@ -167,43 +167,44 @@ def check_internet(host="8.8.8.8", port=53, timeout=2):
         return repsonse
 
 
-# def generate_system_status_response(system_info):
-#     response_type = random.choice(["positive", "concerned"])
+def generate_system_status_response(system_info):
+    response_type = random.choice(["positive", "concerned"])
 
-#     if response_type == "positive":
-#         response = random.choice(positive_phrases)
-#     else:
-#         response = random.choice(concerned_phrases)
+    if response_type == "positive":
+        response = random.choice(positive_phrases)
+    else:
+        response = random.choice(concerned_phrases)
 
-#     cpu_usage = max(system_info["CPU Info"]["CPU Usage"])
-#     memory_usage = float(system_info["Memory Usage"][:-1])
+    cpu_usage = max(system_info["CPU Info"]["CPU Usage"])
+    memory_usage = float(system_info["Memory Usage"][:-1])
 
-#     if cpu_usage > 80:
-#         response += " " + random.choice(witty_phrases["cpu"])
+    if cpu_usage > 80:
+        response += " " + random.choice(witty_phrases["cpu"])
 
-#     if memory_usage > 65:
-#         response += " " + random.choice(witty_phrases["memory"])
+    if memory_usage > 65:
+        response += " " + random.choice(witty_phrases["memory"])
 
-#     # Check disk usage from 'Disk Info'
-#     for disk in system_info["Disk Info"]:
-#         disk_usage = float(disk["Disk Usage"][:-1])
-#         if disk_usage > 90:
-#             response += " " + random.choice(witty_phrases["disk"])
-#             break  # Stop after the first occurrence
+    # Check disk usage from 'Disk Info'
+    for disk in system_info["Disk Info"]:
+        disk_usage = float(disk["Disk Usage"][:-1])
+        if disk_usage > 90:
+            response += " " + random.choice(witty_phrases["disk"])
+            break  # Stop after the first occurrence
 
-#     network_status = system_info.get("Network Status", "")
-#     if network_status == "Disconnected":
-#         response += " " + random.choice(witty_phrases["network"])
+    network_status = system_info.get("Network Status", "")
+    if network_status == "Disconnected":
+        response += " " + random.choice(witty_phrases["network"])
 
-#     # Check if 'Battery Status' exists
-#     battery_status = system_info.get("Battery Status", "")
-#     if battery_status == "Low":
-#         battery_response = random.choice(witty_phrases["battery"])
-#         if random.random() < 0.3:  # Adjust the probability as needed
-#             battery_response += " Sir."
-#         response += " " + battery_response
+    # Check if 'Battery Status' exists
+    battery_status = system_info.get("Battery Status", "")
+    if battery_status == "Low":
+        battery_response = random.choice(witty_phrases["battery"])
+        if random.random() < 0.3:  # Adjust the probability as needed
+            battery_response += " Sir."
+        response += " " + battery_response
 
-#     return response
+    return response
+
 
 follow_up_questions = [
     "Is there anything else I can assist with?",
