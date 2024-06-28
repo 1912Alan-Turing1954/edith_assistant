@@ -1,5 +1,6 @@
 import datetime
 import glob
+import logging
 import pickle
 import re
 import shutil
@@ -18,20 +19,9 @@ from modules.network_tools import *
 # Assuming your Intent Classifier class and functions are defined here
 class Edith_Mainframe(object):
     def __init__(self, intents_file, data_file):
-        with open(intents_file, "r") as json_data:
-            self.intents = json.load(json_data)
-
-        data = torch.load(data_file)
-        self.all_words = data["all_words"]
-        self.tags = data["tags"]
-        input_size = data["input_size"]
-        hidden_size = data["hidden_size"]
-        output_size = data["output_size"]
-        model_state = data["model_state"]
-
-        self.model = NeuralNet(input_size, hidden_size, output_size)
-        self.model.load_state_dict(model_state)
-        self.model.eval()
+        self.intents_file = intents_file
+        self.data_file = data_file
+        self.load_intents_and_model()
 
         self.prev_tag = ""
         self.prev_response = ""
@@ -45,6 +35,22 @@ class Edith_Mainframe(object):
             "mainframe/scripts/data/database/archives/dialogue/dialogue_archives.bin"
         )
         self.backup_dir = "mainframe/scripts/data/database/archives/dialogue"
+
+    def load_intents_and_model(self):
+        with open(self.intents_file, "r") as json_data:
+            self.intents = json.load(json_data)
+
+        data = torch.load(self.data_file)
+        self.all_words = data["all_words"]
+        self.tags = data["tags"]
+        input_size = data["input_size"]
+        hidden_size = data["hidden_size"]
+        output_size = data["output_size"]
+        model_state = data["model_state"]
+
+        self.model = NeuralNet(input_size, hidden_size, output_size)
+        self.model.load_state_dict(model_state)
+        self.model.eval()
 
     def LLM(self, user_input):
         if user_input:
@@ -155,127 +161,25 @@ class Edith_Mainframe(object):
         shutil.copyfile(self.dialogue_archive, backup_file)
         print(f"Backup created: {backup_file}")
 
-    def Matrix(self):
+    def Operational_Matrix(self):
         while True:
             try:
-                print(self.stop_response)
-                print(self.prev_response)
-
+                # print(self.stop_response)
+                # print(self.prev_response)
+                # print(self.stopped)
                 user_input = input("Friday is active: ")
 
                 tag, prob = self.classify_intent(user_input)
 
                 if "edith" == user_input.lower():
                     self.inturupt()
-                elif prob > 0.90:
-                    for intent in self.intents["intents"]:
-                        if tag == intent["tag"]:
-                            if intent["tag"] == "repeat_tsk" and self.stopped:
 
-                                self.stopped = True
-
-                if prob > 0.90:
+                if prob > 0.93:
                     intent_found = False
                     for intent in self.intents["intents"]:
                         if tag == intent["tag"]:
                             intent_found = True
-                            if intent["tag"] == "repeat_tsk" and self.stopped:
-                                self.get_intent_response(
-                                    intent,
-                                    f"{random.choice(intent['responses'])} {self.stop_response}",
-                                )
-                                self.stop_response = ""
-                                self.stopped = False
-                            elif intent["tag"] == "repeat_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    f"{random.choice(intent['responses'])} {self.prev_response}",
-                                )
-                            elif intent["tag"] == "system_info_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]),
-                                    get_live_system_status_response(
-                                        self.get_updated_system_info()
-                                    ),
-                                )
-                            elif intent["tag"] == "storage_info_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]),
-                                    generate_storage_status_response(get_system_info()),
-                                )
-                            elif intent["tag"] == "cpu_usage_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]),
-                                    generate_cpu_usage_response(get_system_info()),
-                                )
-                            elif intent["tag"] == "memory_usage_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]),
-                                    generate_memory_usage_response(get_system_info()),
-                                )
-                            elif intent["tag"] == "disk_space_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]),
-                                    generate_disk_space_response(get_system_info()),
-                                )
-                            elif intent["tag"] == "time_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]).replace(
-                                        "{time}", self.get_time()
-                                    ),
-                                )
-                            elif intent["tag"] == "date_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]).replace(
-                                        "{date}", self.get_date()
-                                    ),
-                                )
-                            elif intent["tag"] == "day_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]).replace(
-                                        "{day}", self.get_day()
-                                    ),
-                                )
-                            elif intent["tag"] == "ping_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]).replace(
-                                        "{string}", network_function(user_input)
-                                    ),
-                                )
-                            elif intent["tag"] == "speedtest_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]).replace(
-                                        "{string}", download_speed_test()
-                                    ),
-                                )
-                            elif intent["tag"] == "check_internet_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]).replace(
-                                        "{string}", check_internet()
-                                    ),
-                                )
-                            elif intent["tag"] == "system_status":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]).replace(
-                                        "{string}", get_live_system_status_response()
-                                    ),
-                                )
-                            else:
-                                self.get_intent_response(
-                                    intent, random.choice(intent["responses"])
-                                )
+                            self.handle_intent(intent, user_input)
                     if not intent_found:
                         self.response = None  # Set response to None if no intent found
 
@@ -302,13 +206,122 @@ class Edith_Mainframe(object):
                     self.backup_dialogue_archive()
 
             except Exception as e:
-                print("An error occurred:", e)
+                logging.error("An error occurred: %s", e)
+
+    def handle_intent(self, intent, user_input=None):
+        if intent["tag"] == "repeat_tsk" and self.stopped:
+            if self.prev_tag == "repeat_tsk":
+                self.get_intent_response(
+                    intent,
+                    f"{self.stop_response}",
+                )
+            else:
+                self.get_intent_response(
+                    intent,
+                    f"{random.choice(intent['responses'])} {self.stop_response}",
+                )
+            self.stop_response = ""
+            self.stopped = False
+        elif intent["tag"] == "repeat_tsk":
+            if self.prev_tag == "repeat_tsk":
+                print("previous tag is repeat_tsk")
+                self.get_intent_response(
+                    intent,
+                    f"{self.prev_response}",
+                )
+            else:
+                print("previous tag is repeat_tsk")
+                self.get_intent_response(
+                    intent,
+                    f"{random.choice(intent['responses'])} {self.prev_response}",
+                )
+
+        elif intent["tag"] == "system_info_tsk":
+            self.get_intent_response(
+                intent,
+                random.choice(intent["responses"]),
+                self.get_updated_system_info(),
+            )
+        elif intent["tag"] == "storage_info_tsk":
+            self.get_intent_response(
+                intent,
+                random.choice(intent["responses"]),
+                generate_storage_status_response(get_system_info()),
+            )
+        elif intent["tag"] == "cpu_usage_tsk":
+            self.get_intent_response(
+                intent,
+                random.choice(intent["responses"]),
+                generate_cpu_usage_response(get_system_info()),
+            )
+        elif intent["tag"] == "memory_usage_tsk":
+            self.get_intent_response(
+                intent,
+                random.choice(intent["responses"]),
+                generate_memory_usage_response(get_system_info()),
+            )
+        elif intent["tag"] == "disk_space_tsk":
+            self.get_intent_response(
+                intent,
+                random.choice(intent["responses"]),
+                generate_disk_space_response(get_system_info()),
+            )
+        elif intent["tag"] == "time_tsk":
+            self.get_intent_response(
+                intent,
+                random.choice(intent["responses"]).replace("{time}", self.get_time()),
+            )
+        elif intent["tag"] == "date_tsk":
+            self.get_intent_response(
+                intent,
+                random.choice(intent["responses"]).replace("{date}", self.get_date()),
+            )
+        elif intent["tag"] == "day_tsk":
+            self.get_intent_response(
+                intent,
+                random.choice(intent["responses"]).replace("{day}", self.get_day()),
+            )
+        elif intent["tag"] == "ping_tsk":
+            self.get_intent_response(
+                intent,
+                random.choice(intent["responses"]).replace(
+                    "{string}", network_function(user_input)
+                ),
+            )
+        elif intent["tag"] == "speedtest_tsk":
+            self.get_intent_response(
+                intent,
+                random.choice(intent["responses"]).replace(
+                    "{string}", download_speed_test()
+                ),
+            )
+        elif intent["tag"] == "check_internet_tsk":
+            self.get_intent_response(
+                intent,
+                random.choice(intent["responses"]).replace(
+                    "{string}", check_internet()
+                ),
+            )
+        elif intent["tag"] == "system_status":
+            self.get_intent_response(
+                intent,
+                random.choice(intent["responses"]).replace(
+                    "{string}", get_live_system_status_response()
+                ),
+            )
+        else:
+            self.get_intent_response(intent, random.choice(intent["responses"]))
 
 
-while True:
+if __name__ == "__main__":
     intents_model = Edith_Mainframe(
         "mainframe/scripts/edith/data/intents.json",
         "mainframe/scripts/edith/data/data.pth",
     )
 
-    intents_model.Matrix()
+    while True:
+        try:
+            intents_model.Operational_Matrix()
+
+        except Exception as e:
+            logging.error("An error occurred in main loop: %s", e)

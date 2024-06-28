@@ -1,3 +1,112 @@
 1. alter model to accept further questiosn regarding system information or concerns "user: how are we running, BOT: {concerned}, user: what is happend, BOT: ........"
 
 2. make LLM read dialogue archives for history e.g { chat_history: {dialogue_archive.bin} }
+
+
+if "edith" == user_input.lower():
+                    self.inturupt()
+                elif prob.item() > 0.95:
+                    for intent in self.intents["intents"]:
+                        if tag == intent["tag"]:
+                            if intent["tag"] == "repeat_tsk" and self.stopped:
+
+                                self.stopped = True
+
+
+if tag == intent["tag"]:
+                            if intent["tag"] == "repeat_tsk" and self.stopped:
+                                print(self.stop_response)
+                                self.get_intent_response(
+                                    intent,
+                                    f"{random.choice(intent['responses'])} {self.stop_response}",
+                                )
+                                self.stop_response = ""
+                                self.stopped = False
+                            elif intent["tag"] == "repeat_tsk":
+                                self.get_intent_response(
+                                    intent,
+                                    f"{random.choice(intent['responses'])} {self.prev_response}",
+                                )
+                            elif intent["tag"] == "system_info_tsk":
+                                self.get_intent_response(
+                                    intent,
+                                    random.choice(intent["responses"]),
+                                    self.get_updated_system_info(),
+                                )
+                            elif intent["tag"] == "storage_info_tsk":
+                                self.get_intent_response(
+                                    intent,
+                                    random.choice(intent["responses"]),
+                                    generate_storage_status_response(get_system_info()),
+                                )
+                            elif intent["tag"] == "cpu_usage_tsk":
+                                self.get_intent_response(
+                                    intent,
+                                    random.choice(intent["responses"]),
+                                    generate_cpu_usage_response(get_system_info()),
+                                )
+                            elif intent["tag"] == "memory_usage_tsk":
+                                self.get_intent_response(
+                                    intent,
+                                    random.choice(intent["responses"]),
+                                    generate_memory_usage_response(get_system_info()),
+                                )
+                            elif intent["tag"] == "disk_space_tsk":
+                                self.get_intent_response(
+                                    intent,
+                                    random.choice(intent["responses"]),
+                                    generate_disk_space_response(get_system_info()),
+                                )
+                            elif intent["tag"] == "time_tsk":
+                                self.get_intent_response(
+                                    intent,
+                                    random.choice(intent["responses"]).replace(
+                                        "{time}", self.get_time()
+                                    ),
+                                )
+                            elif intent["tag"] == "date_tsk":
+                                self.get_intent_response(
+                                    intent,
+                                    random.choice(intent["responses"]).replace(
+                                        "{date}", self.get_date()
+                                    ),
+                                )
+                            elif intent["tag"] == "day_tsk":
+                                self.get_intent_response(
+                                    intent,
+                                    random.choice(intent["responses"]).replace(
+                                        "{day}", self.get_day()
+                                    ),
+                                )
+                            elif intent["tag"] == "ping_tsk":
+                                self.get_intent_response(
+                                    intent,
+                                    random.choice(intent["responses"]).replace(
+                                        "{string}", network_function(user_input)
+                                    ),
+                                )
+                            elif intent["tag"] == "speedtest_tsk":
+                                self.get_intent_response(
+                                    intent,
+                                    random.choice(intent["responses"]).replace(
+                                        "{string}", download_speed_test()
+                                    ),
+                                )
+                            elif intent["tag"] == "check_internet_tsk":
+                                self.get_intent_response(
+                                    intent,
+                                    random.choice(intent["responses"]).replace(
+                                        "{string}", check_internet()
+                                    ),
+                                )
+                            elif intent["tag"] == "system_status":
+                                self.get_intent_response(
+                                    intent,
+                                    random.choice(intent["responses"]).replace(
+                                        "{string}", get_live_system_status_response()
+                                    ),
+                                )
+                            else:
+                                self.get_intent_response(
+                                    intent, random.choice(intent["responses"])
+                                )
