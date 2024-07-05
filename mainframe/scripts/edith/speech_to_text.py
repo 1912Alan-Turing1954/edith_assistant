@@ -3,31 +3,32 @@ import pyaudio
 import numpy as np
 from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
 
-# Path to the directory containing locally stored model and tokenizer
+# Check if CUDA is available
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# Path to the locally stored model and tokenizer
 model_path = "./mainframe/scripts/data/database/models/wav2vec2-base-960h"
 tokenizer = Wav2Vec2Processor.from_pretrained(model_path)
-model = Wav2Vec2ForCTC.from_pretrained(model_path)
+model = Wav2Vec2ForCTC.from_pretrained(model_path).to(device)
+
+# Define a simple noise gate threshold
+NOISE_THRESHOLD = 550  # Adjust this threshold as needed
 
 
-# Function to transcribe speech from audio input
 def speech_to_text(audio):
-    # Ensure audio is in float32
+    """Transcribe speech from audio input."""
     audio = audio.astype(np.float32)
-    # Tokenize the speech input
     input_values = tokenizer(
         audio, return_tensors="pt", sampling_rate=16000
-    ).input_values
-    # Store logits (non-normalized predictions)
+    ).input_values.to(device)
     logits = model(input_values).logits
-    # Store predicted id's
     predicted_ids = torch.argmax(logits, dim=-1)
-    # Decode the audio to generate text
     transcription = tokenizer.batch_decode(predicted_ids)[0]
     return transcription
 
 
-# Function to capture audio from microphone
 def capture_audio(seconds=5):
+    """Capture audio from microphone, focusing on direct noise."""
     CHUNK = 1024
     FORMAT = pyaudio.paInt16
     CHANNELS = 1
@@ -42,15 +43,20 @@ def capture_audio(seconds=5):
     print("Listening...")
 
     frames = []
-
     for _ in range(0, int(RATE / CHUNK * seconds)):
         data = stream.read(CHUNK)
-        frames.append(np.frombuffer(data, dtype=np.int16))
+        audio_chunk = np.frombuffer(data, dtype=np.int16)
+
+        # Apply noise gate
+        if np.max(np.abs(audio_chunk)) > NOISE_THRESHOLD:
+            frames.append(audio_chunk)
 
     stream.stop_stream()
     stream.close()
     p.terminate()
 
-    audio = np.concatenate(frames, axis=0)
-
-    return audio
+    if frames:
+        audio = np.concatenate(frames, axis=0)
+        return audio
+    else:
+        return None

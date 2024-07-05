@@ -203,7 +203,7 @@ class Edith_Mainframe(object):
                 transcription = speech_to_text(
                     audio
                 )  # Replace with your speech to text function
-                print(transcription.lower())  #
+
                 # transcription = input("Enter transcript:")
                 transcription = self.clean_text(transcription.lower().strip())
                 print("User input:", transcription)
@@ -224,7 +224,7 @@ class Edith_Mainframe(object):
                     tag, prob = self.classify_intent(transcription)
                     print("Intent tag:", tag)
 
-                    if prob > 0.84:
+                    if prob > 0.90:
                         intent_found = False
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
