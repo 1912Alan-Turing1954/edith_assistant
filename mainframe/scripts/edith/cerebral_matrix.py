@@ -14,6 +14,8 @@ from jenny_tts import text_to_speech  # Importing modified text_to_speech functi
 
 from modules.system_info import *
 from modules.network_tools import *
+from speech_to_text import *
+import enchant
 
 
 # Assuming your Intent Classifier class and functions are defined here
@@ -35,6 +37,10 @@ class Edith_Mainframe(object):
             "mainframe/scripts/data/database/archives/dialogue/dialogue_archives.bin"
         )
         self.backup_dir = "mainframe/scripts/data/database/archives/dialogue"
+
+        self.is_in_conversation = False  # Flag to track if in conversation
+        self.conversation_timeout = 5  # Timeout in seconds for conversation reset
+        self.last_interaction_time = datetime.datetime.now()
 
     def load_intents_and_model(self):
         with open(self.intents_file, "r") as json_data:
@@ -161,49 +167,96 @@ class Edith_Mainframe(object):
         shutil.copyfile(self.dialogue_archive, backup_file)
         print(f"Backup created: {backup_file}")
 
+    def detect_wake_word(self, transcription):
+        # Implement your logic to detect the wake word ("Edith" in this case)
+        return "edith" in transcription.lower() or "test" in transcription.lower()
+
+    def clean_text(self, text):
+        # Create an English dictionary instance
+        d = enchant.Dict("en_US")
+
+        # Split text into words
+        words = text.split()
+
+        cleaned_words = []
+
+        # Iterate through each word and check if it's a valid English word
+        for word in words:
+            if d.check(word):  # Check if the word is valid
+                cleaned_words.append(word)
+            else:
+                # If the word is not valid, attempt to suggest a correction
+                suggestions = d.suggest(word)
+                if suggestions:
+                    cleaned_words.append(suggestions[0])  # Choose the first suggestion
+                # If no suggestions are available, ignore the word
+
+        # Join the cleaned words back into a single string
+        cleaned_text = " ".join(cleaned_words)
+
+        return cleaned_text
+
     def Operational_Matrix(self):
         while True:
             try:
-                # print(self.stop_response)
-                # print(self.prev_response)
-                # print(self.stopped)
-                user_input = input("Friday is active: ")
+                audio = capture_audio()
+                transcription = speech_to_text(
+                    audio
+                )  # Replace with your speech to text function
+                print(transcription.lower())  #
+                # transcription = input("Enter transcript:")
+                transcription = self.clean_text(transcription.lower().strip())
+                print("User input:", transcription)
 
-                tag, prob = self.classify_intent(user_input)
+                if self.detect_wake_word(transcription):
+                    print("Addressing Edith")
+                    self.is_in_conversation = True
+                    self.last_interaction_time = datetime.datetime.now()
 
-                if "edith" == user_input.lower():
-                    self.inturupt()
+                # Check if still within conversation timeout
+                if (
+                    self.is_in_conversation
+                    and (
+                        datetime.datetime.now() - self.last_interaction_time
+                    ).total_seconds()
+                    < self.conversation_timeout
+                ):
+                    tag, prob = self.classify_intent(transcription)
+                    print("Intent tag:", tag)
 
-                if prob > 0.93:
-                    intent_found = False
-                    for intent in self.intents["intents"]:
-                        if tag == intent["tag"]:
-                            intent_found = True
-                            self.handle_intent(intent, user_input)
-                    if not intent_found:
-                        self.response = None  # Set response to None if no intent found
+                    if prob > 0.84:
+                        intent_found = False
+                        for intent in self.intents["intents"]:
+                            if tag == intent["tag"]:
+                                intent_found = True
+                                self.handle_intent(intent, transcription)
+                        if not intent_found:
+                            self.response = (
+                                None  # Set response to None if no intent found
+                            )
 
-                if self.response:
-                    self.stop_audio()
+                    if self.response:
+                        self.stop_audio()
+                        self.thread, self.play_obj, self.output_path = text_to_speech(
+                            self.response
+                        )
 
-                    self.thread, self.play_obj, self.output_path = text_to_speech(
-                        self.response
-                    )
-                if self.response is None:
-                    self.stop_audio()
+                    if self.response is None:
+                        self.stop_audio()
+                        response = self.LLM(transcription)
+                        self.thread, self.play_obj, self.output_path = text_to_speech(
+                            response
+                        )
 
-                    response = self.LLM(user_input)
-
-                    self.thread, self.play_obj, self.output_path = text_to_speech(
-                        response
-                    )
-
-                if self.response is None:
-                    self.save_dialogue_archive(user_input, response)
-                    self.backup_dialogue_archive()
+                    if self.response is None:
+                        self.save_dialogue_archive(transcription, response)
+                        self.backup_dialogue_archive()
+                    else:
+                        self.save_dialogue_archive(transcription, self.response)
+                        self.backup_dialogue_archive()
                 else:
-                    self.save_dialogue_archive(user_input, self.response)
-                    self.backup_dialogue_archive()
+                    # Conversation timeout or not in conversation state
+                    self.is_in_conversation = False
 
             except Exception as e:
                 logging.error("An error occurred: %s", e)

@@ -3,7 +3,9 @@ import threading
 import sys
 import sys
 
-sys.path.append(r"C:\Users\1912a\Edith\mainframe\scripts")  # Adjust path as necessary
+sys.path.append(
+    r"C:\Users\1912a\Repositories\Edith_mk1\mainframe\scripts"
+)  # Adjust path as necessary
 
 
 from TTS.utils.manage import ModelManager

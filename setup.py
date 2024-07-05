@@ -14,7 +14,7 @@ def install_dependencies():
             [sys.executable, "-m", "pip", "install", "--upgrade", "pip"]
         )
 
-        # # Download torch, torchvision, torchaudio from the specified index URL
+        # Download torch, torchvision, torchaudio from the specified index URL
 
         # torch_download_command = [
         #     sys.executable,
@@ -25,7 +25,7 @@ def install_dependencies():
         #     "torchvision",
         #     "torchaudio",
         #     "--index-url",
-        #     "https://download.pytorch.org/whl/cu121",
+        #     "https://download.pytorch.org/whl/cu181",
         #     "--dest",
         #     download_dir,
         # ]
