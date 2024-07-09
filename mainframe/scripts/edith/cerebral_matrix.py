@@ -199,12 +199,12 @@ class Edith_Mainframe(object):
     def Operational_Matrix(self):
         while True:
             try:
-                audio = capture_audio()
-                transcription = speech_to_text(
-                    audio
-                )  # Replace with your speech to text function
+                # audio = capture_audio()
+                # transcription = speech_to_text(
+                    # audio
+                # )  # Replace with your speech to text function
 
-                # transcription = input("Enter transcript:")
+                transcription = input("Enter transcript:")
                 transcription = self.clean_text(transcription.lower().strip())
                 print("User input:", transcription)
 
