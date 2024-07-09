@@ -10,9 +10,9 @@ import speedtest
 
 
 def download_speed_test():
-
+    
     output = ""
-    st = speedtest.Speedtest()
+    st = speedtest()
     st.get_best_server()  # Find the best server based on ping
 
     print("Testing download speed...")
