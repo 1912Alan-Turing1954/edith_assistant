@@ -235,7 +235,7 @@ class Edith_Mainframe(object):
                     ).total_seconds()
                     < self.conversation_timeout
                 ):
-                    if transcription == "edith":
+                    if transcription.lower() == "edith":
                         self.inturupt()
                     else:
                         # Word to remove
