@@ -4,7 +4,7 @@ import sys
 import sys
 
 sys.path.append(
-    r"C:\Users\1912a\Repositories\Edith_mk1\mainframe\scripts"
+    r"/home/hailwic/Repositories/Edith_mk1/mainframe/scripts"
 )  # Adjust path as necessary
 
 
@@ -44,7 +44,7 @@ else:
 syn = Synthesizer(
     tts_checkpoint=CHECKPOINT_PATH,
     tts_config_path=CONFIG_PATH,
-    use_cuda=True,  # Adjust as needed
+    use_cuda=False,  # Adjust as needed
 )
 
 

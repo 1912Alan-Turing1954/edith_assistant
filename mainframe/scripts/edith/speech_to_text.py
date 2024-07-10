@@ -1,6 +1,7 @@
 import torch
 import pyaudio
 import numpy as np
+import time
 from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
 
 # Check if CUDA is available
@@ -13,6 +14,7 @@ model = Wav2Vec2ForCTC.from_pretrained(model_path).to(device)
 
 # Define a simple noise gate threshold
 NOISE_THRESHOLD = 550  # Adjust this threshold as needed
+SILENCE_THRESHOLD = 2  # Silence duration in seconds to stop listening
 
 
 def speech_to_text(audio):
@@ -43,13 +45,23 @@ def capture_audio(seconds=5):
     print("Listening...")
 
     frames = []
-    for _ in range(0, int(RATE / CHUNK * seconds)):
+    silence_timer = 0  # Timer to track silence duration
+    listening = True  # Flag to control listening loop
+
+    while listening:
         data = stream.read(CHUNK)
         audio_chunk = np.frombuffer(data, dtype=np.int16)
 
-        # Apply noise gate
+        # Check if audio chunk is above noise threshold
         if np.max(np.abs(audio_chunk)) > NOISE_THRESHOLD:
             frames.append(audio_chunk)
+            silence_timer = 0  # Reset silence timer if speech is detected
+        else:
+            silence_timer += CHUNK / RATE  # Increment silence timer
+
+        # Check for silence duration to stop listening
+        if silence_timer > SILENCE_THRESHOLD:
+            listening = False
 
     stream.stop_stream()
     stream.close()

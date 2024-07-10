@@ -16,6 +16,56 @@ from modules.system_info import *
 from modules.network_tools import *
 from speech_to_text import *
 import enchant
+from data.database.large_language_model.llm_llama2 import llm_main
+
+import sqlite3
+import os
+import datetime
+
+class DialogueManager:
+    def __init__(self, dialogue_archive, backup_dir):
+        self.dialogue_archive = dialogue_archive
+        self.backup_dir = backup_dir
+        self._initialize_database()
+
+    def _initialize_database(self):
+        # Create SQLite database if not exists
+        self.conn = sqlite3.connect(self.dialogue_archive)
+        self.cursor = self.conn.cursor()
+        
+        # Create dialogue table if not exists
+        self.cursor.execute('''
+            CREATE TABLE IF NOT EXISTS dialogue (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_input TEXT,
+                bot_response TEXT,
+                timestamp TEXT
+            )
+        ''')
+        self.conn.commit()
+
+    def save_dialogue_archive(self, user_input, bot_response):
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # Insert new dialogue entry into the database
+        self.cursor.execute('''
+            INSERT INTO dialogue (user_input, bot_response, timestamp)
+            VALUES (?, ?, ?)
+        ''', (user_input, bot_response, timestamp))
+        self.conn.commit()
+
+    def backup_dialogue_archive(self):
+        # Ensure backup directory exists
+        os.makedirs(self.backup_dir, exist_ok=True)
+
+        # Generate new backup file name
+        backup_file = os.path.join(
+            self.backup_dir,
+            f"dialogue_archive_backup_{datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')}.db",
+        )
+
+        # Copy current dialogue archive file to backup
+        shutil.copyfile(self.dialogue_archive, backup_file)
+        print(f"Backup created: {backup_file}")
 
 
 # Assuming your Intent Classifier class and functions are defined here
@@ -41,6 +91,8 @@ class Edith_Mainframe(object):
         self.is_in_conversation = False  # Flag to track if in conversation
         self.conversation_timeout = 5  # Timeout in seconds for conversation reset
         self.last_interaction_time = datetime.datetime.now()
+        self.dialogue_manager = DialogueManager('dialogue_archive.db', 'backup_dir')
+
 
     def load_intents_and_model(self):
         with open(self.intents_file, "r") as json_data:
@@ -58,14 +110,9 @@ class Edith_Mainframe(object):
         self.model.load_state_dict(model_state)
         self.model.eval()
 
-    def LLM(self, user_input):
-        if user_input:
-            return "ai response"
-        else:
-            return
+
 
     def classify_intent(self, user_input):
-
         sentence = tokenize(user_input.lower())
         X = bag_of_words(sentence, self.all_words)
         X = X.reshape(1, X.shape[0])
@@ -132,40 +179,7 @@ class Edith_Mainframe(object):
 
         return cleaned_input
 
-    def save_dialogue_archive(self, user_input, bot_response):
-        chat_entry = {
-            "User": user_input,
-            "Bot": bot_response,
-            "Timestamp": datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
-        }
-
-        # Append new entry to the existing binary file
-        with open(self.dialogue_archive, "ab") as file:
-            pickle.dump(chat_entry, file)
-
-    def backup_dialogue_archive(self):
-        # Ensure backup directory exists
-        os.makedirs(self.backup_dir, exist_ok=True)
-
-        # Search for existing backup files in backup directory
-        existing_backups = glob.glob(
-            os.path.join(self.backup_dir, "dialogue_archive_backup*.bin")
-        )
-
-        # Delete previous backup(s) if exist
-        for backup_file in existing_backups:
-            os.remove(backup_file)
-            print(f"Deleted previous backup: {backup_file}")
-
-        # Generate new backup file name
-        backup_file = os.path.join(
-            self.backup_dir,
-            f"dialogue_archive_backup_{datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')}.bin",
-        )
-
-        # Copy current dialogue archive file to backup
-        shutil.copyfile(self.dialogue_archive, backup_file)
-        print(f"Backup created: {backup_file}")
+    
 
     def detect_wake_word(self, transcription):
         # Implement your logic to detect the wake word ("Edith" in this case)
@@ -199,12 +213,12 @@ class Edith_Mainframe(object):
     def Operational_Matrix(self):
         while True:
             try:
-                audio = capture_audio()
-                transcription = speech_to_text(
-                    audio
-                )  # Replace with your speech to text function
+                # audio = capture_audio()
+                # transcription = speech_to_text(
+                    # audio
+                # )  # Replace with your speech to text function
 
-                # transcription = input("Enter transcript:")
+                transcription = input("Enter transcript:")
                 transcription = self.clean_text(transcription.lower().strip())
                 print("User input:", transcription)
 
@@ -221,13 +235,31 @@ class Edith_Mainframe(object):
                     ).total_seconds()
                     < self.conversation_timeout
                 ):
-                    tag, prob = self.classify_intent(transcription)
-                    print("Intent tag:", tag)
+                    if transcription == "edith":
+                        self.inturupt()
+                    else:
+                        # Word to remove
+                        word_to_remove = "edith"
 
-                    if prob > 0.90:
+                        # Split the string into words
+                        words = transcription.lower().split()
+
+                        # Remove occurrences of the word
+                        filtered_words = [word for word in words if word != word_to_remove]
+
+                        # Join the words back into a string
+                        transcription = " ".join(filtered_words)
+
+                    tag, prob = self.classify_intent(transcription)
+                    
+                    print("User input:", transcription)
+
+
+                    if prob > 0.98:
                         intent_found = False
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
+                                print("Intent tag:", tag)
                                 intent_found = True
                                 self.handle_intent(intent, transcription)
                         if not intent_found:
@@ -243,17 +275,17 @@ class Edith_Mainframe(object):
 
                     if self.response is None:
                         self.stop_audio()
-                        response = self.LLM(transcription)
+                        response = llm_main(transcription)
                         self.thread, self.play_obj, self.output_path = text_to_speech(
                             response
                         )
 
                     if self.response is None:
-                        self.save_dialogue_archive(transcription, response)
-                        self.backup_dialogue_archive()
+                        self.dialogue_manager.save_dialogue_archive(transcription, response)
+                        
                     else:
-                        self.save_dialogue_archive(transcription, self.response)
-                        self.backup_dialogue_archive()
+                        self.dialogue_manager.save_dialogue_archive(transcription, self.response)
+
                 else:
                     # Conversation timeout or not in conversation state
                     self.is_in_conversation = False

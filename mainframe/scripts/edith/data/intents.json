@@ -4,67 +4,20 @@
     {
       "tag": "speedtest_tsk",
       "patterns": [
-        "Hey, could you do a quick speed test?",
-        "Can you run a speed test real quick?",
-        "Mind checking the internet speed with a speed test?",
-        "Could you test the internet speed, please?",
-        "Can you do a speed test to check our connection?",
-        "Hey, can you run a speed test for me?",
-        "Could you run a speed test when you get a chance?",
-        "Could you check how fast the internet is with a speed test?",
-        "Can you quickly test the internet speed?",
-        "Do you mind running a speed test for me?",
-        "Edith, I need you to run a speedtest for me.",
-        "Check internet speed please?",
-        "Can you perform an internet speed check?",
-        "Mind running an internet speed test?",
-        "Could you verify our internet speed?",
-        "Can you do a quick check of our internet speed?",
-        "Edith, can you test our internet speed, please?",
-        "Check how fast our internet connection is, please.",
-        "Do we have a moment for a speed test?",
-        "Can you quickly check our network speed?",
-        "Edith, can you verify our connection speed?",
-        "Would you mind checking our current internet speed?",
-        "Edith, could you assess our internet speed?",
-        "Do we need to run a speed test for our network?",
-        "Is our internet connection running smoothly?",
-        "Could you confirm our current internet bandwidth?",
-        "Edith, can you evaluate our internet performance?",
-        "Do we have a strong internet connection?",
-        "Could you provide our current internet speed details?",
-        "Edith, how fast is our internet connection right now?",
-        "Can you tell me the speed of our internet, please?",
-        "Would you mind running a speed check for us?",
-        "Is our network performing up to speed?",
-        "Edith, can you tell me if our network is fast enough?",
-        "Can you do a quick internet speed assessment?",
-        "Edith, what's our internet speed looking like?",
-        "Could you give me a report on our internet speed?",
-        "Can you tell me how quick our network is?",
-        "Edith, please give us an update on our internet speed.",
-        "Is our internet connection operating at full capacity?",
-        "Edith, how reliable is our current internet speed?",
-        "Could you check the speed of our internet connection?",
-        "Edith, could you provide a speed test update?",
-        "Edith, how efficient is our internet connection?",
-        "Is our internet running at optimal speeds?",
-        "Edith, can you perform a network speed test?",
-        "Can you provide a current internet speed reading, please?",
-        "Edith, are we experiencing any internet speed issues?",
-        "Can you confirm our current download speed, Edith?",
-        "Edith, can you check if our upload speed is sufficient?",
-        "Edith, could you run a download speed test?",
-        "Can you tell me if our upload speed meets standards, Edith?",
-        "Edith, could you analyze our download speed, please?",
-        "Can you tell me how our upload speed is performing, Edith?",
-        "Edith, is our download speed consistent?",
-        "Can you perform a quick upload speed check, Edith?",
-        "Edith, is our network latency within acceptable limits?",
-        "Can you check our latency, Edith?",
-        "Edith, how's our ping looking right now?",
-        "Can you tell me our network latency, Edith?",
-        "Edith, can you provide information on our ping?"
+        
+          "Hey, could you do a quick speed test?",
+          "Can you run a speed test real quick?",
+          "Could you test the internet speed, please?",
+          "Edith, I need you to run a speedtest for me.",
+          "Check internet speed please?",
+          "Could you verify our internet speed?",
+          "Do we have a moment for a speed test?",
+          "Can you quickly check our network speed?",
+          "Can you tell me the speed of our internet, please?",
+          "Can you do a quick internet speed assessment?",
+          "Edith, what's our internet speed looking like?",
+          "Can you check our latency, Edith?"
+
       ],
       "responses": [
         "{string}"
@@ -74,61 +27,14 @@
       "tag": "ping_tsk",
       "patterns": [
         "Please ping this address.",
-        "can you ping this address",
-        "Could you ping this address for me?",
-        "i need you to ping an address",
-        "I need you to perform a ping on this address.",
-        "Ping this address, please.",
-        "Can you ping this IP?",
         "Ping this server to check connectivity.",
-        "Please check the latency by pinging this address.",
-        "Verify if this website is up by pinging it.",
-        "I require a ping test for this IP.",
-        "Perform a ping test on this domain.",
         "Ping this URL to see if it's reachable.",
-        "Check if the server responds by pinging it.",
-        "Is it possible to ping this host?",
-        "Ping this IP to see if it's online.",
-        "Could you ping this address to test the connection?",
-        "Confirm connectivity by pinging this address.",
-        "Can you verify if I can reach this address by pinging it?",
-        "I'm troubleshooting; please ping this address.",
-        "Is there a way to ping this IP to diagnose the issue?",
-        "Hey, could you ping this address?",
-        "Can you ping this address real quick?",
-        "Mind pinging this address for me?",
-        "Could you check this address with a ping?",
-        "Hey, can you ping this IP?",
-        "Ping this server to see if it's up.",
-        "Could you ping this address to check the connection?",
-        "Could you ping this website to see if it's working?",
-        "I need to do a quick ping test on this IP.",
-        "Ping this domain for me, please.",
-        "Ping this URL to check if it's online.",
-        "Can you ping the server to check its status?",
-        "Is it possible to ping this host?",
-        "Ping this IP to make sure it's online.",
+        "Ping this IP to confirm it's online.",
         "Could you ping this address to test our internet?",
-        "Can you check if I can reach this address by pinging it?",
-        "I'm troubleshooting; could you ping this address?",
-        "Can you ping this IP to see what's happening?",
         "Edith, could you ping this address?",
         "Edith, can you ping this IP?",
-        "Hey Edith, can you ping this server?",
-        "Edith, could you ping this address to check the connection?",
-        "Ping this address to see if it's online, Edith.",
-        "Edith, can you check if this website is up?",
-        "Edith, can you run a quick ping test on this address?",
-        "Edith, ping this IP and let me know if it responds.",
         "Edith, could you ping this domain?",
-        "Ping this URL to make sure it's accessible, Edith.",
-        "Edith, check if the server responds by pinging it.",
-        "Edith, can you ping this host?",
-        "Ping this IP to confirm it's online, Edith.",
-        "Edith, please ping this address to check our connection.",
-        "Edith, can you check if I can reach this address?",
-        "I'm troubleshooting; could you ping this address, Edith?",
-        "Edith, could you ping this IP?"
+        "ping this address"
       ],
       "responses": [
         "{string}"
@@ -138,52 +44,19 @@
       "tag": "system_status",
       "patterns": [
         "How's everything, Edith?",
-        "Hey Edith, how are we doing?",
-        "How are we doing?",
         "Edith, what's our status?",
-        "Edith, how's everything running?",
         "Hey Edith, how's the system?",
         "Edith, how are things looking?",
         "Is everything okay, Edith?",
-        "Hey Edith, how's our setup?",
         "Edith, are we running smoothly?",
-        "Edith, how's our performance?",
-        "Hey Edith, how's our configuration?",
-        "Edith, how's our operation?",
         "Edith, what's the status?",
-        "Hey Edith, how's it going?",
-        "Edith, how's our current state?",
-        "Edith, are we operational?",
-        "Hey Edith, how are we?",
-        "Edith, how's our functionality?",
-        "Edith, how's the setup?",
-        "Hey Edith, how's our condition?",
-        "Edith, what's the system status?",
-        "Edith, how's our current performance?",
-        "Edith, how are we holding up?",
-        "Edith, what's our current condition?",
-        "Hey Edith, status report on our system.",
-        "Edith, what's the current system status?",
-        "Hey Edith, give me a quick system update.",
-        "Edith, I need to know the system status now.",
-        "Hey Edith, update me on our system's condition.",
-        "Edith, can you check our system status?",
-        "Hey Edith, provide me with the system status.",
-        "Edith, what's the status of our setup?",
-        "Hey Edith, can you give me a rundown on our system status?",
-        "Edith, I want to know how our system is doing.",
+        "Edith, how's our performance?",
         "Hey Edith, system status check, please.",
-        "Edith, what's happening with our system right now?",
-        "Hey Edith, give me an update on our system.",
-        "Edith, I need a quick system status check.",
-        "Hey Edith, tell me the status of our system.",
-        "Edith, report on our system status, please.",
-        "Hey Edith, how's our system?",
-        "Edith, what's our system's current status?",
-        "Hey Edith, check our system status and let me know.",
-        "Edith, update me on our setup's status.",
-        "Hey Edith, I need to know how our system is performing."
+        "Edith, give me a quick system update.",
+        "Edith, can you check our system status?",
+        "Edith, I want to know how our system is doing."
       ],
+
       "responses": [
         "{string}"
       ]
@@ -193,44 +66,26 @@
       "patterns": [
         "Give me storage info.",
         "Give me storage status.",
-        "Give me the storage info.",
-        "Give me the storage status.",
         "Give me the current storage info.",
         "Give me the current storage status.",
-        "Give me a status report on my storage.",
         "Storage info.",
         "Storage status.",
-        "Storage status update.",
         "Drive status.",
-        "Drive status update.",
         "Drive info.",
-        "Give me drive info.",
-        "Give me drive status.",
         "What is my storage status?",
-        "What is my drive status?",
         "What's our drive status?",
         "Hey Edith, could you give me storage info?",
-        "Hey Edith, what's the storage status?",
-        "Edith, can you give me the storage info?",
         "Edith, how's the storage status?",
         "Could you give me the current storage info, Edith?",
         "Edith, what's the current storage status?",
-        "Edith, can you give me a quick status report on my storage?",
         "Edith, what's the status of our storage?",
         "Edith, what's the status of the drive?",
-        "Edith, update me on the drive status.",
         "Edith, I need drive info.",
-        "Edith, please give me drive status.",
-        "Can you tell me what my storage status is, Edith?",
-        "Edith, please update me on my drive status.",
         "Edith, can you provide storage info?",
-        "Edith, can you give me drive info?",
-        "What's my current storage status, Edith?",
         "Edith, what's our drive status looking like?",
-        "Edith, could you give me an update on our storage?",
-        "Edith, I need to know my storage status.",
-        "Hey Edith, what's the status of our drive?"
+        "Edith, could you give me an update on our storage?"
       ],
+
       "responses": [
         "{string}"
       ]
@@ -242,9 +97,7 @@
         "Give me CPU status.",
         "Give me our CPU usage.",
         "Give me our CPU status.",
-        "Give me our current CPU usage.",
-        "Give me the CPU status.",
-        "CPU status.",
+        "Give me the current CPU usage.",
         "CPU status update.",
         "CPU usage.",
         "What is my CPU status?",
@@ -253,31 +106,26 @@
         "What is our CPU status?",
         "Show CPU usage.",
         "Check CPU usage.",
-        "Check CPU status.",
         "Get CPU info.",
         "CPU info.",
-        "Hey Edith, can you give me CPU usage?",
+        "Hey Edith, CPU usage?",
         "Edith, what's the CPU status?",
-        "Hey Edith, what's our CPU usage?",
+        "Hey Edith, our CPU usage?",
         "Edith, how's our CPU status?",
         "Could you give me the current CPU usage, Edith?",
         "Edith, what's the current CPU status?",
-        "Edith, can you give me a quick update on our CPU usage?",
-        "Edith, what's the status of our CPU?",
-        "Edith, show me the CPU usage.",
-        "Edith, check the CPU usage.",
-        "Edith, check the CPU status.",
+        "Edith, quick update on our CPU usage.",
+        "Edith, status of our CPU?",
+        "Edith, show me CPU usage.",
+        "Edith, check CPU usage.",
         "Edith, I need CPU info.",
         "Edith, please give me CPU status.",
-        "Can you tell me what my CPU status is, Edith?",
-        "Edith, please update me on my CPU usage.",
-        "Edith, can you provide CPU info?",
-        "Edith, what's our current CPU usage?",
-        "Edith, could you give me an update on our CPU?",
-        "Edith, I need to know my CPU usage.",
-        "Hey Edith, what's our CPU status?",
-        "what is our cpu running at?"
+        "Can you tell me my CPU status, Edith?",
+        "Edith, update me on my CPU usage.",
+        "Edith, CPU info.",
+        "Edith, our current CPU usage?"
       ],
+
       "responses": [
         "{string}"
       ]
@@ -308,40 +156,9 @@
         "Give me a memory update.",
         "RAM details, please.",
         "Check my memory usage, please.",
-        "What's the memory situation?",
-        "RAM info, please.",
-        "Tell me about my memory.",
-        "Show me memory stats.",
-        "RAM usage, please.",
-        "How much RAM am I using right now?",
-        "Check my RAM status.",
-        "Any updates on memory usage?",
-        "RAM report, please.",
-        "Tell me my memory stats.",
-        "What's the status of my RAM?",
-        "What is our CPU running at?",
-        "Hey Edith, can you give me memory usage?",
-        "Edith, what's the memory status?",
-        "Hey Edith, what's our memory usage?",
-        "Edith, how's our RAM status?",
-        "Could you give me the current memory usage, Edith?",
-        "Edith, what's the current RAM status?",
-        "Edith, can you give me a quick update on our memory?",
-        "Edith, what's the status of our RAM?",
-        "Edith, show me the memory usage.",
-        "Edith, check the memory usage.",
-        "Edith, check the RAM status.",
-        "Edith, I need memory info.",
-        "Edith, please give me RAM status.",
-        "Can you tell me what my memory status is, Edith?",
-        "Edith, please update me on my RAM usage.",
-        "Edith, can you provide memory info?",
-        "Edith, what's our current memory usage?",
-        "Edith, could you give me an update on our RAM?",
-        "Edith, I need to know my memory usage.",
-        "Hey Edith, what's our RAM status?",
-        "what is our RAM running at?"
+        "What's the memory situation?"
       ],
+
       "responses": [
         "{string}"
       ]
@@ -368,38 +185,9 @@
         "Can you provide details about my disk space?",
         "Check how much disk space I have.",
         "What's the status of my disk space?",
-        "Show me disk space statistics.",
-        "How much disk space am I using?",
-        "Could you verify my disk space?",
-        "Show my disk space usage statistics.",
-        "Tell me about my disk space.",
-        "I need to know my disk space usage.",
-        "Hey Edith, how much disk space do I have?",
-        "Edith, can you tell me my available disk space?",
-        "Hey Edith, what's my current disk space?",
-        "Edith, show me the amount of disk space I have.",
-        "Edith, check available disk space.",
-        "Hey Edith, how much storage do I have?",
-        "Edith, what's my current storage?",
-        "Edith, show me the amount of storage I have.",
-        "Edith, check available storage.",
-        "Edith, what's our storage looking like?",
-        "Hey Edith, how's my disk space?",
-        "Edith, check my disk space.",
-        "Hey Edith, show me disk space.",
-        "Edith, what's my disk space looking like?",
-        "Edith, any updates on my disk space?",
-        "Edith, give me an update on my disk space.",
-        "Edith, can you provide details about my disk space?",
-        "Edith, check how much disk space I have.",
-        "Edith, what's the status of my disk space?",
-        "Hey Edith, show me disk space statistics.",
-        "Edith, how much disk space am I using?",
-        "Edith, could you verify my disk space?",
-        "Edith, show my disk space usage statistics.",
-        "Edith, tell me about my disk space.",
-        "Edith, I need to know my disk space usage."
+        "Show me disk space statistics."
       ],
+
       "responses": [
         "{string}"
       ]
@@ -431,25 +219,13 @@
         "Is the network connection okay, Edith?",
         "Edith, is the internet performing well?",
         "Hey Edith, is the internet speed sufficient?",
-        "Edith, are we online without issues?",
+        "Edith, are we online?",
+        "are we online",
         "Edith, how's our internet reliability?",
         "Is the internet up to speed, Edith?",
-        "Is the internet stable?",
-        "Edith, how's our internet?",
-        "Hey Edith, is the internet working well?",
-        "Is the internet speed okay?",
-        "Edith, do we have a good internet connection?",
-        "Hey Edith, is the internet fast today?",
-        "Is the Wi-Fi strong?",
-        "Is the internet reliable right now?",
-        "Hey Edith, can you check the internet?",
-        "Is the network stable?",
-        "Hey Edith, is there any issue?",
-        "Edith, are we online?",
-        "Edith, how's our internet?",
-        "How's our connection?",
-        "How is our connection?"
-        ],
+        "Is the internet stable?"
+      ],
+
       "responses": [
         "{string}"
       ]
@@ -467,139 +243,7 @@
         "You called, sir?"
       ]
     },
-    {
-      "tag": "follow_up_why_high_cpu",
-      "patterns": [
-        "why is CPU usage so high",
-        "why is CPU high",
-        "what's causing CPU to be high",
-        "explain CPU usage",
-        "what's wrong with CPU",
-        "reason for high CPU",
-        "CPU usage too high",
-        "CPU utilization high",
-        "why is the CPU working so hard",
-        "CPU hogging resources",
-        "what is the reason for the cpu hogging resources"
-      ],
-      "responses": [
-        "{string}"
-      ]
-    },
-    {
-      "tag": "follow_up_why_low_cpu",
-      "patterns": [
-        "why is CPU usage so low",
-        "why is CPU low",
-        "what's causing CPU to be low",
-        "explain CPU usage",
-        "what's right with CPU",
-        "reason for low CPU",
-        "CPU usage too low",
-        "CPU utilization low",
-        "why is the CPU not working hard",
-        "CPU not using resources"
-      ],
-      "responses": [
-        "{string}"
-      ]
-    },
-    {
-      "tag": "follow_up_why_high_ram",
-      "patterns": [
-        "why is RAM usage so high",
-        "why is RAM high",
-        "what's causing RAM to be high",
-        "explain RAM usage",
-        "what's wrong with RAM",
-        "reason for high RAM",
-        "RAM usage too high",
-        "RAM utilization high",
-        "why is the RAM working so hard",
-        "RAM hogging resources",
-        "what is the reason for the RAM hogging resources"
-      ],
-      "responses": [
-        "{string}"
-      ]
-    },
-    {
-      "tag": "follow_up_why_low_ram",
-      "patterns": [
-        "why is RAM usage so low",
-        "why is RAM low",
-        "what's causing RAM to be low",
-        "explain RAM usage",
-        "what's right with RAM",
-        "reason for low RAM",
-        "RAM usage too low",
-        "RAM utilization low",
-        "why is the RAM not working hard",
-        "RAM not using resources"
-      ],
-      "responses": [
-        "{string}"
-      ]
-    },
-    {
-      "tag": "follow_up_why_high_storage",
-      "patterns": [
-        "why is storage usage so high",
-        "why is disk space high",
-        "what's causing storage to be high",
-        "explain storage usage",
-        "what's wrong with storage",
-        "reason for high storage",
-        "disk space too high",
-        "disk utilization high",
-        "why is the disk space working so hard",
-        "disk space hogging resources",
-        "what is the reason for the disk space hogging resources"
-      ],
-      "responses": [
-        "{string}"
-      ]
-    },
-    {
-      "tag": "follow_up_why_low_storage",
-      "patterns": [
-        "why is storage usage so low",
-        "why is disk space low",
-        "what's causing storage to be low",
-        "explain storage usage",
-        "what's right with storage",
-        "reason for low storage",
-        "disk space too low",
-        "disk utilization low",
-        "why is the disk space not working hard",
-        "disk space not using resources"
-      ],
-      "responses": [
-        "{string}"
-      ]
-    },
-    {
-      "tag": "follow_up_concerns",
-      "patterns": [
-        "what is wrong",
-        "what's wrong",
-        "what's the matter",
-        "what's the issue",
-        "what seems to be the problem",
-        "any problems",
-        "any concerns",
-        "is something wrong",
-        "problems detected",
-        "unexpected behavior",
-        "error message",
-        "unusual activity",
-        "issue with",
-        "concerned about"
-      ],
-      "responses": [
-        "{string}"
-      ]
-    },
+    
     {
       "tag": "edith_you_there",
       "patterns": [
@@ -660,32 +304,7 @@
         "I said"
       ]
     },
-    {
-      "tag": "curious_what_should_i_call_you",
-      "patterns": [
-        "what should I call you?",
-        "What's your preferred name?",
-        "Any suggestions for what I can call you?",
-        "Can you tell me the name you'd like to be called?",
-        "I'd like to know what to call you. Any ideas?",
-        "What's the name you go by?",
-        "Could you share the name I should address you with?",
-        "what is your name?",
-        "what do i call you",
-        "do you have a name?"
-      ],
-      "responses": [
-        "You can call me Edith, which stands for Enhanced Digital Intelligence Total Help, designed by Mr. Stark.",
-        "Feel free to call me Edith, your AI companion, crafted by Mr. Stark.",
-        "You may refer to me as Edith, designed by Mr. Stark.",
-        "You can call me Edith, your reliable digital assistant, engineered by Mr. Stark.",
-        "I go by the name Edith, here to assist and support you, a creation of Mr. Stark.",
-        "Call me Edith, your dedicated AI aide, developed by Mr. Stark.",
-        "Address me as Edith, your helpful AI, brought to you by Mr. Stark.",
-        "Feel comfortable calling me Edith, your personal AI, a product of Mr. Stark.",
-        "Just call me Edith, your trusted AI, designed by Mr. Stark."
-      ]
-    },
+    
     {
       "tag": "technical",
       "patterns": [],
