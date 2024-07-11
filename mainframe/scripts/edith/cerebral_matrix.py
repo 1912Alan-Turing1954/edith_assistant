@@ -398,7 +398,7 @@ from modules.system_info import *  # Adjusted import to specific function
 from modules.network_tools import *
 from speech_to_text import *
 import enchant
-from data.database.large_language_model.llm_llama2 import llm_main
+from mainframe.scripts.data.database.large_language_model.llm_ import llm_main
 
 import sqlite3
 import os
@@ -468,9 +468,9 @@ class Edith_Mainframe(object):
         self.backup_dir = "mainframe/scripts/data/database/archives/dialogue"
 
         self.is_in_conversation = False  # Flag to track if in conversation
-        self.conversation_timeout = 5  # Timeout in seconds for conversation reset
+        self.conversation_timeout = 15  # Timeout in seconds for conversation reset
         self.last_interaction_time = datetime.datetime.now()
-        self.dialogue_manager = DialogueManager('dialogue_archive.db', 'backup_dir')
+        self.dialogue_manager = DialogueManager('mainframe/scripts/data/database/archives/dialogue/dialogue_archive.db', 'backup_dir')
 
 
     def load_intents_and_model(self):
@@ -537,7 +537,7 @@ class Edith_Mainframe(object):
             if self.output_path and os.path.exists(self.output_path):
                 os.remove(self.output_path)
 
-    def interrupt(self):
+    def stopping(self):
         # Stop current audio playback
         if self.play_obj and self.play_obj.is_playing():
             self.stop_response = self.prev_response
@@ -557,7 +557,7 @@ class Edith_Mainframe(object):
     
 
     def detect_wake_word(self, transcription):
-        return "edith" in transcription.lower() or "test" in transcription.lower()
+        return "edith" in transcription.lower()
 
     def clean_text(self, text):
         d = enchant.Dict("en_US")
@@ -587,7 +587,7 @@ class Edith_Mainframe(object):
                 print("User input:", transcription)
 
                 if self.detect_wake_word(transcription):
-                    print("Addressing Edith")
+                    print("Edith Detected")
                     self.is_in_conversation = True
                     self.last_interaction_time = datetime.datetime.now()
 
@@ -600,40 +600,39 @@ class Edith_Mainframe(object):
                     < self.conversation_timeout
                 ):
                     if transcription.lower() == "edith":
-                        self.inturupt()
+                        self.stopping()
+                        transcription = 'edith'
                     else:
-                        # Word to remove
-                        word_to_remove = "edith"
-
-                        # Split the string into words
-                        words = transcription.lower().split()
-
-                        # Remove occurrences of the word
-                        filtered_words = [word for word in words if word != word_to_remove]
-
-                        # Join the words back into a string
-                        transcription = " ".join(filtered_words)
+                        transcription = transcription.lower().replace("edith", "")
+                        
+                    
 
                     tag, prob = self.classify_intent(transcription)
                     
                     print("User input:", transcription)
 
-
-                    if prob > 0.98:
+                    print(prob)
+                    # Adjust the confidence threshold as needed
+                    if prob >= 0.999:
                         intent_found = False
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
-                                print("Intent tag:", tag)
+                                print("Intent matched:", tag)
                                 intent_found = True
                                 self.handle_intent(intent, transcription)
+                                break  # Exit loop once intent is found
                         if not intent_found:
                             self.response = None
+                    else:
+                        self.response = None
+                        print("Confidence below threshold. Using LLM.")
+                    
 
                     if self.response:
                         self.stop_audio()
                         self.thread, self.play_obj, self.output_path = text_to_speech(self.response)
 
-                    if self.response is None:
+                    else:
                         self.stop_audio()
                         response = llm_main(transcription)
                         self.thread, self.play_obj, self.output_path = text_to_speech(
@@ -642,10 +641,10 @@ class Edith_Mainframe(object):
 
                     if self.response is None:
                         self.dialogue_manager.save_dialogue_archive(transcription, response)
-                        
+                        self.dialogue_manager.backup_dialogue_archive()
                     else:
                         self.dialogue_manager.save_dialogue_archive(transcription, self.response)
-
+                        self.dialogue_manager.backup_dialogue_archive()
                 else:
                     self.is_in_conversation = False
 

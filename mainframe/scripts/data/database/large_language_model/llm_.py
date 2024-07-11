@@ -9,7 +9,7 @@ def llm(user_input):
     try:
         # Call ollama.chat to generate response
         response = ollama.chat(
-            model='llama2',
+            model='mistral',
             messages=[
                 {'role': 'system', 'content': prompt},
                 {'role': 'user', 'content': user_input}
@@ -24,17 +24,14 @@ def llm(user_input):
         print(f"Error in llm function: {e}")
         return None
     
-def remove_emoticons(response):
-    # Define regex pattern to match expressions like *smiling* or (smiling)
-    pattern = r'\*[\w\s]+\*|\([\w\s]+\)'
-    
-    # Use re.sub to replace matching patterns with an empty string
-    clean_response = re.sub(pattern, '', response)
-    
-    return clean_response.strip()
+
 
 def llm_main(user_input):
 
-    response = remove_emoticons(llm(user_input))
+    response = (llm(user_input))
 
     return response
+
+while True:
+    text = input("")
+    print(llm_main(text))
