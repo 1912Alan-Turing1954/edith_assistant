@@ -12,7 +12,7 @@ def fetch_conv_():
         SELECT user_input, bot_response, timestamp
         FROM dialogue
         ORDER BY timestamp DESC
-        LIMIT 4
+        LIMIT 6
     ''')
     # Fetch all the results from the executed query
     conversations = cursor.fetchall()
