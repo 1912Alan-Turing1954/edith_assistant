@@ -390,15 +390,19 @@ import shutil
 import torch
 import json
 import enchant
+import warnings
+warnings.filterwarnings("ignore", category=RuntimeWarning, module='networkx')
+
 
 from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
 from jenny_tts import text_to_speech  # Assuming this import is correct
 from modules.system_info import *  # Adjusted import to specific function
 from modules.network_tools import *
-from speech_to_text import *
+# from speech_to_text import *
 import enchant
-from mainframe.scripts.data.database.large_language_model.llm_ import llm_main
+# from mainframe.scripts.data.database.large_language_model.llm_ import llm
+from data.database.large_language_model.llm_ import *
 
 import sqlite3
 import os
@@ -414,7 +418,7 @@ class DialogueManager:
         # Create SQLite database if not exists
         self.conn = sqlite3.connect(self.dialogue_archive)
         self.cursor = self.conn.cursor()
-        
+
         # Create dialogue table if not exists
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS dialogue (
@@ -468,7 +472,7 @@ class Edith_Mainframe(object):
         self.backup_dir = "mainframe/scripts/data/database/archives/dialogue"
 
         self.is_in_conversation = False  # Flag to track if in conversation
-        self.conversation_timeout = 15  # Timeout in seconds for conversation reset
+        self.conversation_timeout = 60  # Timeout in seconds for conversation reset
         self.last_interaction_time = datetime.datetime.now()
         self.dialogue_manager = DialogueManager('mainframe/scripts/data/database/archives/dialogue/dialogue_archive.db', 'backup_dir')
 
@@ -519,6 +523,18 @@ class Edith_Mainframe(object):
         day_ = datetime.datetime.now().strftime("%A")
         return day_
 
+    def convert_decimal_to_verbal(self, sentence):
+    # Define a function to convert each decimal number
+        def replace_decimal(match):
+            number = match.group(0)
+            # Split the number into integer and decimal parts
+            integer_part, decimal_part = number.split('.')
+            # Construct the verbal representation
+            return f"{integer_part} point {decimal_part}"
+
+        # Use a regular expression to find all decimal numbers in the sentence
+        return re.sub(r'\b\d+\.\d+\b', replace_decimal, sentence)
+
     def get_updated_system_info(self):
         return get_system_info()
 
@@ -554,7 +570,7 @@ class Edith_Mainframe(object):
         cleaned_input = re.sub(pattern, r"\1 point \2", user_input)
         return cleaned_input
 
-    
+
 
     def detect_wake_word(self, transcription):
         return "edith" in transcription.lower()
@@ -584,6 +600,7 @@ class Edith_Mainframe(object):
 
                 transcription = input("Enter transcript:")
                 transcription = self.clean_text(transcription.lower().strip())
+
                 print("User input:", transcription)
 
                 if self.detect_wake_word(transcription):
@@ -604,16 +621,16 @@ class Edith_Mainframe(object):
                         transcription = 'edith'
                     else:
                         transcription = transcription.lower().replace("edith", "")
-                        
-                    
+
+
 
                     tag, prob = self.classify_intent(transcription)
-                    
+
                     print("User input:", transcription)
 
                     print(prob)
                     # Adjust the confidence threshold as needed
-                    if prob >= 0.999:
+                    if prob > 0.9995:
                         intent_found = False
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
@@ -626,15 +643,17 @@ class Edith_Mainframe(object):
                     else:
                         self.response = None
                         print("Confidence below threshold. Using LLM.")
-                    
+
 
                     if self.response:
                         self.stop_audio()
+                        self.response = self.convert_decimal_to_verbal(self.response)
                         self.thread, self.play_obj, self.output_path = text_to_speech(self.response)
 
                     else:
                         self.stop_audio()
                         response = llm_main(transcription)
+                        response = self.convert_decimal_to_verbal(response)
                         self.thread, self.play_obj, self.output_path = text_to_speech(
                             response
                         )
@@ -697,10 +716,11 @@ class Edith_Mainframe(object):
 if __name__ == "__main__":
     intents_model = Edith_Mainframe("mainframe/scripts/edith/data/intents.json",
                                     "mainframe/scripts/edith/data/data.pth")
-    
+
     while True:
         try:
             intents_model.Operational_Matrix()
 
         except Exception as e:
             logging.error("An error occurred in main loop: %s", e)
+
