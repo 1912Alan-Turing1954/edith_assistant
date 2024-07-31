@@ -446,7 +446,7 @@ class DialogueManager:
         # Generate new backup file name
         backup_file = os.path.join(
             self.backup_dir,
-            f"dialogue_archive_backup_{datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')}.db",
+            f"dialogue_archive_backup_.db",
         )
 
         # Copy current dialogue archive file to backup

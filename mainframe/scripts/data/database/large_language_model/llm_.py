@@ -12,7 +12,7 @@ def fetch_conv_():
         SELECT user_input, bot_response, timestamp
         FROM dialogue
         ORDER BY timestamp DESC
-        LIMIT 6
+        LIMIT 8
     ''')
     # Fetch all the results from the executed query
     conversations = cursor.fetchall()
@@ -52,3 +52,7 @@ def llm_main(user_input):
 
     return response
 
+
+while True:
+    i = input("enter: ")
+    print(llm_main(i))
