@@ -537,6 +537,28 @@ class Edith_Mainframe(object):
 
     def get_updated_system_info(self):
         return get_system_info()
+    
+    def replace_symbols(self, expression):
+        # Define a mapping of symbols to their descriptions
+        symbol_map = {
+            '/': ' divided by ',
+            '+': ' plus ',
+            '-': ' minus ',
+            '*': ' multiplied by ',
+            '^': ' raised to the power of ',
+            '=': ' equals ',
+            '(': ' open parenthesis ',
+            ')': ' close parenthesis '
+            # Add more symbols and their descriptions as needed
+        }
+        
+        # Replace each symbol in the expression with its descriptive phrase
+        for symbol, description in symbol_map.items():
+            expression = expression.replace(symbol, description)
+        
+        return expression
+
+
 
     def get_intent_response(self, intent, response, replacement=None):
         if replacement:
@@ -629,7 +651,7 @@ class Edith_Mainframe(object):
 
                     print(prob)
                     # Adjust the confidence threshold as needed
-                    if prob > 0.9995:
+                    if prob > 0.9999:
                         intent_found = False
                         for intent in self.intents["intents"]:
                             if tag == intent["tag"]:
@@ -648,6 +670,7 @@ class Edith_Mainframe(object):
                         self.stop_audio()
                         self.response = self.convert_decimal_to_verbal(self.response)
                         self.response = re.sub(r'(?<=\d),(?=\d)', '', self.response)
+                        self.response = self.replace_symbols(self.response)
                         self.thread, self.play_obj, self.output_path = text_to_speech(self.response)
 
                     else:
@@ -655,6 +678,7 @@ class Edith_Mainframe(object):
                         response = llm_main(transcription)
                         response = re.sub(r'(?<=\d),(?=\d)', '', response)
                         response = self.convert_decimal_to_verbal(response)
+                        response = self.replace_symbols(response)
                         self.thread, self.play_obj, self.output_path = text_to_speech(
                             response
                         )

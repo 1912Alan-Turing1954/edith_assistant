@@ -48,7 +48,9 @@ else:
 syn = Synthesizer(
     tts_checkpoint=CHECKPOINT_PATH,
     tts_config_path=CONFIG_PATH,
+    # use_cuda=True,  # Adjust as needed
     use_cuda=False,  # Adjust as needed
+
 )
 
 
@@ -82,6 +84,7 @@ def add_period_if_missing(text):
         return text.strip()
 
 
+
 def text_to_speech(text, output_path="audio.wav"):
     """
     Convert text to speech using the initialized TTS model.
@@ -99,7 +102,10 @@ def text_to_speech(text, output_path="audio.wav"):
     outputs = syn.tts(
         text,
         emotion=emotion,
+
     )
+
+  
 
     # Save the synthesized audio
     syn.save_wav(outputs, output_path)

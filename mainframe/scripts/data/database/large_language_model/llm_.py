@@ -19,7 +19,7 @@ def fetch_conv_():
     return conversations
 
 def llm(user_input):
-    history = "This is our chat history. do not bring up details in the chat history unless is seems appropiate or until I ask." + str(fetch_conv_())
+    history = "This is our chat history, do not bring up details in the chat history unless is seems appropiate or I ask for them. " + str(fetch_conv_())
 
     # Read prompt from file
     with open('mainframe/scripts/data/database/prompts/boot_personality_prompt.txt') as f:
