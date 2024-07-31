@@ -568,9 +568,8 @@ class Edith_Mainframe(object):
     def clean_input(self, user_input):
         pattern = r"(\d+)\.(\d+)"
         cleaned_input = re.sub(pattern, r"\1 point \2", user_input)
+        cleaned_input = re.sub(r'(?<=\d),(?=\d)', '', cleaned_input)
         return cleaned_input
-
-
 
     def detect_wake_word(self, transcription):
         return "edith" in transcription.lower()
@@ -648,11 +647,13 @@ class Edith_Mainframe(object):
                     if self.response:
                         self.stop_audio()
                         self.response = self.convert_decimal_to_verbal(self.response)
+                        self.response = re.sub(r'(?<=\d),(?=\d)', '', self.response)
                         self.thread, self.play_obj, self.output_path = text_to_speech(self.response)
 
                     else:
                         self.stop_audio()
                         response = llm_main(transcription)
+                        response = re.sub(r'(?<=\d),(?=\d)', '', response)
                         response = self.convert_decimal_to_verbal(response)
                         self.thread, self.play_obj, self.output_path = text_to_speech(
                             response

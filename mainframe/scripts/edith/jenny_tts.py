@@ -122,3 +122,4 @@ def text_to_speech(text, output_path="audio.wav"):
     return thread, play_obj, output_path
     # # Delete the audio file after use (optional)
     # os.remove(output_path)
+

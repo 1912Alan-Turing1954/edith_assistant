@@ -53,6 +53,3 @@ def llm_main(user_input):
     return response
 
 
-while True:
-    i = input("enter: ")
-    print(llm_main(i))
