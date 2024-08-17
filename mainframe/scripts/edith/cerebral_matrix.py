@@ -393,6 +393,7 @@ import enchant
 import warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning, module='networkx')
 
+# from speech_to_text import *
 
 from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
@@ -547,8 +548,6 @@ class Edith_Mainframe(object):
             '*': ' multiplied by ',
             '^': ' raised to the power of ',
             '=': ' equals ',
-            '(': ' open parenthesis ',
-            ')': ' close parenthesis '
             # Add more symbols and their descriptions as needed
         }
         
@@ -616,13 +615,16 @@ class Edith_Mainframe(object):
             try:
                 # audio = capture_audio()
                 # transcription = speech_to_text(
-                    # audio
+                #     audio
                 # )  # Replace with your speech to text function
 
                 transcription = input("Enter transcript:")
+
                 transcription = self.clean_text(transcription.lower().strip())
 
                 print("User input:", transcription)
+
+
 
                 if self.detect_wake_word(transcription):
                     print("Edith Detected")
