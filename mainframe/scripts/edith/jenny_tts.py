@@ -15,7 +15,6 @@ sys.path.append(r"/home/hailwic/Repositories/Edith/mainframe/scripts")
 from TTS.utils.manage import ModelManager
 from TTS.utils.synthesizer import Synthesizer
 
-
 # from TTS.utils.manage import ModelManager
 import simpleaudio as sa
 from textblob import TextBlob
