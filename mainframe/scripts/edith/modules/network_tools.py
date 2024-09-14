@@ -5,7 +5,7 @@ import sys
 import ipaddress
 import urllib.request
 import time
-from tkinter import Tk, simpledialog
+# from tkinter import Tk, simpledialog
 import speedtest
 
 
@@ -61,15 +61,18 @@ def ping_ip(ip_str):
         return f"Ping failed. {ip} seems to be offline or unreachable."
 
 
-# Function to get IP address input from user
+# # Function to get IP address input from user
+# def get_ip_address(prompt):
+#     root = Tk()
+#     root.withdraw()  # Hide the main window
+
+#     ip_address = simpledialog.askstring("Input", prompt)
+#     root.destroy()  # Destroy the main window after input dialog is closed
+
+#     return ip_address
 def get_ip_address(prompt):
-    root = Tk()
-    root.withdraw()  # Hide the main window
+    return prompt
 
-    ip_address = simpledialog.askstring("Input", prompt)
-    root.destroy()  # Destroy the main window after input dialog is closed
-
-    return ip_address
 
 
 def traffic_analysis():

@@ -3,13 +3,7 @@ import threading
 import sys
 import sys
 
-# sys.path.append(
-#     r"C:\Users\1912a\Repositories\Edith_mk1\mainframe\scripts"
-# )  # Adjust path as necessary
-sys.path.append(r"/home/hailwic/Repositories/Edith/mainframe/scripts")
-# sys.path.append(
-#     r"/home/hailwic/Repositories/Edith/"
-# )  # Adjust path as necessary
+sys.path.append(r"/home/hailwic/Repos/Edith/mainframe/scripts")
 
 
 from TTS.utils.manage import ModelManager
@@ -48,7 +42,7 @@ syn = Synthesizer(
     tts_checkpoint=CHECKPOINT_PATH,
     tts_config_path=CONFIG_PATH,
     # use_cuda=True,  # Adjust as needed
-    use_cuda=False,  # Adjust as needed
+    use_cuda=True,  # Adjust as needed
 
 )
 
