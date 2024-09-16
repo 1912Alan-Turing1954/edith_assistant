@@ -3,7 +3,7 @@ import threading
 import sys
 import sys
 
-sys.path.append(r"/home/hailwic/Repos/Edith/mainframe/scripts")
+sys.path.append(r"/home/hailwic/Repos/Edith/scripts")
 
 
 from TTS.utils.manage import ModelManager
@@ -15,11 +15,11 @@ from textblob import TextBlob
 
 
 # Get the absolute path of the 'TTS' directory
-model_manager = ModelManager("mainframe/scripts/TTS/.models.json")
+model_manager = ModelManager("TTS/.models.json")
 
 # Global variables for model paths
 MODEL_NAME = "tts_models/en/jenny/jenny"
-SAVE_PATH = "./mainframe/scripts/data/database/models/jenny_model/"
+SAVE_PATH = "data/models/jenny_model/"
 CHECKPOINT_PATH = os.path.join(SAVE_PATH, "model.pt")
 CONFIG_PATH = os.path.join(SAVE_PATH, "config.json")
 

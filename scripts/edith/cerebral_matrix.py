@@ -395,7 +395,7 @@ from brain.nltk_utils import bag_of_words, tokenize
 from modules.jenny_tts import text_to_speech
 from modules.system_info import *  # Adjusted import to specific functions
 from modules.network_tools import *
-from data.database.large_language_model.llm_ import *  # Assuming llm_main function exists
+from data.large_language_model.llm_ import *  # Assuming llm_main function exists
 
 class DialogueManager:
     def __init__(self, dialogue_archive, backup_dir):
@@ -447,13 +447,13 @@ class Edith_Mainframe:
         self.output_path = None
         self.stopped = False
         self.response = None
-        self.dialogue_archive = "mainframe/scripts/data/database/archives/dialogue/dialogue_archives.bin"
-        self.backup_dir = "mainframe/scripts/data/database/archives/dialogue"
+        self.dialogue_archive = "scripts/data/archives/dialogue/dialogue_archives.bin"
+        self.backup_dir = "scripts/data/archives/dialogue"
         self.is_in_conversation = False
         self.conversation_timeout = 60
         self.last_interaction_time = datetime.datetime.now()
         self.dialogue_manager = DialogueManager(
-            'mainframe/scripts/data/database/archives/dialogue/dialogue_archive.db', 
+            'scripts/data/archives/dialogue/dialogue_archive.db', 
             'backup_dir'
         )
 
@@ -589,7 +589,7 @@ class Edith_Mainframe:
                 print("User input:", transcription)
 
                 if self.detect_wake_word(transcription):
-                    print("Edith Detected")
+                    print("Wake word Detected...")
                     self.is_in_conversation = True
                     self.last_interaction_time = datetime.datetime.now()
 
@@ -685,8 +685,8 @@ class Edith_Mainframe:
 
 if __name__ == "__main__":
     intents_model = Edith_Mainframe(
-        "mainframe/scripts/edith/data/intents.json",
-        "mainframe/scripts/edith/data/data.pth"
+        "edith/data/intents.json",
+        "edith/data/data.pth"
     )
 
     while True:
