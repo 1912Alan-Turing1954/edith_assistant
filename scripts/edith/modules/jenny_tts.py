@@ -3,23 +3,25 @@ import threading
 import sys
 import sys
 
-sys.path.append(r"/home/hailwic/Repos/Edith/scripts")
+# sys.path.append(r"/home/hailwic/Repos/Edith/")
 
+
+# from TTS.utils.manage import ModelManager
+# from TTS.utils.synthesizer import Synthesizer
 
 from TTS.utils.manage import ModelManager
 from TTS.utils.synthesizer import Synthesizer
-
 # from TTS.utils.manage import ModelManager
 import simpleaudio as sa
 from textblob import TextBlob
 
 
 # Get the absolute path of the 'TTS' directory
-model_manager = ModelManager("TTS/.models.json")
+model_manager = ModelManager("/home/hailwic/Repos/Edith/scripts/edith/TTS/.models.json")
 
 # Global variables for model paths
 MODEL_NAME = "tts_models/en/jenny/jenny"
-SAVE_PATH = "data/models/jenny_model/"
+SAVE_PATH = "scripts/data/models/jenny_model/"
 CHECKPOINT_PATH = os.path.join(SAVE_PATH, "model.pt")
 CONFIG_PATH = os.path.join(SAVE_PATH, "config.json")
 

@@ -395,8 +395,7 @@ from brain.nltk_utils import bag_of_words, tokenize
 from modules.jenny_tts import text_to_speech
 from modules.system_info import *  # Adjusted import to specific functions
 from modules.network_tools import *
-from data.large_language_model.llm_ import *  # Assuming llm_main function exists
-
+from large_language_model.llm_main import handle_conversation  # Assuming llm_main function exists
 class DialogueManager:
     def __init__(self, dialogue_archive, backup_dir):
         self.dialogue_archive = dialogue_archive
@@ -629,7 +628,7 @@ class Edith_Mainframe:
                         self.thread, self.play_obj, self.output_path = text_to_speech(self.response)
                     else:
                         self.stop_audio()
-                        response = llm_main(transcription)
+                        response = handle_conversation(transcription)
                         response = re.sub(r'(?<=\d),(?=\d)', '', response)
                         response = self.convert_decimal_to_verbal(response)
                         response = self.replace_symbols(response)

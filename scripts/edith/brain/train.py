@@ -125,7 +125,7 @@ data = {
     "tags": tags,
 }
 
-FILE = "mainframe/scripts/edith/data/data.pth"
+FILE = "scripts/edith/data/data.pth"
 torch.save(data, FILE)
 
 print(f"training complete. file saved to {FILE}")
