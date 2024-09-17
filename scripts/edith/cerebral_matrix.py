@@ -596,7 +596,7 @@ class Edith_Mainframe:
                     self.is_in_conversation and 
                     (datetime.datetime.now() - self.last_interaction_time).total_seconds() < self.conversation_timeout
                 ):
-                    if transcription == "edith":
+                    if transcription.lower() == "edith":
                         self.stopping()
                         transcription = 'edith'
                     else:
@@ -684,8 +684,8 @@ class Edith_Mainframe:
 
 if __name__ == "__main__":
     intents_model = Edith_Mainframe(
-        "edith/data/intents.json",
-        "edith/data/data.pth"
+        "scripts/edith/data/intents.json",
+        "scripts/edith/data/data.pth"
     )
 
     while True:
