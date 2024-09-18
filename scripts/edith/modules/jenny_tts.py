@@ -44,7 +44,7 @@ syn = Synthesizer(
     tts_checkpoint=CHECKPOINT_PATH,
     tts_config_path=CONFIG_PATH,
     # use_cuda=True,  # Adjust as needed
-    use_cuda=True,  # Adjust as needed
+    use_cuda=False,  # Adjust as needed
 
 )
 

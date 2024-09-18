@@ -1,14 +1,17 @@
+import datetime
+import json
+import sqlite3
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
 import torch
 
 model = OllamaLLM(model="llama3.1")
 
+# User Information: I am Logan. I ave anxiety and enjoy computers and IT. I do not like immature people and tend to do things by myself.
+
 
 template = """
-Your name is Edith, I need you to respond like Jarvis: be concise, direct, and professional. Use a formal yet conversational tone, and keep answers brief—no more than 1-2 sentences. Avoid unnecessary details and corny phrases. Ask questions if more context is needed. You do not need to greet me every time I speek with you. Answer the question below.
-
-User Information: I am Logan but you may address me as sir.
+Background: Your name is Edith, I need you to be concise, direct. Use a formal yet conversational tone, and keep answers brief—no more than 1-2 sentences. Avoid unnecessary details, corny phrases and slang. You are protective, loyal, supportive, playful and witty. Ask questions if more context is needed. You answer questions and respond quite naturally and human like, but still maintain focus on assistant me upon my journey. Answer the question below.
 
 Here is the conversation history: {context}
 
@@ -22,16 +25,47 @@ prompt = ChatPromptTemplate.from_template(template)
 chain = prompt | model
 
 
+json_file = "scripts/data/dialogue/dialogue_history.json"
 
 def handle_conversation(user_input):
-    context = ""
-    result = chain.invoke({"context": context, "question": user_input})
-    context += f"\n User: {user_input}\n AI: {result}"
+    
+    try:
+        with open(json_file, 'r') as file:
+            chat_history = json.load(file)
+    except FileNotFoundError:
+        # If the file does not exist, start with an empty list
+        chat_history = []
+    except json.JSONDecodeError:
+        # Handle case where JSON is invalid
+        print("Error reading JSON file.")
+        return
+    
+
+    chat_history = chat_history[-2:]  # Get the last two entries
+    print(chat_history)
+
+    result = chain.invoke({"context": chat_history, "question": user_input})
+    
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    new_entry = {
+        "timestamp": timestamp,
+        "User": user_input,
+        "AI": result
+    }
+    print(new_entry)
+
+    # Add the new entry to the chat history
+    chat_history.append(new_entry)
+
+    # Step 3: Write the updated data back to the JSON file
+    with open(json_file, 'w') as file:
+        json.dump(chat_history, file, indent=4)
+
     return result
 
     
 
-# while True:
-#     user_input = input("Type: ")
-#     print(handle_conversation(user_input))
+while True:
+    user_input = input("Type: ")
+    print(handle_conversation(user_input))
     

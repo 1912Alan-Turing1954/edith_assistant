@@ -410,7 +410,7 @@ class DialogueManager:
             CREATE TABLE IF NOT EXISTS dialogue (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_input TEXT,
-                bot_response TEXT,
+                AI_response TEXT,
                 timestamp TEXT
             )
         ''')
@@ -420,7 +420,7 @@ class DialogueManager:
         """Save a dialogue entry to the database."""
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.cursor.execute('''
-            INSERT INTO dialogue (user_input, bot_response, timestamp)
+            INSERT INTO dialogue (user_input, AI_response, timestamp)
             VALUES (?, ?, ?)
         ''', (user_input, bot_response, timestamp))
         self.conn.commit()
@@ -583,7 +583,7 @@ class Edith_Mainframe:
                 # Simulate user input (replace with actual audio capture and transcription)
                 transcription = input("Enter transcript:").lower().strip()
 
-                transcription = self.clean_text(transcription)
+                transcription = self.clean_text(transcription).lower()
 
                 print("User input:", transcription)
 
@@ -649,7 +649,7 @@ class Edith_Mainframe:
     def handle_intent(self, intent, user_input=None):
         """Handle the intent based on the tag and generate the appropriate response."""
         responses = {
-            "repeat_tsk": self.handle_repeat_tsk,
+            # "repeat_tsk": self.handle_repeat_tsk,
             "system_info_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]), self.get_updated_system_info()),
             "storage_info_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]), generate_storage_status_response(get_system_info())),
             "cpu_usage_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]), generate_cpu_usage_response(get_system_info())),
@@ -668,19 +668,19 @@ class Edith_Mainframe:
         else:
             self.get_intent_response(intent, random.choice(intent["responses"]))
 
-    def handle_repeat_tsk(self):
-        """Handle 'repeat_tsk' intent."""
-        if self.stopped:
-            if self.prev_tag == "repeat_tsk":
-                self.get_intent_response(self.prev_response)
-            else:
-                self.get_intent_response(f"{random.choice(self.intents['repeat_tsk']['responses'])} {self.stop_response}")
-            self.stop_response = ""
-            self.stopped = False
-        elif self.prev_tag == "repeat_tsk":
-            self.get_intent_response(self.prev_response)
-        else:
-            self.get_intent_response(f"{random.choice(self.intents['repeat_tsk']['responses'])} {self.prev_response}")
+    # def handle_repeat_tsk(self):
+    #     """Handle 'repeat_tsk' intent."""
+    #     if self.stopped:
+    #         if self.prev_tag == "repeat_tsk":
+    #             self.get_intent_response(self.prev_response)
+    #         else:
+    #             self.get_intent_response(f"{random.choice(self.intents['repeat_tsk']['responses'])} {self.stop_response}")
+    #         self.stop_response = ""
+    #         self.stopped = False
+    #     elif self.prev_tag == "repeat_tsk":
+    #         self.get_intent_response(self.prev_response)
+    #     else:
+    #         self.get_intent_response(f"{random.choice(self.intents['repeat_tsk']['responses'])} {self.prev_response}")
 
 if __name__ == "__main__":
     intents_model = Edith_Mainframe(

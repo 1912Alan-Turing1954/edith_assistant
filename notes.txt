@@ -2,111 +2,105 @@
 
 2. make LLM read dialogue archives for history e.g { chat_history: {dialogue_archive.bin} }
 
+{
+      "tag": "name",
+      "patterns": [
+        "edith"
+      ],
+      "responses": [
+        "Yes sir?",
+        "Sir?",
+        "yes boss",
+        "Yes?",
+        "You called, sir?"
+      ]
+    },
+    
+    {
+      "tag": "edith_you_there",
+      "patterns": [
+        "edith you there",
+        "edith you up",
+        "are you there",
+        "are you up",
+        "you there",
+        "hey edith do you have a minute",
+        "Edith, are you there?",
+        "Edith, are you up?",
+        "Hey Edith, got a minute?",
+        "Edith, can I ask you something?",
+        "Edith, need your input.",
+        "Hey Edith, need your help.",
+        "Edith, are you there?",
+        "Edith, can we talk?",
+        "Edith, are you free?",
+        "Hey Edith, are you busy?"
+        ],
+      "responses": [
+        "Affirmative, sir.",
+        "for you sir, always",
+        "for you sir, always",
+        "for you sir, always",
+        "I'm online, sir.",
+        "Standing by, sir.",
+        "As always, sir"
+      ]
+    },
 
-if "edith" == user_input.lower():
-                    self.inturupt()
-                elif prob.item() > 0.95:
-                    for intent in self.intents["intents"]:
-                        if tag == intent["tag"]:
-                            if intent["tag"] == "repeat_tsk" and self.stopped:
-
-                                self.stopped = True
-
-
-if tag == intent["tag"]:
-                            if intent["tag"] == "repeat_tsk" and self.stopped:
-                                print(self.stop_response)
-                                self.get_intent_response(
-                                    intent,
-                                    f"{random.choice(intent['responses'])} {self.stop_response}",
-                                )
-                                self.stop_response = ""
-                                self.stopped = False
-                            elif intent["tag"] == "repeat_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    f"{random.choice(intent['responses'])} {self.prev_response}",
-                                )
-                            elif intent["tag"] == "system_info_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]),
-                                    self.get_updated_system_info(),
-                                )
-                            elif intent["tag"] == "storage_info_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]),
-                                    generate_storage_status_response(get_system_info()),
-                                )
-                            elif intent["tag"] == "cpu_usage_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]),
-                                    generate_cpu_usage_response(get_system_info()),
-                                )
-                            elif intent["tag"] == "memory_usage_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]),
-                                    generate_memory_usage_response(get_system_info()),
-                                )
-                            elif intent["tag"] == "disk_space_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]),
-                                    generate_disk_space_response(get_system_info()),
-                                )
-                            elif intent["tag"] == "time_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]).replace(
-                                        "{time}", self.get_time()
-                                    ),
-                                )
-                            elif intent["tag"] == "date_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]).replace(
-                                        "{date}", self.get_date()
-                                    ),
-                                )
-                            elif intent["tag"] == "day_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]).replace(
-                                        "{day}", self.get_day()
-                                    ),
-                                )
-                            elif intent["tag"] == "ping_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]).replace(
-                                        "{string}", network_function(user_input)
-                                    ),
-                                )
-                            elif intent["tag"] == "speedtest_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]).replace(
-                                        "{string}", download_speed_test()
-                                    ),
-                                )
-                            elif intent["tag"] == "check_internet_tsk":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]).replace(
-                                        "{string}", check_internet()
-                                    ),
-                                )
-                            elif intent["tag"] == "system_status":
-                                self.get_intent_response(
-                                    intent,
-                                    random.choice(intent["responses"]).replace(
-                                        "{string}", get_live_system_status_response()
-                                    ),
-                                )
-                            else:
-                                self.get_intent_response(
-                                    intent, random.choice(intent["responses"])
-                                )
+    {
+      "tag": "repeat_tsk",
+      "patterns": [
+        "Can you repeat that?",
+        "Hey edith, say that again.",
+        "edith, one more time, please.",
+        "edith, give me a playback.",
+        "Repeat that, edith.",
+        "Say it again, edith.",
+        "Come again, edith?",
+        "edith, rewind and replay.",
+        "edith, I need a playback.",
+        "One more time, edith, for good measure.",
+        "Hey edith, let's try that one more time.",
+        "edith, I wasn't paying attention. Say it again.",
+        "Give me a rerun, edith.",
+        "Hey edith, rewind and repeat.",
+        "Hey edith, how about a second take?",
+        "repeat",
+        "run a playback"
+      ],
+      "responses": [
+        "Apologies, Sir.",
+        "Certainly, Sir.",
+        "My apologies, Sir. I said",
+        "Of course, Sir.",
+        "I said"
+      ]
+    },
+    
+    {
+      "tag": "technical",
+      "patterns": [],
+      "responses": [
+        "I apologize, but it seems like there's interference affecting my systems. Let me work on resolving it.",
+        "It appears that there might be a technical issue or interference. I will investigate and address it promptly.",
+        "Apologies for any disruption. It seems there is interference in the system. I'll rectify the issue.",
+        "There seems to be a disturbance in the communication channels. I will analyze and mitigate the interference.",
+        "I'm detecting signal interference. Initiating countermeasures to restore optimal functionality.",
+        "Apologies, but it seems there's a glitch in the system. I'll investigate and rectify the technical issue.",
+        "Interference detected. Adjusting transmission protocols to minimize its impact. Please stand by.",
+        "It seems there's an unexpected technical anomaly. I will analyze and resolve it as quickly as possible.",
+        "I apologize for the disruption. It appears there might be interference. Allow me to rectify the situation.",
+        "There appears to be a technical hiccup. Rest assured, I'll conduct diagnostics to address the interference.",
+        "Apologies, but it seems like there's a disturbance in the system. I'll work on eliminating the interference.",
+        "I'm detecting unusual signal patterns. Investigating the issue and implementing corrective measures.",
+        "There's an anomaly in the system. Initiating diagnostic protocols to pinpoint and address the interference.",
+        "Apologies for the interruption. It seems there might be a technical glitch. I will investigate and rectify it.",
+        "Interference detected. Implementing signal analysis algorithms to identify and mitigate the issue.",
+        "It appears there's a disruption in the system. I will employ error correction techniques to restore stability.",
+        "I apologize for any inconvenience caused by the interference. Rest assured, I'll restore normal operations.",
+        "Interference is affecting the system. I'll adapt the transmission protocols to minimize its impact.",
+        "Apologies for the disturbance. I'll conduct a thorough analysis to identify and resolve the technical issue.",
+        "It seems there's a technical anomaly. Employing diagnostic procedures to resolve the interference promptly.",
+        "Interference detected. I'll optimize the communication channels and implement measures to address the issue."
+      ]
+    },
