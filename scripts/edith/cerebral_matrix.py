@@ -8,6 +8,7 @@ import torch
 import json
 import enchant
 import warnings
+import urwid
 from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
 from modules.jenny_tts import text_to_speech
@@ -228,7 +229,7 @@ class EdithMainframe:
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     intents_model = EdithMainframe("scripts/edith/data/intents.json", "scripts/edith/data/data.pth")
-
+# 
     while True:
         try:
             intents_model.operational_matrix()

@@ -1,260 +1,163 @@
 import time
 import random
 import subprocess
-import os.path
-from tqdm import tqdm
-import sqlite3
-import shutil
 import os
+import shutil
+import sqlite3
+import logging
+from tqdm import tqdm
+
+# Set up logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # ANSI color escape codes
 RED = "\033[91m"
 RESET = "\033[0m"
 
-# Simulated module loading statuses and additional data
+def print_red(text):
+    """Prints text in red color for error messages."""
+    print(f"{RED}{text}{RESET}")
+
+def get_size(file_path):
+    """Returns the size of the file in a human-readable format.
+
+    Args:
+        file_path (str): Path to the file.
+
+    Returns:
+        str: Size of the file in MB, or '0MB' if not found.
+    """
+    try:
+        if os.path.isfile(file_path):
+            size = os.path.getsize(file_path)
+            return f"{size / (1024 * 1024):.2f}MB"  # Convert bytes to MB
+    except Exception as e:
+        logging.error(f"Unable to get size for '{file_path}': {e}")
+    return "0MB"
+
 modules = {
     "Text-to-speech Model": {
         "loaded": False,
         "progress": 0,
-        "size": "50MB",
-        "file_path": "mainframe/scripts/data/database/models/jenny_model/model.pt",
+        "file_path": "scripts/data/models/jenny_model/model.pt",
     },
     "Speech recognition": {
         "loaded": False,
         "progress": 0,
-        "size": "30MB",
-        "file_path": "mainframe/scripts/edith/speech_to_text.py",  # Example path, replace with actual
+        "file_path": "scripts/edith/modules/speech_to_text.py",
     },
     "Text-to-speech (TTS)": {
         "loaded": False,
         "progress": 0,
-        "size": "20MB",
-        "file_path": "mainframe/scripts/edith/jenny_tts.py",  # Example path, replace with actual
+        "file_path": "scripts/edith/modules/jenny_tts.py",
     },
     "Natural language processing": {
         "loaded": False,
         "progress": 0,
-        "size": "40MB",
-        "file_path": "mainframe/scripts/edith/brain/model.py",  # Example path, replace with actual
+        "file_path": "scripts/edith/data/data.pth",
+    },
+    "Large Language Model": {
+        "loaded": False,
+        "progress": 0,
+        "file_path": "scripts/edith/large_language_model/llm_main.py",
     },
     "Network tools": {
         "loaded": False,
         "progress": 0,
-        "size": "15MB",
-        "file_path": "mainframe/scripts/edith/modules/network_tools.py",
-    },
-    "Database connection": {
-        "loaded": False,
-        "progress": 0,
-        "size": "5MB",
-        "file_path": "mainframe/scripts/edith/modules/database_connection.py",
+        "file_path": "scripts/edith/modules/network_tools.py",
     },
     "Hardware diagnostics": {
         "loaded": False,
         "progress": 0,
-        "size": "25MB",
-        "file_path": "mainframe/scripts/edith/modules/system_info.py",
+        "file_path": "scripts/edith/modules/system_info.py",
     },
     "Peripheral devices": {
         "loaded": False,
         "progress": 0,
-        "size": "12MB",
-        "file_path": "mainframe/scripts/edith/modules/system_info.py",
+        "file_path": "scripts/edith/modules/system_info.py",
     },
     "Audio processing": {
         "loaded": False,
         "progress": 0,
-        "size": "18MB",
-        "file_path": "mainframe/scripts/edith/edith_testing.py",  # Example path, replace with actual
+        "file_path": "scripts/edith/cerebral_matrix.py",
     },
     "Security modules": {
         "loaded": False,
         "progress": 0,
-        "size": "8MB",
-        "file_path": "mainframe/scripts/edith/modules/barn_door_protocol.py",
-    },
-    "Data analytics": {
-        "loaded": False,
-        "progress": 0,
-        "size": "22MB",
-        "file_path": "mainframe/scripts/edith/modules/data_analytics.py",  # Example path, replace with actual
+        "file_path": "scripts/edith/modules/barn_door_protocol.py",
     },
     "Virtual Assistant": {
         "loaded": False,
         "progress": 0,
-        "size": "22MB",
-        "file_path": "mainframe/scripts/edith/edith_testing.py",  # Example path, replace with actual
+        "file_path": "scripts/edith/cerebral_matrix.py",
     },
 }
 
+# Add size to each module
+for module in modules.values():
+    module["size"] = get_size(module["file_path"])
 
-# Function to print in red
-def print_red(text):
-    print(f"{RED}{text}{RESET}")
-
-
-# Function to simulate loading each module with progress bars and error handling
 def load_modules():
-    print("IOS (Basic Input/Output System) initializing...\n")
-    time.sleep(1.5)  # Reduce the initial sleep time to 1.5 seconds
+    """Loads each module and handles errors."""
+    logging.info("IOS (Basic Input/Output System) initializing...")
+    time.sleep(1.5)
 
-    try:
-        # Define progress bar
-        with tqdm(
-            total=len(modules), desc="Loading modules", unit="module", ascii=True
-        ) as pbar:
-            for module_name, module_info in modules.items():
-                # Check if file exists before attempting to load
+    with tqdm(total=len(modules), desc="Loading modules", unit="module", ascii=True) as pbar:
+        for module_name, module_info in modules.items():
+            try:
                 if not os.path.isfile(module_info["file_path"]):
-                    print_red(
-                        f"ERROR: {module_name} file '{module_info['file_path']}' not found."
-                    )
+                    print_red(f"ERROR: {module_name} file '{module_info['file_path']}' not found.")
                     continue
 
-                # Simulate module loading time (faster loading)
-                time.sleep(random.uniform(0.2, 0.5))  # Adjusted for faster loading
+                time.sleep(random.uniform(0.2, 0.5))
 
-                # Introduce errors for specific modules (simulated)
-                if module_name == "Speech recognition" and random.random() < 0.2:
-                    print_red("ERROR: Speech recognition module failed to load.")
-                    time.sleep(random.uniform(0.3, 0.6))  # Simulate fix attempt
-                    print("INFO: Attempting to fix Speech recognition...")
-                    time.sleep(random.uniform(0.3, 0.6))  # Simulate fix attempt
-                    print("INFO: Speech recognition fixed.")
-                elif module_name == "Network tools" and random.random() < 0.2:
-                    print_red("ERROR: Network tools module failed to load.")
-                    time.sleep(random.uniform(0.3, 0.6))  # Simulate fix attempt
-                    print("INFO: Attempting to fix Network tools...")
-                    time.sleep(random.uniform(0.3, 0.6))  # Simulate fix attempt
-                    print("INFO: Network tool fixed.")
-                elif module_name == "Security modules" and random.random() < 0.2:
-                    print_red("ERROR: Security modules module failed to load.")
-                    time.sleep(random.uniform(0.3, 0.6))  # Simulate fix attempt
-                    print("INFO: Attempting to fix Security modules...")
-                    time.sleep(random.uniform(0.3, 0.6))  # Simulate fix attempt
-                    print("INFO: Security modules fixed.")
-                elif module_name == "Data analytics" and random.random() < 0.2:
-                    print_red("ERROR: Data analytics module failed to load.")
-                    time.sleep(random.uniform(0.3, 0.6))  # Simulate fix attempt
-                    print("INFO: Attempting to fix Data analytics...")
-                    time.sleep(random.uniform(0.3, 0.6))  # Simulate fix attempt
-                    print("INFO: Data analytics fixed.")
+                # Simulated error handling
+                if random.random() < 0.2:
+                    print_red(f"ERROR: {module_name} failed to load.")
+                    time.sleep(random.uniform(0.3, 0.6))
+                    logging.info(f"Attempting to fix {module_name}...")
+                    time.sleep(random.uniform(0.3, 0.6))
+                    logging.info(f"{module_name} fixed.")
 
-                # Mark module as loaded
                 module_info["loaded"] = True
                 module_info["progress"] = 100
                 pbar.update(1)
-                print(
-                    f"INIT: {module_name} loaded successfully. Size: {module_info['size']}"
-                )
+                logging.info(f"INIT: {module_name} loaded successfully. Size: {module_info['size']}")
 
-        # Final initialization message
-        print("\nINIT: All components initialized. Edith is now operational.")
+            except Exception as e:
+                print_red(f"ERROR: An error occurred while loading '{module_name}': {e}")
+                continue  # Continue with the next module
 
-    except Exception as e:
-        print_red(f"\nERROR: {e}")
-        print("INFO: Continuing with initialization despite errors.")
+    logging.info("INIT: All components initialized. Edith is now operational.")
 
-
-# Connect to SQLite database
-def fetch_and_copy_files():
-    # Connect to SQLite database
-    conn = sqlite3.connect("mainframe/scripts/data/database/edith_matrix.db")
-    cursor = conn.cursor()
-
-    try:
-        # Fetch models data
-        cursor.execute("SELECT Name, FilePath, Destination FROM Models")
-        models = cursor.fetchall()
-
-        print("Copying models:")
-        for model in tqdm(models, desc="Models", unit="model"):
-            name, file_path, destination = model
-            if destination == "unchanged":
-                tqdm.write(f"Skipping model '{name}' as destination is 'unchanged'")
-                continue
-
-            # Check if file_path exists
-            if os.path.isfile(file_path):
-                # Ensure destination directory exists
-                os.makedirs(os.path.dirname(destination), exist_ok=True)
-                # Copy file to destination folder
-                shutil.copy(file_path, destination)
-                # Update progress bar
-                tqdm.write(f"Copied model '{name}' to '{destination}'")
-            else:
-                tqdm.write(f"File '{file_path}' for model '{name}' not found.")
-
-        # Fetch configurations data
-        cursor.execute("SELECT Name, FilePath, Destination FROM Configurations")
-        configurations = cursor.fetchall()
-
-        print("Copying configurations:")
-        for config in tqdm(configurations, desc="Configurations", unit="config"):
-            name, file_path, destination = config
-            if destination == "unchanged":
-                tqdm.write(
-                    f"Skipping configuration '{name}' as destination is 'unchanged'"
-                )
-                continue
-
-            # Check if file_path exists
-            if os.path.isfile(file_path):
-                # Ensure destination directory exists
-                os.makedirs(os.path.dirname(destination), exist_ok=True)
-                # Copy file to destination folder
-                shutil.copy(file_path, destination)
-                # Update progress bar
-                tqdm.write(f"Copied configuration '{name}' to '{destination}'")
-            else:
-                tqdm.write(f"File '{file_path}' for configuration '{name}' not found.")
-
-        # Return True if all operations were successful
-        return True
-
-    except sqlite3.Error as e:
-        print(f"SQLite error: {e}")
-        return False  # Return False on error
-
-    except Exception as e:
-        print(f"Error: {e}")
-        return False  # Return False on any unexpected error
-
-    finally:
-        # Close database connection
-        if conn:
-            conn.close()
-            return True
-
-
-# Function to simulate running a script after successful boot
 def run_script():
-    print("\nRunning edith...")
-    try:
-        script_path = "mainframe/scripts/edith/edith_testing.py"  # Replace with your actual script path
-        subprocess.run(["python", script_path], check=True)
-        print("Script execution completed.")
-    except subprocess.CalledProcessError as e:
-        print_red(f"Script execution failed with error: {e}")
+    """Runs the main script after all components are initialized."""
+    max_retries = 3
+    for attempt in range(max_retries):
+        logging.info("Initializing edith...")
+        try:
+            script_path = "scripts/edith/cerebral_matrix.py"
+            subprocess.run(["python", script_path], check=True)
+            logging.info("Script execution completed.")
+            break  # Exit loop if successful
+        except subprocess.CalledProcessError as e:
+            print_red(f"Script execution failed with error: {e}")
+            if attempt < max_retries - 1:
+                logging.info("INFO: Retrying script execution...")
+                time.sleep(2)  # Wait before retrying
+            else:
+                print_red("ERROR: Script execution failed after multiple attempts.")
 
-
-# Main function to simulate BIOS boot sequence
 def bios_boot():
-    print("Starting Friday AI boot sequence...\n")
-    time.sleep(1)  # Reduce the initial sleep time to 1 second
+    """Main function to simulate BIOS boot sequence."""
+    logging.info("Starting Friday AI boot sequence...")
+    time.sleep(1)
     try:
         load_modules()
-        fetch_and_copy_files()
-        time.sleep(2)
-        if (
-            all(module["loaded"] for module in modules.values())
-            and fetch_and_copy_files()
-        ):
+        if all(module["loaded"] for module in modules.values()):
             run_script()
     except Exception as e:
         print_red(f"An unexpected error occurred during boot: {e}")
 
-
-# Execute the boot sequence
 if __name__ == "__main__":
     bios_boot()
