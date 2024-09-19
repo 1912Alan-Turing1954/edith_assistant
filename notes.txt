@@ -104,3 +104,75 @@
         "Interference detected. I'll optimize the communication channels and implement measures to address the issue."
       ]
     },
+    {
+      "tag": "time_tsk",
+      "patterns": [
+        "what time is it",
+        "can you tell me the time",
+        "do you know the current time",
+        "what's the time",
+        "what is the time",
+        "could you please inform me of the current time?",
+        "what time do we have",
+        "do you have the time",
+        "time, please",
+        "tell me the time",
+        "any idea what time it is",
+        "i need to know the time.",
+        "tell me the current time.",
+        "what hour is it",
+        "can you let me know the time, please?"
+      ],
+      "responses": [
+        "It's {time}, sir.",
+        "The time is {time}, sir.",
+        "{time}",
+        "{time}"
+      ]
+    },
+    {
+      "tag": "day_tsk",
+      "patterns": [
+        "what day is it?",
+        "can you tell me the day?",
+        "do you know the current day?",
+        "what's the day?",
+        "could you please inform me of the current day?",
+        "what day do we have?",
+        "do you have the day?",
+        "day, please?",
+        "any idea what day it is?",
+        "i need to know the day.",
+        "tell me the current day.",
+        "tell me the day",
+        "what day is today?",
+        "do you know the day of the week?"
+      ],
+      "responses": [
+        "It's {day}, sir.",
+        "Today is {day}, sir.",
+        "its friday, logan"
+      ]
+    },
+    {
+      "tag": "date_tsk",
+      "patterns": [
+        "What's the date today?",
+        "Can you tell me today's date?",
+        "Do you know the current date?",
+        "What date is it?",
+        "Could you please inform me of the current date?",
+        "Do you have the date?",
+        "Tell me the current date.",
+        "I need to know the date.",
+        "Any idea what date it is?",
+        "What's today's date?",
+        "Please tell me the date.",
+        "What is today's date?"
+      ],
+      "responses": [
+        "Today's date is {date}.",
+        "Sir, the date is {date}.",
+        "The date sir, is {date}."
+      ]
+    }

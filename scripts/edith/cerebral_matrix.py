@@ -75,18 +75,18 @@ class Edith_Mainframe:
         prob = probs[0][predicted.item()]
         return tag, prob.item()
 
-    def get_time(self):
-        """Get current time in a specific format."""
-        time_ = datetime.datetime.now().time().strftime("%I:%M %p")
-        return time_.replace("PM", "P M").replace("AM", "A M")
+    # def get_time(self):
+        # """Get current time in a specific format."""
+        # time_ = datetime.datetime.now().time().strftime("%I:%M %p")
+        # return time_.replace("PM", "P M").replace("AM", "A M")
 
-    def get_date(self):
-        """Get current date in a specific format."""
-        return datetime.datetime.now().date().strftime("%B %d, %Y")
+    # def get_date(self):
+        # """Get current date in a specific format."""
+        # return datetime.datetime.now().date().strftime("%B %d, %Y")
 
-    def get_day(self):
-        """Get current day of the week."""
-        return datetime.datetime.now().strftime("%A")
+    # def get_day(self):
+    #     """Get current day of the week."""
+    #     return datetime.datetime.now().strftime("%A")
 
     def convert_decimal_to_verbal(self, sentence):
         """Convert decimal numbers in a sentence to verbal form."""
@@ -192,7 +192,6 @@ class Edith_Mainframe:
                         transcription = transcription.replace("edith", "")
 
                     tag, prob = self.classify_intent(transcription)
-                    print("User input:", transcription)
                     print(prob)
 
                     if prob > 0.9999:
@@ -236,9 +235,9 @@ class Edith_Mainframe:
             "cpu_usage_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]), generate_cpu_usage_response(get_system_info())),
             "memory_usage_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]), generate_memory_usage_response(get_system_info())),
             "disk_space_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]), generate_disk_space_response(get_system_info())),
-            "time_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]).replace("{time}", self.get_time())),
-            "date_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]).replace("{date}", self.get_date())),
-            "day_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]).replace("{day}", self.get_day())),
+            # "time_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]).replace("{time}", self.get_time())),
+            # "date_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]).replace("{date}", self.get_date())),
+            # "day_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]).replace("{day}", self.get_day())),
             "ping_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]).replace("{string}", network_function(user_input))),
             "speedtest_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]).replace("{string}", download_speed_test())),
             "check_internet_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]).replace("{string}", check_internet())),
