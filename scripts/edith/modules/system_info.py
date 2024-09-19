@@ -296,10 +296,3 @@ def get_live_disk_space_response():
     info_system = get_live_system_info()
     return generate_disk_space_response(info_system)
 
-# # Example usage
-# if __name__ == "__main__":
-#     print(get_live_system_status_response())
-#     print(get_live_storage_status_response())
-#     print(get_live_cpu_usage_response())
-#     print(get_live_memory_usage_response())
-#     print(get_live_disk_space_response())

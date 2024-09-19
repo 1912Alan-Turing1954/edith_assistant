@@ -176,3 +176,30 @@
         "The date sir, is {date}."
       ]
     }
+
+    # def get_time(self):
+        # """Get current time in a specific format."""
+        # time_ = datetime.datetime.now().time().strftime("%I:%M %p")
+        # return time_.replace("PM", "P M").replace("AM", "A M")
+
+    # def get_date(self):
+        # """Get current date in a specific format."""
+        # return datetime.datetime.now().date().strftime("%B %d, %Y")
+
+    # def get_day(self):
+    #     """Get current day of the week."""
+    #     return datetime.datetime.now().strftime("%A")
+    
+# def handle_repeat_tsk(self):
+    #     """Handle 'repeat_tsk' intent."""
+    #     if self.stopped:
+    #         if self.prev_tag == "repeat_tsk":
+    #             self.get_intent_response(self.prev_response)
+    #         else:
+    #             self.get_intent_response(f"{random.choice(self.intents['repeat_tsk']['responses'])} {self.stop_response}")
+    #         self.stop_response = ""
+    #         self.stopped = False
+    #     elif self.prev_tag == "repeat_tsk":
+    #         self.get_intent_response(self.prev_response)
+    #     else:
+    #         self.get_intent_response(f"{random.choice(self.intents['repeat_tsk']['responses'])} {self.prev_response}")

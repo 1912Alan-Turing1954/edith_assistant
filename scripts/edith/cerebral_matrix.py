@@ -1,33 +1,26 @@
+import threading
 import datetime
-import glob
 import logging
 import os
-import pickle
 import random
 import re
-import shutil
 import torch
 import json
 import enchant
-import sqlite3
 import warnings
+from brain.model import NeuralNet
+from brain.nltk_utils import bag_of_words, tokenize
+from modules.jenny_tts import text_to_speech
+from modules.system_info import *
+from modules.network_tools import *
+from large_language_model.llm_main import handle_conversation
 
 # Suppress specific warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning, module='networkx')
 
-# Import modules
-from brain.model import NeuralNet
-from brain.nltk_utils import bag_of_words, tokenize
-from modules.jenny_tts import text_to_speech
-from modules.system_info import *  # Adjusted import to specific functions
-from modules.network_tools import *
-from large_language_model.llm_main import handle_conversation  # Assuming llm_main function exists
 
-
-    
-
-class Edith_Mainframe:
-    def __init__(self, intents_file, data_file):
+class EdithMainframe:
+    def __init__(self, intents_file: str, data_file: str):
         self.intents_file = intents_file
         self.data_file = data_file
         self.load_intents_and_model()
@@ -43,14 +36,13 @@ class Edith_Mainframe:
         self.is_in_conversation = False
         self.conversation_timeout = 90
         self.last_interaction_time = datetime.datetime.now()
-        
 
-    def load_intents_and_model(self):
+    def load_intents_and_model(self) -> None:
         """Load intents and model from files."""
         with open(self.intents_file, "r") as json_data:
             self.intents = json.load(json_data)
 
-        data = torch.load(self.data_file)
+        data = torch.load(self.data_file, weights_only=True)
         self.all_words = data["all_words"]
         self.tags = data["tags"]
         input_size = data["input_size"]
@@ -62,46 +54,32 @@ class Edith_Mainframe:
         self.model.load_state_dict(model_state)
         self.model.eval()
 
-    def classify_intent(self, user_input):
+    def classify_intent(self, user_input: str) -> tuple:
         """Classify user input to determine intent."""
         sentence = tokenize(user_input.lower())
-        X = bag_of_words(sentence, self.all_words)
-        X = X.reshape(1, X.shape[0])
+        X = bag_of_words(sentence, self.all_words).reshape(1, -1)
         X = torch.from_numpy(X)
         output = self.model(X)
         _, predicted = torch.max(output, dim=1)
         tag = self.tags[predicted.item()]
-        probs = torch.softmax(output, dim=1)
-        prob = probs[0][predicted.item()]
-        return tag, prob.item()
+        prob = torch.softmax(output, dim=1)[0][predicted.item()].item()
+        return tag, prob
 
-    # def get_time(self):
-        # """Get current time in a specific format."""
-        # time_ = datetime.datetime.now().time().strftime("%I:%M %p")
-        # return time_.replace("PM", "P M").replace("AM", "A M")
-
-    # def get_date(self):
-        # """Get current date in a specific format."""
-        # return datetime.datetime.now().date().strftime("%B %d, %Y")
-
-    # def get_day(self):
-    #     """Get current day of the week."""
-    #     return datetime.datetime.now().strftime("%A")
-
-    def convert_decimal_to_verbal(self, sentence):
+    def convert_decimal_to_verbal(self, sentence: str) -> str:
         """Convert decimal numbers in a sentence to verbal form."""
-        def replace_decimal(match):
-            number = match.group(0)
-            integer_part, decimal_part = number.split('.')
-            return f"{integer_part} point {decimal_part}"
+        return re.sub(r'\b\d+\.\d+\b', self._replace_decimal, sentence)
 
-        return re.sub(r'\b\d+\.\d+\b', replace_decimal, sentence)
+    def _replace_decimal(self, match) -> str:
+        """Helper method to replace decimal match with verbal representation."""
+        number = match.group(0)
+        integer_part, decimal_part = number.split('.')
+        return f"{integer_part} point {decimal_part}"
 
     def get_updated_system_info(self):
         """Get updated system information."""
         return get_system_info()
 
-    def replace_symbols(self, expression):
+    def replace_symbols(self, expression: str) -> str:
         """Replace mathematical symbols in an expression with descriptive phrases."""
         symbol_map = {
             '/': ' divided by ',
@@ -115,7 +93,7 @@ class Edith_Mainframe:
             expression = expression.replace(symbol, description)
         return expression
 
-    def get_intent_response(self, intent, response, replacement=None):
+    def get_intent_response(self, intent, response: str, replacement: str = None) -> None:
         """Get the response for an intent, with optional replacement."""
         if replacement:
             response = response.replace("{string}", replacement)
@@ -123,153 +101,136 @@ class Edith_Mainframe:
         self.prev_response = response
         self.response = response
 
-    def stop_audio(self):
+    def stop_audio(self) -> None:
         """Stop current audio playback and remove the output file if exists."""
         if self.play_obj and self.play_obj.is_playing():
             self.play_obj.stop()
             if self.output_path and os.path.exists(self.output_path):
                 os.remove(self.output_path)
 
-    def stopping(self):
-        """Stop current audio playback and return the stop response."""
-        if self.play_obj and self.play_obj.is_playing():
-            self.stop_response = self.prev_response
-            self.play_obj.stop()
-            self.stopped = True
-            if self.output_path and os.path.exists(self.output_path):
-                os.remove(self.output_path)
-            return self.stop_response
-        self.stopped = False
-
-    def clean_input(self, user_input):
+    def clean_input(self, user_input: str) -> str:
         """Clean the user input by converting decimal points and removing commas."""
         cleaned_input = re.sub(r"(\d+)\.(\d+)", r"\1 point \2", user_input)
         return re.sub(r'(?<=\d),(?=\d)', '', cleaned_input)
 
-    def detect_wake_word(self, transcription):
+    def detect_wake_word(self, transcription: str) -> bool:
         """Detect if the wake word 'edith' is present in the transcription."""
         return "edith" in transcription.lower()
 
-    def clean_text(self, text):
+    def clean_text(self, text: str) -> str:
         """Clean text by correcting misspelled words."""
         d = enchant.Dict("en_US")
         words = text.split()
-        cleaned_words = []
-
-        for word in words:
-            if d.check(word):
-                cleaned_words.append(word)
-            else:
-                suggestions = d.suggest(word)
-                if suggestions:
-                    cleaned_words.append(suggestions[0])
+        cleaned_words = [word if d.check(word) else d.suggest(word)[0] for word in words if d.suggest(word)]
         return " ".join(cleaned_words)
 
-    def Operational_Matrix(self):
+    def operational_matrix(self) -> None:
         """Main loop for handling user input and generating responses."""
         while True:
             try:
-                # Simulate user input (replace with actual audio capture and transcription)
-                transcription = input("Enter transcript:").lower().strip()
-
-                transcription = self.clean_text(transcription).lower()
-
-                print("User input:", transcription)
-
+                transcription = self.get_user_input()
                 if self.detect_wake_word(transcription):
-                    print("Wake word Detected...")
-                    self.is_in_conversation = True
-                    self.last_interaction_time = datetime.datetime.now()
-
-                if (
-                    self.is_in_conversation and 
-                    (datetime.datetime.now() - self.last_interaction_time).total_seconds() < self.conversation_timeout
-                ):
-                    if transcription.lower() == "edith":
-                        self.stopping()
-                        transcription = 'edith'
-                    else:
-                        transcription = transcription.replace("edith", "")
-
+                    self.start_conversation()
+                
+                if self.is_in_conversation and self.is_within_timeout():
+                    transcription = self.prepare_transcription(transcription)
                     tag, prob = self.classify_intent(transcription)
-                    print(prob)
 
                     if prob > 0.9999:
-                        intent_found = False
-                        for intent in self.intents["intents"]:
-                            if tag == intent["tag"]:
-                                print("Intent matched:", tag)
-                                intent_found = True
-                                self.handle_intent(intent, transcription)
-                                break
-                        if not intent_found:
-                            self.response = None
+                        self.handle_intent_response(tag, transcription)
                     else:
-                        self.response = None
-                        print("Confidence below threshold. Using LLM.")
-
-                    if self.response:
-                        self.stop_audio()
-                        self.response = self.convert_decimal_to_verbal(self.response)
-                        self.response = re.sub(r'(?<=\d),(?=\d)', '', self.response)
-                        self.thread, self.play_obj, self.output_path = text_to_speech(self.response)
-                    else:
-                        self.stop_audio()
-                        response = handle_conversation(transcription)
-                        response = re.sub(r'(?<=\d),(?=\d)', '', response)
-                        response = self.convert_decimal_to_verbal(response)
-                        self.thread, self.play_obj, self.output_path = text_to_speech(response)
-
+                        self.handle_low_confidence(transcription)
                 else:
                     self.is_in_conversation = False
 
             except Exception as e:
                 logging.error("An error occurred: %s", e)
 
-    def handle_intent(self, intent, user_input=None):
+    def get_user_input(self) -> str:
+        """Get and clean user input."""
+        transcription = input("Enter transcript:").lower().strip()
+        return self.clean_text(transcription)
+
+    def start_conversation(self) -> None:
+        """Initialize conversation state."""
+        logging.info("Wake word detected...")
+        self.is_in_conversation = True
+        self.last_interaction_time = datetime.datetime.now()
+
+    def is_within_timeout(self) -> bool:
+        """Check if the conversation is still within timeout."""
+        return (datetime.datetime.now() - self.last_interaction_time).total_seconds() < self.conversation_timeout
+
+    def prepare_transcription(self, transcription: str) -> str:
+        """Prepare transcription by removing the wake word."""
+        return transcription.replace("edith", "") if transcription.lower() != "edith" else 'edith'
+
+    def handle_low_confidence(self, transcription: str) -> None:
+        """Handle the case when intent classification confidence is low."""
+        logging.info("Confidence below threshold. Using LLM.")
+        self.response = None
+        self.stop_audio()
+        response = handle_conversation(transcription)
+        response = self.convert_decimal_to_verbal(response)
+        self.thread, self.play_obj, self.output_path = text_to_speech(response)
+
+    def handle_intent_response(self, tag: str, user_input: str) -> None:
         """Handle the intent based on the tag and generate the appropriate response."""
         responses = {
-            # "repeat_tsk": self.handle_repeat_tsk,
-            "system_info_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]), self.get_updated_system_info()),
-            "storage_info_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]), generate_storage_status_response(get_system_info())),
-            "cpu_usage_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]), generate_cpu_usage_response(get_system_info())),
-            "memory_usage_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]), generate_memory_usage_response(get_system_info())),
-            "disk_space_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]), generate_disk_space_response(get_system_info())),
-            # "time_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]).replace("{time}", self.get_time())),
-            # "date_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]).replace("{date}", self.get_date())),
-            # "day_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]).replace("{day}", self.get_day())),
-            "ping_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]).replace("{string}", network_function(user_input))),
-            "speedtest_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]).replace("{string}", download_speed_test())),
-            "check_internet_tsk": lambda: self.get_intent_response(intent, random.choice(intent["responses"]).replace("{string}", check_internet())),
-            "system_status": lambda: self.get_intent_response(intent, random.choice(intent["responses"]).replace("{string}", get_live_system_status_response()))
+            "storage_info_tsk": lambda: self.get_intent_response(
+                self.intents["intents"][tag],
+                random.choice(self.intents["intents"][tag]["responses"]),
+                generate_storage_status_response()
+            ),
+            "cpu_usage_tsk": lambda: self.get_intent_response(
+                self.intents["intents"][tag],
+                random.choice(self.intents["intents"][tag]["responses"]),
+                generate_cpu_usage_response()
+            ),
+            "memory_usage_tsk": lambda: self.get_intent_response(
+                self.intents["intents"][tag],
+                random.choice(self.intents["intents"][tag]["responses"]),
+                generate_memory_usage_response()
+            ),
+            "disk_space_tsk": lambda: self.get_intent_response(
+                self.intents["intents"][tag],
+                random.choice(self.intents["intents"][tag]["responses"]),
+                generate_disk_space_response()
+            ),
+            "ping_tsk": lambda: self.get_intent_response(
+                self.intents["intents"][tag],
+                random.choice(self.intents["intents"][tag]["responses"]),
+                network_function(user_input)
+            ),
+            "speedtest_tsk": lambda: self.get_intent_response(
+                self.intents["intents"][tag],
+                random.choice(self.intents["intents"][tag]["responses"]),
+                download_speed_test()
+            ),
+            "check_internet_tsk": lambda: self.get_intent_response(
+                self.intents["intents"][tag],
+                random.choice(self.intents["intents"][tag]["responses"]),
+                check_internet()
+            ),
+            "system_status": lambda: self.get_intent_response(
+                self.intents["intents"][tag],
+                random.choice(self.intents["intents"][tag]["responses"]),
+                get_live_system_status_response()
+            ),
         }
-        if intent["tag"] in responses:
-            responses[intent["tag"]]()
+        
+        if tag in responses:
+            responses[tag]()
         else:
-            self.get_intent_response(intent, random.choice(intent["responses"]))
+            self.get_intent_response(self.intents["intents"][tag], random.choice(self.intents["intents"][tag]["responses"]))
 
-    # def handle_repeat_tsk(self):
-    #     """Handle 'repeat_tsk' intent."""
-    #     if self.stopped:
-    #         if self.prev_tag == "repeat_tsk":
-    #             self.get_intent_response(self.prev_response)
-    #         else:
-    #             self.get_intent_response(f"{random.choice(self.intents['repeat_tsk']['responses'])} {self.stop_response}")
-    #         self.stop_response = ""
-    #         self.stopped = False
-    #     elif self.prev_tag == "repeat_tsk":
-    #         self.get_intent_response(self.prev_response)
-    #     else:
-    #         self.get_intent_response(f"{random.choice(self.intents['repeat_tsk']['responses'])} {self.prev_response}")
 
 if __name__ == "__main__":
-    intents_model = Edith_Mainframe(
-        "scripts/edith/data/intents.json",
-        "scripts/edith/data/data.pth"
-    )
+    logging.basicConfig(level=logging.INFO)
+    intents_model = EdithMainframe("scripts/edith/data/intents.json", "scripts/edith/data/data.pth")
 
     while True:
         try:
-            intents_model.Operational_Matrix()
+            intents_model.operational_matrix()
         except Exception as e:
-            logging.error("An error occurred in main loop: %s", e)
+            logging.error("An error occurred in the main loop: %s", e)
