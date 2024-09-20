@@ -174,7 +174,7 @@ class EdithMainframe:
         response = handle_conversation(transcription)
         response = self.convert_decimal_to_verbal(response)
         self.thread, self.play_obj, self.output_path = text_to_speech(response)
-
+cc
     def handle_intent_response(self, tag: str, user_input: str) -> None:
         """Handle the intent based on the tag and generate the appropriate response."""
         responses = {
