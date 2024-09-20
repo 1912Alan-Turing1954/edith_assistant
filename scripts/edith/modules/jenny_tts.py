@@ -3,11 +3,7 @@ import threading
 import sys
 import sys
 
-# sys.path.append(r"/home/hailwic/Repos/Edith/")
-
-
-# from TTS.utils.manage import ModelManager
-# from TTS.utils.synthesizer import Synthesizer
+# sys.path.append(r"/home/hailwic/Repos/edith-mk1/scripts")
 
 from TTS.utils.manage import ModelManager
 from TTS.utils.synthesizer import Synthesizer
@@ -17,7 +13,7 @@ from textblob import TextBlob
 
 
 # Get the absolute path of the 'TTS' directory
-model_manager = ModelManager("/home/hailwic/Repos/Edith/scripts/edith/TTS/.models.json")
+model_manager = ModelManager("/home/hailwic/Repos/edith-mk1/scripts/edith/TTS/.models.json")
 
 # Global variables for model paths
 MODEL_NAME = "tts_models/en/jenny/jenny"
@@ -25,6 +21,8 @@ SAVE_PATH = "scripts/data/models/jenny_model/"
 CHECKPOINT_PATH = os.path.join(SAVE_PATH, "model.pt")
 CONFIG_PATH = os.path.join(SAVE_PATH, "config.json")
 
+print(CHECKPOINT_PATH)
+print(CONFIG_PATH)
 # Initialize or load the TTS model on script start
 if os.path.exists(CHECKPOINT_PATH) and os.path.exists(CONFIG_PATH):
     # If the model files exist locally, load them

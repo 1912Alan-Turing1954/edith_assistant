@@ -6,9 +6,10 @@ import random
 import re
 import torch
 import json
+from tqdm import tqdm
+import time
 import enchant
 import warnings
-import urwid
 from brain.model import NeuralNet
 from brain.nltk_utils import bag_of_words, tokenize
 from modules.jenny_tts import text_to_speech
@@ -124,12 +125,81 @@ class EdithMainframe:
         words = text.split()
         cleaned_words = [word if d.check(word) else d.suggest(word)[0] for word in words if d.suggest(word)]
         return " ".join(cleaned_words)
+    
+    
+
+    def settings_menu(self) -> None:
+        """Display a sci-fi inspired BIOS settings menu with effects."""
+        while True:
+            print("\n" + "=" * 70)
+            print("           ██████████ BIOS Settings Interface ██████████")
+            print("=" * 70)
+            print(" [1] Change Conversation Timeout (Current: {}s)".format(self.conversation_timeout))
+            print(" [2] Change Intents File Path (Current: {})".format(self.intents_file))
+            print(" [3] Change Data File Path (Current: {})".format(self.data_file))
+            print(" [4] Change Logging Level (Current: {})".format(logging.getLevelName(logging.root.level)))
+            print(" [5] Exit Settings")
+            print("=" * 70)
+
+            choice = input(" Select an option [1-5]: ")
+
+            if choice == "1":
+                new_timeout = input(" Enter new conversation timeout in seconds: ")
+                try:
+                    self.conversation_timeout = int(new_timeout)
+                    print(" ➤ Updating conversation timeout...", end='')
+                    for _ in tqdm(range(10), desc='Processing', bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt}'):
+                        time.sleep(0.1)  # Simulate processing time
+                    print(" Updated to {} seconds.".format(self.conversation_timeout))
+                except ValueError:
+                    print(" ❌ Invalid input. Please enter a valid integer.")
+            elif choice == "2":
+                new_intents_file = input(" Enter new intents file path: ")
+                self.intents_file = new_intents_file
+                print(" ➤ Updating intents file path...", end='')
+                for _ in tqdm(range(10), desc='Processing', bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt}'):
+                    time.sleep(0.1)  # Simulate processing time
+                print(" Updated.")
+            elif choice == "3":
+                new_data_file = input(" Enter new data file path: ")
+                self.data_file = new_data_file
+                print(" ➤ Updating data file path...", end='')
+                for _ in tqdm(range(10), desc='Processing', bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt}'):
+                    time.sleep(0.1)  # Simulate processing time
+                print(" Updated.")
+            elif choice == "4":
+                new_logging_level = input(" Enter new logging level (DEBUG, INFO, WARNING, ERROR): ").upper()
+                levels = {
+                    'DEBUG': logging.DEBUG,
+                    'INFO': logging.INFO,
+                    'WARNING': logging.WARNING,
+                    'ERROR': logging.ERROR
+                }
+                if new_logging_level in levels:
+                    logging.getLogger().setLevel(levels[new_logging_level])
+                    print(" ➤ Updating logging level...", end='')
+                    for _ in tqdm(range(10), desc='Processing', bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt}'):
+                        time.sleep(0.1)  # Simulate processing time
+                    print(" Updated to {}.".format(new_logging_level))
+                else:
+                    print(" ❌ Invalid logging level.")
+            elif choice == "5":
+                print(" Exiting settings menu.")
+                break
+            else:
+                print(" ❌ Invalid choice. Please select a valid option.")
+
 
     def operational_matrix(self) -> None:
         """Main loop for handling user input and generating responses."""
         while True:
             try:
                 transcription = self.get_user_input()
+
+                if transcription == "access bios":
+                    self.settings_menu()
+                    continue
+
                 if self.detect_wake_word(transcription):
                     self.start_conversation()
                 
