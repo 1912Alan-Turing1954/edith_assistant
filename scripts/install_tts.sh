@@ -1,4 +1,4 @@
-echo "Install Coqui - TTS"
+echo "Installing Coqui - TTS"
 git clone https://github.com/coqui-ai/TTS/
 cd TTS
 make system-deps  # only on Linux systems.
