@@ -3,7 +3,7 @@ import threading
 import sys
 import sys
 
-# sys.path.append(r"/home/hailwic/Repos/edith-mk1/scripts")
+# sys.path.append(r"/home/hailwic/Repos/edith/scripts")
 
 from TTS.utils.manage import ModelManager
 from TTS.utils.synthesizer import Synthesizer
@@ -13,34 +13,36 @@ from textblob import TextBlob
 
 
 # Get the absolute path of the 'TTS' directory
-model_manager = ModelManager("/home/hailwic/Repos/edith-mk1/scripts/edith/TTS/.models.json")
+model_manager = ModelManager('scripts/TTS/TTS/.models.json')
 
-# Global variables for model paths
-MODEL_NAME = "tts_models/en/jenny/jenny"
-SAVE_PATH = "scripts/data/models/jenny_model/"
-CHECKPOINT_PATH = os.path.join(SAVE_PATH, "model.pt")
-CONFIG_PATH = os.path.join(SAVE_PATH, "config.json")
+model_path, config_path, model_item = model_manager.download_model("tts_models/en/jenny/jenny")
 
-print(CHECKPOINT_PATH)
-print(CONFIG_PATH)
-# Initialize or load the TTS model on script start
-if os.path.exists(CHECKPOINT_PATH) and os.path.exists(CONFIG_PATH):
-    # If the model files exist locally, load them
-    print("Loading jenny model: success")
-else:
-    # If the model files do not exist, download the model
-    model_path, config_path, model_item = model_manager.download_model(MODEL_NAME)
-    print("Downloading model: success")
+# # Global variables for model paths
+# MODEL_NAME = "tts_models/en/jenny/jenny"
+# SAVE_PATH = "scripts/data/models/jenny_model/"
+# CHECKPOINT_PATH = os.path.join(SAVE_PATH, "model.pt")
+# CONFIG_PATH = os.path.join(SAVE_PATH, "config.json")
 
-    # Save the downloaded model to the local directory
-    os.makedirs(SAVE_PATH, exist_ok=True)
-    os.rename(model_path, CHECKPOINT_PATH)
-    os.rename(config_path, CONFIG_PATH)
+# print(CHECKPOINT_PATH)
+# print(CONFIG_PATH)
+# # Initialize or load the TTS model on script start
+# if os.path.exists(CHECKPOINT_PATH) and os.path.exists(CONFIG_PATH):
+#     # If the model files exist locally, load them
+#     print("Loading jenny model: success")
+# else:
+#     # If the model files do not exist, download the model
+#     model_path, config_path, model_item = model_manager.download_model(MODEL_NAME)
+#     print("Downloading model: success")
+
+#     # Save the downloaded model to the local directory
+#     os.makedirs(SAVE_PATH, exist_ok=True)
+#     os.rename(model_path, CHECKPOINT_PATH)
+#     os.rename(config_path, CONFIG_PATH)
 
 # Initialize the TTS synthesizer
 syn = Synthesizer(
-    tts_checkpoint=CHECKPOINT_PATH,
-    tts_config_path=CONFIG_PATH,
+    tts_checkpoint=model_path,
+    tts_config_path=config_path,
     # use_cuda=True,  # Adjust as needed
     use_cuda=False,  # Adjust as needed
 
@@ -121,4 +123,6 @@ def text_to_speech(text, output_path="audio.wav"):
     return thread, play_obj, output_path
     # # Delete the audio file after use (optional)
     # os.remove(output_path)
+
+
 
