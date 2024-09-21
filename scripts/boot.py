@@ -1,3 +1,5 @@
+import shutil
+import importlib.util
 import time
 import random
 import subprocess
@@ -32,47 +34,47 @@ modules = {
     "🔊 Text-to-Speech Model": {
         "loaded": False,
         "progress": 0,
-        "file_path": "scripts/data/models/jenny_model/model.pt",
+        "file_path": "data/models/jenny_model/.model.pt",
     },
     "🗣 Speech Recognition": {
         "loaded": False,
         "progress": 0,
-        "file_path": "scripts/edith/modules/speech_to_text.py",
+        "file_path": "edith/modules/speech_to_text.py",
     },
     "🎤 Audio Processing": {
         "loaded": False,
         "progress": 0,
-        "file_path": "scripts/edith/cerebral_matrix.py",
+        "file_path": "edith/cerebral_matrix.py",
     },
     "🔍 Natural Language Processing": {
         "loaded": False,
         "progress": 0,
-        "file_path": "scripts/edith/data/data.pth",
+        "file_path": "edith/data/data.pth",
     },
     "🧠 Large Language Model": {
         "loaded": False,
         "progress": 0,
-        "file_path": "scripts/edith/large_language_model/llm_main.py",
+        "file_path": "edith/large_language_model/llm_main.py",
     },
     "🌐 Network Tools": {
         "loaded": False,
         "progress": 0,
-        "file_path": "scripts/edith/modules/network_tools.py",
+        "file_path": "edith/modules/network_tools.py",
     },
     "⚙️ Hardware Diagnostics": {
         "loaded": False,
         "progress": 0,
-        "file_path": "scripts/edith/modules/system_info.py",
+        "file_path": "edith/modules/system_info.py",
     },
     "🔒 Security Modules": {
         "loaded": False,
         "progress": 0,
-        "file_path": "scripts/edith/modules/barn_door_protocol.py",
+        "file_path": "edith/modules/barn_door_protocol.py",
     },
     "🤖 Virtual Assistant": {
         "loaded": False,
         "progress": 0,
-        "file_path": "scripts/edith/cerebral_matrix.py",
+        "file_path": "edith/cerebral_matrix.py",
     },
 }
 
@@ -80,54 +82,86 @@ modules = {
 for module in modules.values():
     module["size"] = get_size(module["file_path"])
 
+
+def check_disk_space(min_required_space_mb):
+    """Check if there is enough disk space available."""
+    total, used, free = shutil.disk_usage("/")
+    free_mb = free // (1024 * 1024)  # Convert bytes to MB
+    if free_mb < min_required_space_mb:
+        return False, free_mb
+    return True, free_mb
+
 def load_modules():
     """Loads each module with enhanced loading animations."""
     logging.info("Initializing Quantum Operating System... Please wait...")
     time.sleep(1.5)
 
-    with tqdm(total=len(modules), desc="Loading modules", unit="module", ascii=True) as pbar:
-        for module_name, module_info in modules.items():
-            try:
-                if not os.path.isfile(module_info["file_path"]):
-                    print_red(f"ERROR: {module_name} file '{module_info['file_path']}' not found.")
-                    continue
+    min_required_space_mb = 100  # Set a minimum required disk space in MB
 
-                time.sleep(random.uniform(0.5, 1.0))
-                logging.info(f"LOADING: {module_name} ({module_info['size']})...")
+    # Check for disk space
+    space_available, free_space = check_disk_space(min_required_space_mb)
+    if not space_available:
+        print_red(f"ERROR: Not enough disk space available. Free space: {free_space} MB")
+        return
 
-                # Simulate the loading effect
-                for _ in range(5):
-                    time.sleep(0.1)
-                    pbar.set_postfix({"Current Module": module_name, "Status": "Initializing..."})
-                    pbar.refresh()
-                    time.sleep(0.1)
+    for module_name, module_info in modules.items():
+        try:
+            file_path = module_info["file_path"]
 
-                # Simulated error handling
-                if random.random() < 0.2:
-                    print_red(f"ERROR: {module_name} failed to load.")
-                    time.sleep(random.uniform(0.3, 0.6))
-                    logging.info(f"Attempting to rectify {module_name}...")
-                    time.sleep(random.uniform(0.3, 0.6))
-                    logging.info(f"STATUS: {module_name} successfully rectified.")
+            # Create a progress bar for this module
+            print(f" ➤ Loading {module_name}...", end='')
+            for _ in tqdm(range(10), desc=f"Loading {module_name}", bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt}'):
+                time.sleep(0.1)  # Simulate processing time
 
-                module_info["loaded"] = True
-                module_info["progress"] = 100
-                pbar.update(1)
-                logging.info(f"INIT: {module_name} loaded successfully.")
+            # Check if the file exists
+            if not os.path.isfile(file_path):
+                print_red(f"ERROR: {module_name} file '{file_path}' not found.")
+                continue
 
-            except Exception as e:
-                print_red(f"ERROR: An error occurred while loading '{module_name}': {e}")
-                continue  # Continue with the next module
+            # Increment progress after existence check
+            time.sleep(0.05)  # Quick sleep for feedback
+            logging.info(f"Checked existence for {module_name}.")
+
+            # Check if the file has read permissions
+            if not os.access(file_path, os.R_OK):
+                print_red(f"ERROR: {module_name} file '{file_path}' is not readable.")
+                continue
+
+            time.sleep(0.1)  # Slightly longer sleep for permission check
+            logging.info(f"Checked permissions for {module_name}.")
+
+            # Check if the file is empty
+            if os.path.getsize(file_path) == 0:
+                print_red(f"ERROR: {module_name} file '{file_path}' is empty.")
+                continue
+
+            time.sleep(0.15)  # Longer sleep for size check
+            logging.info(f"Checked size for {module_name}.")
+
+            # Log loading message
+            logging.info(f"LOADING: {module_name} ({module_info['size']})...")
+            time.sleep(random.uniform(0.15, 0.20))  # Simulate loading work
+
+            # Mark module as loaded
+            module_info["loaded"] = True
+            module_info["progress"] = 100
+            logging.info(f"INIT: {module_name} loaded successfully.")
+
+        except Exception as e:
+            print_red(f"ERROR: An error occurred while loading '{module_name}': {e}")
+            continue  # Continue with the next module
 
     logging.info("INIT: All systems are operational. AI is ready for engagement.")
+
+
 
 def run_script():
     """Runs the main script after all components are initialized."""
     max_retries = 3
     for attempt in range(max_retries):
-        logging.info("Booting up the virtual assistant...")
+        logging.info("Booting up virtual assistant...")
         try:
-            script_path = "scripts/edith/cerebral_matrix.py"
+            script_path = "edith/cerebral_matrix.py"
             subprocess.run(["python", script_path], check=True)
             logging.info("Script execution completed successfully.")
             break  # Exit loop if successful

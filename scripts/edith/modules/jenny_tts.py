@@ -13,7 +13,7 @@ from textblob import TextBlob
 
 
 # Get the absolute path of the 'TTS' directory
-model_manager = ModelManager('scripts/TTS/TTS/.models.json')
+model_manager = ModelManager('TTS/TTS/.models.json')
 
 model_path, config_path, model_item = model_manager.download_model("tts_models/en/jenny/jenny")
 

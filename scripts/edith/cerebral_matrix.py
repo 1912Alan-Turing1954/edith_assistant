@@ -38,6 +38,7 @@ class EdithMainframe:
         self.is_in_conversation = False
         self.conversation_timeout = 90
         self.last_interaction_time = datetime.datetime.now()
+        self.load_settings()
 
     def load_intents_and_model(self) -> None:
         """Load intents and model from files."""
@@ -124,9 +125,42 @@ class EdithMainframe:
         d = enchant.Dict("en_US")
         words = text.split()
         cleaned_words = [word if d.check(word) else d.suggest(word)[0] for word in words if d.suggest(word)]
-        return " ".join(cleaned_words)
-    
-    
+        return " ".join(cleaned_words)    
+
+    def load_settings(self) -> None:
+        """Loads settings from a JSON file if it exists."""
+        if os.path.exists('settings.json'):
+            try:
+                with open('settings.json', 'r') as f:
+                    settings = json.load(f)
+                    
+                self.conversation_timeout = settings.get('conversation_timeout', self.conversation_timeout)
+                self.intents_file = settings.get('intents_file', self.intents_file)
+                self.data_file = settings.get('data_file', self.data_file)
+
+                # Set logging level
+                logging_level = settings.get('logging_level', logging.getLevelName(logging.root.level))
+                logging.getLogger().setLevel(logging.getLevelName(logging_level))
+
+                print(" ➤ Settings loaded successfully from 'settings.json'.")
+            except Exception as e:
+                print(f" ❌ Failed to load settings: {e}")
+
+    def save_settings(self) -> None:
+        """Saves the current settings to a JSON file."""
+        settings = {
+            'conversation_timeout': self.conversation_timeout,
+            'intents_file': self.intents_file,
+            'data_file': self.data_file,
+            'logging_level': logging.getLevelName(logging.root.level),
+        }
+        try:
+            with open('settings.json', 'w') as f:
+                json.dump(settings, f, indent=4)
+            print(" ➤ Settings saved successfully to 'settings.json'.")
+        except Exception as e:
+            print(f" ❌ Failed to save settings: {e}")
+
 
     def settings_menu(self) -> None:
         """Display a sci-fi inspired BIOS settings menu with effects."""
@@ -138,7 +172,8 @@ class EdithMainframe:
             print(" [2] Change Intents File Path (Current: {})".format(self.intents_file))
             print(" [3] Change Data File Path (Current: {})".format(self.data_file))
             print(" [4] Change Logging Level (Current: {})".format(logging.getLevelName(logging.root.level)))
-            print(" [5] Exit Settings")
+            print(" [5] Save current settings to file")
+            print(" [6] Exit Settings")
             print("=" * 70)
 
             choice = input(" Select an option [1-5]: ")
@@ -184,6 +219,9 @@ class EdithMainframe:
                 else:
                     print(" ❌ Invalid logging level.")
             elif choice == "5":
+                print(" ➤ Saving current settings...", end='')
+                self.save_settings()  # Call the save method
+            elif choice == "6":
                 print(" Exiting settings menu.")
                 break
             else:
@@ -298,7 +336,7 @@ class EdithMainframe:
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    intents_model = EdithMainframe("scripts/edith/data/intents.json", "scripts/edith/data/data.pth")
+    intents_model = EdithMainframe("edith/data/intents.json", "edith/data/data.pth")
 # 
     while True:
         try:

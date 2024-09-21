@@ -1,0 +1,6 @@
+{
+    "conversation_timeout": 30,
+    "intents_file": "edith/data/intents.json",
+    "data_file": "edith/data/data.pth",
+    "logging_level": "INFO"
+}
