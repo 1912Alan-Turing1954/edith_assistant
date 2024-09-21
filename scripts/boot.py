@@ -69,7 +69,7 @@ modules = {
     "🔒 Security Modules": {
         "loaded": False,
         "progress": 0,
-        "file_path": "edith/modules/barn_door_protocol.py",
+        "file_path": "edith/modules/barn_door_protocol.sh",
     },
     "🤖 Virtual Assistant": {
         "loaded": False,

@@ -1,6 +1,51 @@
 {
   "intents": [
-    
+    {
+      "tag": "barn_door_protocol",
+      "patterns": [
+        "Activate the barn door protocol, please.",
+        "Could you initiate the barn door protocol?",
+        "I need you to turn on the barn door protocol.",
+        "Edith, can you start the barn door protocol?",
+        "Please engage the barn door protocol.",
+        "Can we enable the barn door protocol now?",
+        "I would like to activate the barn door protocol.",
+        "Can you set the barn door protocol in motion?",
+        "Let's activate the barn door protocol.",
+        "Edith, initiate barn door protocol, please.",
+        "Can you please trigger the barn door protocol?",
+        "Can you enable the barn door protocol for me?"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
+      "tag": "override_barn_door_protocol",
+      "patterns": [
+        "Override barn door protocol with password ...",
+        "Override barn door protocol using keyword ...",
+        "Disable barn door protocol with password ...",
+        "Disable barn door protocol using keyword ...",
+        "Turn off barn door protocol, password ...",
+        "Turn off barn door protocol, keyword ...",
+        "Stop barn door protocol, password ...",
+        "Stop barn door protocol, keyword ...",
+        "Cancel barn door protocol with password ...",
+        "Cancel barn door protocol using keyword ...",
+        "Initiate override of barn door protocol, password ...",
+        "Initiate override of barn door protocol, keyword ...",
+        "Execute override for barn door protocol with password ...",
+        "Execute override for barn door protocol using keyword ...",
+        "Terminate barn door protocol with password ...",
+        "Terminate barn door protocol using keyword ...",
+        "Halt barn door protocol with password ...",
+        "Halt barn door protocol using keyword ..."
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
     {
       "tag": "speedtest_tsk",
       "patterns": [

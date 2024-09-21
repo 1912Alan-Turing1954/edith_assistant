@@ -15,6 +15,7 @@ from brain.nltk_utils import bag_of_words, tokenize
 from modules.jenny_tts import text_to_speech
 from modules.system_info import *
 from modules.network_tools import *
+from modules.barn_door_protocol import *
 from large_language_model.llm_main import handle_conversation
 
 # Suppress specific warnings
@@ -126,6 +127,26 @@ class EdithMainframe:
         words = text.split()
         cleaned_words = [word if d.check(word) else d.suggest(word)[0] for word in words if d.suggest(word)]
         return " ".join(cleaned_words)    
+    
+    def disable_bdp(self, user_input):
+        if 'password' in user_input:
+            word =self.get_text_after_keyword(user_input, 'password')
+        
+        if 'keyword' in user_input:
+            word = self.get_text_after_keyword(user_input, 'keyword')
+        print(word)
+        override(True, word)
+
+    def get_text_after_keyword(self, input_string, keyword):
+                    # Split the string into parts using the keyword
+                    parts = input_string.split(keyword, 1)
+                    
+                    # Check if the keyword was found
+                    if len(parts) > 1:
+                        # Return everything after the keyword, stripping leading whitespace
+                        return parts[1].strip()
+                    else:
+                        return None
 
     def load_settings(self) -> None:
         """Loads settings from a JSON file if it exists."""
@@ -156,11 +177,13 @@ class EdithMainframe:
         }
         try:
             with open('settings.json', 'w') as f:
+                # Using tqdm to show progress
+                for _ in tqdm(range(100), desc='Saving settings', bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt}'):
+                    time.sleep(0.01)  # Simulate some processing time
                 json.dump(settings, f, indent=4)
             print(" ➤ Settings saved successfully to 'settings.json'.")
         except Exception as e:
             print(f" ❌ Failed to save settings: {e}")
-
 
     def settings_menu(self) -> None:
         """Display a sci-fi inspired BIOS settings menu with effects."""
@@ -234,7 +257,7 @@ class EdithMainframe:
             try:
                 transcription = self.get_user_input()
 
-                if transcription == "access bios":
+                if "access bios" in self.clean_text(transcription) or "access bios" == self.clean_text(transcription):
                     self.settings_menu()
                     continue
 
@@ -244,8 +267,13 @@ class EdithMainframe:
                 if self.is_in_conversation and self.is_within_timeout():
                     transcription = self.prepare_transcription(transcription)
                     tag, prob = self.classify_intent(transcription)
-
-                    if prob > 0.9999:
+                    if tag == "barn_door_protocol":
+                        text_to_speech("Enabling barn door protocol.")
+                        enable_protocol()
+                    elif tag == "override_barn_door_protocol":
+                        text_to_speech("Disabling barn door protocol.")
+                        self.disable_bdp(transcription)
+                    elif prob > 0.9999:
                         self.handle_intent_response(tag, transcription)
                     else:
                         self.handle_low_confidence(transcription)
@@ -326,6 +354,7 @@ class EdithMainframe:
                 random.choice(self.intents["intents"][tag]["responses"]),
                 get_live_system_status_response()
             ),
+            
         }
         
         if tag in responses:

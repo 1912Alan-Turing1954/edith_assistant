@@ -34,7 +34,7 @@ prompt = ChatPromptTemplate.from_template(template)
 chain = prompt | model
 
 
-json_file = "scripts/data/dialogue/dialogue_history.json"
+json_file = "data/dialogue/dialogue_history.json"
 
 def handle_conversation(user_input):
     
