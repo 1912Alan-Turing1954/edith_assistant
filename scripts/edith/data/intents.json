@@ -1,46 +1,50 @@
 {
   "intents": [
     {
-      "tag": "barn_door_protocol",
+      "tag": "ghostnet_protocol",
       "patterns": [
-        "Activate the barn door protocol, please.",
-        "Could you initiate the barn door protocol?",
-        "I need you to turn on the barn door protocol.",
-        "Edith, can you start the barn door protocol?",
-        "Please engage the barn door protocol.",
-        "Can we enable the barn door protocol now?",
-        "I would like to activate the barn door protocol.",
-        "Can you set the barn door protocol in motion?",
-        "Let's activate the barn door protocol.",
-        "Edith, initiate barn door protocol, please.",
-        "Can you please trigger the barn door protocol?",
-        "Can you enable the barn door protocol for me?"
+        "Activate the Ghost net, please.",
+        "Could you initiate the Ghost net?",
+        "I need you to turn on the Ghost net.",
+        "Edith, can you start the Ghost net?",
+        "Please engage the Ghost net.",
+        "Can we enable the Ghost net now?",
+        "I would like to activate the Ghost net.",
+        "Can you set the Ghost net in motion?",
+        "Let's activate the Ghost net.",
+        "Edith, initiate Ghost net, please.",
+        "Can you please trigger the Ghost net?",
+        "Can you enable the Ghost net for me?"
       ],
       "responses": [
         "{string}"
       ]
     },
     {
-      "tag": "override_barn_door_protocol",
+      "tag": "override_ghostnet_protocol",
       "patterns": [
-        "Override barn door protocol with password ...",
-        "Override barn door protocol using keyword ...",
-        "Disable barn door protocol with password ...",
-        "Disable barn door protocol using keyword ...",
-        "Turn off barn door protocol, password ...",
-        "Turn off barn door protocol, keyword ...",
-        "Stop barn door protocol, password ...",
-        "Stop barn door protocol, keyword ...",
-        "Cancel barn door protocol with password ...",
-        "Cancel barn door protocol using keyword ...",
-        "Initiate override of barn door protocol, password ...",
-        "Initiate override of barn door protocol, keyword ...",
-        "Execute override for barn door protocol with password ...",
-        "Execute override for barn door protocol using keyword ...",
-        "Terminate barn door protocol with password ...",
-        "Terminate barn door protocol using keyword ...",
-        "Halt barn door protocol with password ...",
-        "Halt barn door protocol using keyword ..."
+        "Override Ghost net with password ...",
+        "Override Ghost net using keyword ...",
+        "Disable Ghost net with password ...",
+        "Disable Ghost net using keyword ...",
+        "Override Ghost net password ...",
+        "Override Ghost net keyword ...",
+        "Disable Ghost net password ...",
+        "Disable Ghost net keyword ...",
+        "Turn off Ghost net, password ...",
+        "Turn off Ghost net, keyword ...",
+        "Stop Ghost net, password ...",
+        "Stop Ghost net, keyword ...",
+        "Cancel Ghost net with password ...",
+        "Cancel Ghost net using keyword ...",
+        "Initiate override of Ghost net, password ...",
+        "Initiate override of Ghost net, keyword ...",
+        "Execute override for Ghost net with password ...",
+        "Execute override for Ghost net using keyword ...",
+        "Terminate ghost net protocol with password ...",
+        "Terminate Ghost net using keyword ...",
+        "Halt Ghost net with password ...",
+        "Halt Ghost net using keyword ..."
       ],
       "responses": [
         "{string}"

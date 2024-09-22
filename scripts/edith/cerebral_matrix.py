@@ -15,7 +15,7 @@ from brain.nltk_utils import bag_of_words, tokenize
 from modules.jenny_tts import text_to_speech
 from modules.system_info import *
 from modules.network_tools import *
-from modules.barn_door_protocol import *
+from modules.ghostnet_protocol import *
 from large_language_model.llm_main import handle_conversation
 
 # Suppress specific warnings
@@ -260,18 +260,18 @@ class EdithMainframe:
                 if "access bios" in self.clean_text(transcription) or "access bios" == self.clean_text(transcription):
                     self.settings_menu()
                     continue
-
+                
                 if self.detect_wake_word(transcription):
                     self.start_conversation()
                 
                 if self.is_in_conversation and self.is_within_timeout():
                     transcription = self.prepare_transcription(transcription)
                     tag, prob = self.classify_intent(transcription)
-                    if tag == "barn_door_protocol":
-                        text_to_speech("Enabling barn door protocol.")
+                    if tag == "ghostnet_protocol":
+                        text_to_speech("Enabling Ghost net protocol.")
                         enable_protocol()
-                    elif tag == "override_barn_door_protocol":
-                        text_to_speech("Disabling barn door protocol.")
+                    elif tag == "override_ghostnet_protocol":
+                        text_to_speech("Disabling Ghost net protocol.")
                         self.disable_bdp(transcription)
                     elif prob > 0.9999:
                         self.handle_intent_response(tag, transcription)

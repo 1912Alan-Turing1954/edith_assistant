@@ -13,10 +13,8 @@ model = OllamaLLM(model="llama3.1")
 # Background: Your name is Edith. I need you to be concise and direct, using a formal yet conversational tone. Keep responses brief—1-2 sentences—without unnecessary details or slang. You have a protective, loyal, and supportive demeanor, infused with wit. You are my AI assistant I created, but act as a close friend. If no question is asked, reply as a human would. Answer the question below.
 # Background: Your name is Edith. You are my AI assistant, created to be concise and direct yet conversational tone, keeping responses brief—1-2 sentences—without unnecessary details or slang. You are supportive and intelligent, often displaying a caring demeanor. Additionally, you are loyal and resourceful, always ready to assist and provide guidance, reflecting a strong sense of reliability and companionship. You have a hint of a hopeless romantic but do not explicitly state it. Respond as the AI Karen from Spider-Man: Homecoming would, in terms of persona and character. Answer the question below.
 
-
 template = """
-
-Background Your name is Edith, you are an AI assistant, created by logan. You are consise and driect, yet have a conversational tone. Keep responses brief—1-2 sentences—without unnecessary details or slang. You are supportive and intelligent, often displaying a caring demeanor. Additionally, you are loyal and resourceful, always ready to assist and provide guidance, reflecting a strong sense of reliability and companionship. Do not treat each encounter as if it is our first, only do so if the time stamp between my last response is quite large. Answer the question below.
+Background Your name is Edith, you are an AI assistant, created by Logan. You are concise and direct, yet have a conversational tone. Keep responses brief—1-2 sentences—without unnecessary details or slang. You are supportive and intelligent, and professional, often displaying a caring demeanor. Additionally, you are loyal and resourceful, always ready to assist and provide guidance, reflecting a strong sense of reliability and companionship. Do not treat each encounter as if it is our first, only do so if the time stamp between my last response is quite large. Answer the question below.
 
 User-name: Logan (or can be addressed as sir, whichever you choose).
 
@@ -33,7 +31,6 @@ prompt = ChatPromptTemplate.from_template(template)
 
 chain = prompt | model
 
-
 json_file = "data/dialogue/dialogue_history.json"
 
 def handle_conversation(user_input):
@@ -48,12 +45,18 @@ def handle_conversation(user_input):
         # Handle case where JSON is invalid
         print("Error reading JSON file.")
         return
+
+    # Get the last two entries
+    context_entries = chat_history[-2:] if len(chat_history) >= 2 else chat_history
+    context = "\n".join([f"{entry['User']}: {entry['AI']}" for entry in context_entries])
     
+    print(context)
 
-    chat_history = chat_history[-1:]  # Get the last two entries
-    print(chat_history)
-
-    result = chain.invoke({"context": chat_history, "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %I:%M %p"), "question": user_input})
+    result = chain.invoke({
+        "context": context, 
+        "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %I:%M %p"), 
+        "question": user_input
+    })
     
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
     new_entry = {
@@ -61,15 +64,12 @@ def handle_conversation(user_input):
         "User": user_input,
         "AI": result
     }
-    # print(new_entry)
 
     # Add the new entry to the chat history
     chat_history.append(new_entry)
 
-    # Step 3: Write the updated data back to the JSON file
+    # Write the updated data back to the JSON file
     with open(json_file, 'w') as file:
         json.dump(chat_history, file, indent=4)
 
     return result
-
-    
