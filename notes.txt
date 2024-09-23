@@ -203,3 +203,55 @@
     #         self.get_intent_response(self.prev_response)
     #     else:
     #         self.get_intent_response(f"{random.choice(self.intents['repeat_tsk']['responses'])} {self.prev_response}")
+
+
+{
+      "tag": "ghostnet_protocol",
+      "patterns": [
+        "Activate the Ghost net, please.",
+        "Could you initiate the Ghost net?",
+        "I need you to turn on the Ghost net.",
+        "Edith, can you start the Ghost net?",
+        "Please engage the Ghost net.",
+        "Can we enable the Ghost net now?",
+        "I would like to activate the Ghost net.",
+        "Can you set the Ghost net in motion?",
+        "Let's activate the Ghost net.",
+        "Edith, initiate Ghost net, please.",
+        "Can you please trigger the Ghost net?",
+        "Can you enable the Ghost net for me?"
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
+    {
+      "tag": "override_ghostnet_protocol",
+      "patterns": [
+        "Override Ghost net with password ...",
+        "Override Ghost net using keyword ...",
+        "Disable Ghost net with password ...",
+        "Disable Ghost net using keyword ...",
+        "Override Ghost net password ...",
+        "Override Ghost net keyword ...",
+        "Disable Ghost net password ...",
+        "Disable Ghost net keyword ...",
+        "Turn off Ghost net, password ...",
+        "Turn off Ghost net, keyword ...",
+        "Stop Ghost net, password ...",
+        "Stop Ghost net, keyword ...",
+        "Cancel Ghost net with password ...",
+        "Cancel Ghost net using keyword ...",
+        "Initiate override of Ghost net, password ...",
+        "Initiate override of Ghost net, keyword ...",
+        "Execute override for Ghost net with password ...",
+        "Execute override for Ghost net using keyword ...",
+        "Terminate ghost net protocol with password ...",
+        "Terminate Ghost net using keyword ...",
+        "Halt Ghost net with password ...",
+        "Halt Ghost net using keyword ..."
+      ],
+      "responses": [
+        "{string}"
+      ]
+    },
