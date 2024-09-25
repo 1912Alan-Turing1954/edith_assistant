@@ -12,6 +12,7 @@ import GPUtil
 import enchant
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
+from tqdm import tqdm
 from modules.jenny_tts import text_to_speech
 from modules.ghostnet_protocol import override, enable_protocol
 from modules.data_extraction import extract_file_contents
@@ -232,8 +233,20 @@ class EdithMainframe:
         except Exception as e:
             logging.error(f"Failed to create default settings: {e}")
     
-    def save_settings(self) -> None:
-        """Saves the current settings to a JSON file."""
+    # def save_settings(self) -> None:
+    #     """Saves the current settings to a JSON file."""
+    #     settings = {
+    #         'conversation_timeout': self.conversation_timeout,
+    #         'logging_level': logging.getLevelName(logging.root.level),
+    #         'protection': self.protection_password
+    #     }
+    #     try:
+    #         with open('settings.json', 'w') as f:
+    #             json.dump(settings, f, indent=4)
+    #         logging.info("Settings saved successfully to 'settings.json'.")
+    #     except Exception as e:
+    #         logging.error(f"Failed to save settings: {e}")
+    def save_settings(self):
         settings = {
             'conversation_timeout': self.conversation_timeout,
             'logging_level': logging.getLevelName(logging.root.level),
@@ -243,6 +256,11 @@ class EdithMainframe:
             with open('settings.json', 'w') as f:
                 json.dump(settings, f, indent=4)
             logging.info("Settings saved successfully to 'settings.json'.")
+            with tqdm(total=100, desc="Saving Settings", ncols=200) as pbar:
+                for _ in range(100):
+                    time.sleep(0.01)  # Simulate a delay
+                    pbar.update(1)
+            print(" ➤ Settings saved successfully.")
         except Exception as e:
             logging.error(f"Failed to save settings: {e}")
 
@@ -280,11 +298,46 @@ class EdithMainframe:
                 logging.warning("Invalid choice in settings menu.")
                 print(" ❌ Invalid choice. Please select a valid option.")
 
+    # def change_conversation_timeout(self):
+    #     new_timeout = input(" Enter new conversation timeout in seconds: ")
+    #     if new_timeout.isdigit():
+    #         self.conversation_timeout = int(new_timeout)
+    #         logging.info(f"Updated conversation timeout to {self.conversation_timeout}s.")
+    #         print(f" ➤ Updated to {self.conversation_timeout} seconds.")
+    #     else:
+    #         logging.warning("Invalid input for conversation timeout.")
+    #         print(" ❌ Invalid input. Please enter a valid integer.")
+
+    # def change_logging_level(self):
+    #     new_logging_level = input(" Enter new logging level (DEBUG, INFO, WARNING, ERROR): ").upper()
+    #     levels = {
+    #         'DEBUG': logging.DEBUG,
+    #         'INFO': logging.INFO,
+    #         'WARNING': logging.WARNING,
+    #         'ERROR': logging.ERROR
+    #     }
+    #     if new_logging_level in levels:
+    #         logging.getLogger().setLevel(levels[new_logging_level])
+    #         logging.info(f"Updated logging level to {new_logging_level}.")
+    #         print(f" ➤ Updated to {new_logging_level}.")
+    #     else:
+    #         logging.warning("Invalid logging level input.")
+    #         print(" ❌ Invalid logging level.")
+
+    # def set_protection_password(self):
+    #     new_password = input(" Enter new protection password: ")
+    #     self.protection_password = new_password
+    #     logging.info("Command password has been set.")
+    #     print(" ➤ Command password has been set.")
     def change_conversation_timeout(self):
         new_timeout = input(" Enter new conversation timeout in seconds: ")
         if new_timeout.isdigit():
             self.conversation_timeout = int(new_timeout)
             logging.info(f"Updated conversation timeout to {self.conversation_timeout}s.")
+            with tqdm(total=100, desc="Updating Conversation Timeout") as pbar:
+                for _ in range(100):
+                    time.sleep(0.01)  # Simulate a delay
+                    pbar.update(1)
             print(f" ➤ Updated to {self.conversation_timeout} seconds.")
         else:
             logging.warning("Invalid input for conversation timeout.")
@@ -301,6 +354,10 @@ class EdithMainframe:
         if new_logging_level in levels:
             logging.getLogger().setLevel(levels[new_logging_level])
             logging.info(f"Updated logging level to {new_logging_level}.")
+            with tqdm(total=100, desc="Updating Logging Level") as pbar:
+                for _ in range(100):
+                    time.sleep(0.01)  # Simulate a delay
+                    pbar.update(1)
             print(f" ➤ Updated to {new_logging_level}.")
         else:
             logging.warning("Invalid logging level input.")
@@ -310,7 +367,38 @@ class EdithMainframe:
         new_password = input(" Enter new protection password: ")
         self.protection_password = new_password
         logging.info("Command password has been set.")
+        with tqdm(total=100, desc="Setting Protection Password") as pbar:
+            for _ in range(100):
+                time.sleep(0.01)  # Simulate a delay
+                pbar.update(1)
         print(" ➤ Command password has been set.")
+
+    def clear_dialogue_history(self):
+        with open(self.json_file, 'w') as file:
+            file.write('')
+        logging.info("Dialogue history cleared.")
+        with tqdm(total=100, desc="Clearing Dialogue History") as pbar:
+            for _ in range(100):
+                time.sleep(0.01)  # Simulate a delay
+                pbar.update(1)
+
+    def save_settings(self):
+        settings = {
+            'conversation_timeout': self.conversation_timeout,
+            'logging_level': logging.getLevelName(logging.root.level),
+            'protection': self.protection_password
+        }
+        try:
+            with open('settings.json', 'w') as f:
+                json.dump(settings, f, indent=4)
+            logging.info("Settings saved successfully to 'settings.json'.")
+            with tqdm(total=100, desc="Saving Settings") as pbar:
+                for _ in range(100):
+                    time.sleep(0.01)  # Simulate a delay
+                    pbar.update(1)
+            print(" ➤ Settings saved successfully.")
+        except Exception as e:
+            logging.error(f"Failed to save settings: {e}")
 
     def clear_dialogue_history(self):
         with open(self.json_file, 'w') as file:
