@@ -14,7 +14,7 @@ from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
 from modules.jenny_tts import text_to_speech
 from modules.ghostnet_protocol import override, enable_protocol
-import speedtest
+from modules.data_extraction import extract_file_contents
 
 warnings.filterwarnings("ignore", category=RuntimeWarning, module='networkx')
 
@@ -147,6 +147,7 @@ class EdithMainframe:
     def handle_conversation(self, user_input) -> str:
         logging.info(f"Handling conversation input: {user_input}")
         self.stop_audio()
+        print("Forwarding request to LLM...")
 
         # Ensure user input is valid
         if not user_input or not isinstance(user_input, str):
@@ -161,7 +162,7 @@ class EdithMainframe:
             chat_history = []
 
         # Get the last two entries
-        context_entries = chat_history[-2:] if len(chat_history) >= 2 else chat_history
+        context_entries = chat_history[-2:] if len(chat_history) >= 2 else []
         context = "\n".join([f"{entry['User']}: {entry['AI']}" for entry in context_entries])
         
         logging.debug(f"Context for LLM: {context}")
@@ -207,6 +208,18 @@ class EdithMainframe:
                 logging.info("Settings loaded successfully from 'settings.json'.")
             except Exception as e:
                 logging.error(f"Failed to load settings: {e}")
+        else:
+            """Creates a default settings JSON file."""
+            default_settings = {
+                'conversation_timeout': self.conversation_timeout,
+                'logging_level': logging.getLevelName(20)
+            }
+            try:
+                with open('settings.json', 'w') as f:
+                    json.dump(default_settings, f, indent=4)
+                logging.info("Default settings created successfully in 'settings.json'.")
+            except Exception as e:
+                logging.error(f"Failed to create default settings: {e}")
 
     def save_settings(self) -> None:
         """Saves the current settings to a JSON file."""
@@ -231,8 +244,9 @@ class EdithMainframe:
             print(" [1] Change Conversation Timeout (Current: {}s)".format(self.conversation_timeout))
             print(" [2] Change Logging Level (Current: {})".format(logging.getLevelName(logging.root.level)))
             print(" [3] Set Protection Password (Current: {})".format("Set" if self.command_password else "Not Set"))
-            print(" [4] Save current settings to file")
-            print(" [5] Exit Settings")
+            print(" [4] Clear Dialogue History")
+            print(" [5] Save current settings to file")
+            print(" [6] Exit Settings")
             print("=" * 70)
 
             choice = input(" Select an option [1-5]: ")
@@ -271,12 +285,16 @@ class EdithMainframe:
                 logging.info("Command password has been set.")
                 print(" ➤ Command password has been set.")
 
-            elif choice == "4":
+            elif choice == '4':
+                with open('scripts/data/dialogue/dialogue_history.json', 'w') as file:
+                    file.write('')
+
+            elif choice == "5":
                 logging.info("Saving current settings.")
                 print(" ➤ Saving current settings...", end='')
                 self.save_settings()
                 print(" Settings saved.")
-            elif choice == "5":
+            elif choice == "6":
                 logging.info("Exiting settings menu.")
                 print(" Exiting settings menu.")
                 break
@@ -309,7 +327,7 @@ class EdithMainframe:
             else:
                 suggestions = d.suggest(word)
                 cleaned_words.append(suggestions[0] if suggestions else word)
-        return " ".join(cleaned_words)
+        return " ".join(cleaned_words).lower()
     
     def _replace_decimal(self, match) -> str:
         """Helper method to replace decimal match with verbal representation."""
@@ -339,10 +357,10 @@ class EdithMainframe:
         """Check if the conversation is still within timeout."""
         return (datetime.datetime.now() - self.last_interaction_time).total_seconds() < self.conversation_timeout
 
-    def launch(self) -> None:
-        logging.info("Launching main interaction loop.")
-        while True:
-            try:
+    def launch(self):
+        logging.info("Launching Edith...")
+        try:
+            while True:
                 ghost_net_bundles = [
                     ['enable', 'ghost', 'net', 'protocol'],
                     ['activate', 'ghost', 'net', 'protocol'],
@@ -365,15 +383,30 @@ class EdithMainframe:
                     ['suspend', 'ghost', 'net', 'protocol'],
                     ['resume', 'ghost', 'net', 'protocol']
                 ]
-            
+
+                document_analysis_bundles = [
+                    ['perform', 'document', 'analysis'],
+                    ['conduct', 'document', 'analysis'],
+                    ['initiate', 'document', 'analysis'],
+                    ['execute', 'document', 'analysis'],
+                    ['start', 'document', 'analysis'],
+                    ['launch', 'document', 'analysis'],
+                    ['engage', 'in', 'document', 'analysis'],
+                    ['confirm', 'document', 'analysis'],
+                    ['summarize', 'document'],
+                    ['analyze', 'document']
+                ]
+                
+
                 transcription = input("Type: ")
+                
                 if "access bios" in self.clean_text(transcription).lower():
                     self.settings_menu()
-                    continue
+                    continue  # Ensure this is within a loop
                 
                 if self.detect_wake_word(transcription):
-                        self.start_conversation()
-                    
+                    self.start_conversation()
+
                 if self.is_in_conversation and self.is_within_timeout():
                     # Check for Ghost Net Protocol bundles
                     for bundle in ghost_net_bundles:
@@ -390,13 +423,25 @@ class EdithMainframe:
                             else:
                                 enable_protocol()  # Enable or activate the protocol
                             break  # Exit after handling
+
+                    for bundle in document_analysis_bundles:
+                        if all(keyword in transcription for keyword in bundle):
+                            logging.info(f"Document analysis triggered with bundle: {bundle}")
+                            try:
+                                contents = extract_file_contents()
+                                response = self.convert_decimal_to_verbal(self.handle_conversation(f'Analyze this document and give me brief explanation and further information regarding the document: "{contents}"'))
+                                self.speak(response)
+                            except Exception as e:
+                                logging.error(f"Error during document analysis: {e}")
+                            break  # Ensure this is intended; it will exit after the first match.
                     else:
+                        # Fallback response
                         response = self.convert_decimal_to_verbal(self.handle_conversation(transcription))
                         self.speak(response)
                 else:
                     self.is_in_conversation = False
-            except Exception as e:
-                logging.error("An error occurred: %s", e)
+        except Exception as e:
+            logging.error("An error occurred: %s", e)
 
 if __name__ == "__main__":
     edith = EdithMainframe()

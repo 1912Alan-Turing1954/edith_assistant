@@ -1,4 +1,4 @@
 {
-    "conversation_timeout": 30,
-    "logging_level": "WARNING"
+    "conversation_timeout": 90,
+    "logging_level": "INFO"
 }
