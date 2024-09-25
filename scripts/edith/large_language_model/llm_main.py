@@ -256,7 +256,7 @@ class EdithMainframe:
             with open('settings.json', 'w') as f:
                 json.dump(settings, f, indent=4)
             logging.info("Settings saved successfully to 'settings.json'.")
-            with tqdm(total=100, desc="Saving Settings", ncols=200) as pbar:
+            with tqdm(total=100, desc="Saving Settings") as pbar:
                 for _ in range(100):
                     time.sleep(0.01)  # Simulate a delay
                     pbar.update(1)

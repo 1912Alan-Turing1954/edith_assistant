@@ -1,16 +1,23 @@
-import tkinter as tk
-from tkinter import scrolledtext
+import sys
 import subprocess
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QVBoxLayout, QWidget
 
-class SimpleApp:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Edith")
-        self.root.geometry("400x300")
+class SimpleApp(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Edith")
+        self.setGeometry(100, 100, 400, 300)
 
-        # Create a scrolled text area for output
-        self.text_area = scrolledtext.ScrolledText(self.root, wrap=tk.WORD)
-        self.text_area.pack(expand=True, fill='both')
+        # Create a central widget and set the layout
+        self.central_widget = QWidget()
+        self.setCentralWidget(self.central_widget)
+        self.layout = QVBoxLayout()
+        self.central_widget.setLayout(self.layout)
+
+        # Create a text area for output
+        self.text_area = QTextEdit(self)
+        self.text_area.setReadOnly(True)
+        self.layout.addWidget(self.text_area)
 
         # Run the script and display output
         self.run_script()
@@ -18,12 +25,13 @@ class SimpleApp:
     def run_script(self):
         try:
             # Replace with the path to your script
-            result = subprocess.run(['python', 'edith/cerebral_matrix.py'], capture_output=True, text=True)
-            self.text_area.insert(tk.END, result.stdout + result.stderr)
+            result = subprocess.run(['python', 'scripts/edith/large_language_model/llm_main.py'], capture_output=True, text=True)
+            self.text_area.append(result.stdout + result.stderr)
         except Exception as e:
-            self.text_area.insert(tk.END, f"Error running script: {e}")
+            self.text_area.append(f"Error running script: {e}")
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = SimpleApp(root)
-    root.mainloop()
+    app = QApplication(sys.argv)
+    main_window = SimpleApp()
+    main_window.show()
+    sys.exit(app.exec_())

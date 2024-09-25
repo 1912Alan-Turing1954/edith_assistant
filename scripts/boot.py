@@ -34,47 +34,37 @@ modules = {
     "🔊 Text-to-Speech Model": {
         "loaded": False,
         "progress": 0,
-        "file_path": "data/models/jenny_model/.model.pt",
+        "file_path": "scripts/data/models/jenny_model/.model.pt",
     },
     "🗣 Speech Recognition": {
         "loaded": False,
         "progress": 0,
-        "file_path": "edith/modules/speech_to_text.py",
+        "file_path": "scripts/edith/large_language_model/modules/speech_to_text.py",
     },
     "🎤 Audio Processing": {
         "loaded": False,
         "progress": 0,
-        "file_path": "edith/cerebral_matrix.py",
-    },
-    "🔍 Natural Language Processing": {
-        "loaded": False,
-        "progress": 0,
-        "file_path": "edith/data/data.pth",
+        "file_path": "scripts/edith/large_language_model/modules/speech_to_text.py",
     },
     "🧠 Large Language Model": {
         "loaded": False,
         "progress": 0,
-        "file_path": "edith/large_language_model/llm_main.py",
-    },
-    "🌐 Network Tools": {
-        "loaded": False,
-        "progress": 0,
-        "file_path": "edith/modules/network_tools.py",
+        "file_path": "scripts/edith/large_language_model/llm_main.py",
     },
     "⚙️ Hardware Diagnostics": {
         "loaded": False,
         "progress": 0,
-        "file_path": "edith/modules/system_info.py",
+        "file_path": "scripts/edith/large_language_model/llm_main.py",
     },
     "🔒 Security Modules": {
         "loaded": False,
         "progress": 0,
-        "file_path": "edith/modules/barn_door_protocol.sh",
+        "file_path": "scripts/edith/large_language_model/modules/ghostnet_protocol.py",
     },
     "🤖 Virtual Assistant": {
         "loaded": False,
         "progress": 0,
-        "file_path": "edith/cerebral_matrix.py",
+        "file_path": "scripts/edith/large_language_model/llm_main.py",
     },
 }
 
@@ -110,8 +100,10 @@ def load_modules():
 
             # Create a progress bar for this module
             print(f" ➤ Loading {module_name}...", end='')
-            for _ in tqdm(range(10), desc=f"Loading {module_name}", bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt}'):
-                time.sleep(0.1)  # Simulate processing time
+            with tqdm(total=100, desc=f"Loading {module_name}", bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt}') as pbar:
+                for _ in range(100):
+                        time.sleep(0.01)  # Simulate a delay
+                        pbar.update(1)
 
             # Check if the file exists
             if not os.path.isfile(file_path):
@@ -161,7 +153,7 @@ def run_script():
     for attempt in range(max_retries):
         logging.info("Booting up virtual assistant...")
         try:
-            script_path = "edith/cerebral_matrix.py"
+            script_path = "scripts/edith/large_language_model/llm_main.py"
             subprocess.run(["python", script_path], check=True)
             logging.info("Script execution completed successfully.")
             break  # Exit loop if successful
