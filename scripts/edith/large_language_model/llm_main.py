@@ -12,11 +12,15 @@ import GPUtil
 import enchant
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
-from tqdm import tqdm
+import tqdm
 from modules.jenny_tts import text_to_speech
 from modules.ghostnet_protocol import override, enable_protocol
 from modules.data_extraction import extract_file_contents
 from modules.speech_to_text import record_audio, transcribe_audio
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QPushButton, QVBoxLayout, QWidget, QMessageBox
+from PyQt5.QtCore import QTimer, QCoreApplication
+import sys
+
 
 # Suppress specific warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning, module='networkx')
@@ -345,9 +349,9 @@ class EdithMainframe:
             file.write('')
         logging.info("Dialogue history cleared.")
 
-    def speak(self, input: str) -> None:
+    def speak(self, input_: str) -> None:
         self.stop_audio()
-        self.play_obj, self.output_path = text_to_speech(input)
+        self.play_obj, self.output_path = text_to_speech(input_)
         os.remove(self.output_path)
 
 
@@ -405,21 +409,19 @@ class EdithMainframe:
     def launch(self):
         logging.info("Launching Edith...")
         try:
-            while True:
-                if self.play_obj and self.play_obj.is_playing():
-                    continue  # Wait while audio is playing
+            # while True:
+            if self.play_obj and self.play_obj.is_playing():
+                pass  # Wait while audio is playing
+            # Capture audio and get transcription
+            audio_file = record_audio()
+            transcription = transcribe_audio(audio_file)
 
-                # Capture audio and get transcription
-                audio_file = record_audio()
-                transcription = transcribe_audio(audio_file)
-
-                if transcription:
-                    transcription = self.clean_text(transcription).lower()
-                    print("Transcription:", transcription)  # Debugging output
-
-                    # Process commands or questions
-                    self.process_transcription(transcription)
-
+            if transcription:
+                transcription = self.clean_text(transcription).lower()
+                print("Transcription:", transcription)  # Debugging output
+                # Process commands or questions
+                input_ = self.process_transcription(transcription)
+                return transcription, input_
         except Exception as e:
             logging.error("An error occurred: %s", e)
 
@@ -506,8 +508,40 @@ class EdithMainframe:
         except Exception as e:
             logging.error(f"Error during document analysis: {e}")
 
-if __name__ == "__main__":
-    edith = EdithMainframe()
-    edith.launch()
+import sys
+import subprocess
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QTextEdit, QPushButton
 
+class App(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+        self.run_script()
+
+    def initUI(self):
+        self.setWindowTitle('Standard Output GUI')
+        layout = QVBoxLayout()
+
+        # Text area for displaying output
+        self.output_text = QTextEdit(self)
+        self.output_text.setReadOnly(True)
+        layout.addWidget(self.output_text)
+
+        self.setLayout(layout)
+
+    def run_script(self):
+        # Replace 'your_script.py' with the path to your actual script
+        result = subprocess.run(['python', 'scripts/edith/large_language_model/llm_main.py'], capture_output=True, text=True)
+        self.output_text.setPlainText(result.stdout)  # Set the output text
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = App()
+    ex.resize(400, 300)
+    ex.show()
+    sys.exit(app.exec_())
+
+# if __name__ == "__main__":
+#     edith = EdithMainframe()
+#     edith.launch()
 

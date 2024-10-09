@@ -80,7 +80,7 @@ def add_period_if_missing(text):
 
 
 
-def text_to_speech(text, output_path="audio.wav"):
+def text_to_speech(text, output_path="tts_audio.wav"):
     """
     Convert text to speech using the initialized TTS model.
     """

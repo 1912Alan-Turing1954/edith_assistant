@@ -5,7 +5,7 @@ import time
 import torch, torchaudio
 from transformers import Wav2Vec2Tokenizer, Wav2Vec2ForCTC
 
-def record_audio(output_filename="output.wav", start_threshold=3000, silence_threshold=2500, silence_duration=2.5, warmup_samples=5):
+def record_audio(output_filename="recorded_output.wav", start_threshold=3000, silence_threshold=2500, silence_duration=2.5, warmup_samples=5):
     """Record audio from the microphone until silence is detected.
 
     Args:
@@ -68,6 +68,7 @@ def record_audio(output_filename="output.wav", start_threshold=3000, silence_thr
     stream.close()
     audio.terminate()
 
+    output_filename = "scripts/data/dialogue/"+output_filename
     # Save the recorded data as a WAV file
     with wave.open(output_filename, 'wb') as wf:
         wf.setnchannels(CHANNELS)
@@ -108,7 +109,3 @@ def transcribe_audio(filename):
 
     return transcription
 
-# if __name__ == "__main__":
-#     audio_file = record_audio()
-#     transcription = transcribe_audio(audio_file)
-#     print("Transcription:", transcription)
