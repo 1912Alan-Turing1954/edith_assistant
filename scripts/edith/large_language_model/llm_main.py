@@ -17,9 +17,6 @@ from modules.jenny_tts import text_to_speech
 from modules.ghostnet_protocol import override, enable_protocol
 from modules.data_extraction import extract_file_contents
 from modules.speech_to_text import record_audio, transcribe_audio
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QPushButton, QVBoxLayout, QWidget, QMessageBox
-from PyQt5.QtCore import QTimer, QCoreApplication
-import sys
 
 
 # Suppress specific warnings
@@ -409,19 +406,18 @@ class EdithMainframe:
     def launch(self):
         logging.info("Launching Edith...")
         try:
-            # while True:
-            if self.play_obj and self.play_obj.is_playing():
-                pass  # Wait while audio is playing
-            # Capture audio and get transcription
-            audio_file = record_audio()
-            transcription = transcribe_audio(audio_file)
+            while True:
+                if self.play_obj and self.play_obj.is_playing():
+                    pass  # Wait while audio is playing
+                # Capture audio and get transcription
+                audio_file = record_audio()
+                transcription = transcribe_audio(audio_file)
 
-            if transcription:
-                transcription = self.clean_text(transcription).lower()
-                print("Transcription:", transcription)  # Debugging output
-                # Process commands or questions
-                input_ = self.process_transcription(transcription)
-                return transcription, input_
+                if transcription:
+                    transcription = self.clean_text(transcription).lower()
+                    print("Transcription:", transcription)  # Debugging output
+                    # Process commands or questions
+                    self.process_transcription(transcription)
         except Exception as e:
             logging.error("An error occurred: %s", e)
 
@@ -508,40 +504,10 @@ class EdithMainframe:
         except Exception as e:
             logging.error(f"Error during document analysis: {e}")
 
-import sys
-import subprocess
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QTextEdit, QPushButton
 
-class App(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.initUI()
-        self.run_script()
-
-    def initUI(self):
-        self.setWindowTitle('Standard Output GUI')
-        layout = QVBoxLayout()
-
-        # Text area for displaying output
-        self.output_text = QTextEdit(self)
-        self.output_text.setReadOnly(True)
-        layout.addWidget(self.output_text)
-
-        self.setLayout(layout)
-
-    def run_script(self):
-        # Replace 'your_script.py' with the path to your actual script
-        result = subprocess.run(['python', 'scripts/edith/large_language_model/llm_main.py'], capture_output=True, text=True)
-        self.output_text.setPlainText(result.stdout)  # Set the output text
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = App()
-    ex.resize(400, 300)
-    ex.show()
-    sys.exit(app.exec_())
-
-# if __name__ == "__main__":
-#     edith = EdithMainframe()
-#     edith.launch()
+if __name__ == "__main__":
+# def main() -> None:
+    edith = EdithMainframe()
+# while True:
+    edith.launch()
 
