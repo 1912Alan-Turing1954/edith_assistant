@@ -83,7 +83,9 @@ class TextExtractorApp(QtWidgets.QWidget):
             QLineEdit {
                 background-color: #3E3E3E; /* Dark input field */
                 color: #FFFFFF; /* Light text */
-                border: 1px solid #555555; /* Input border */
+                bor
+contents = extract_file_contents()
+print(contents)der: 1px solid #555555; /* Input border */
             }
             QPushButton {
                 background-color: #3E3E3E; /* Dark button */

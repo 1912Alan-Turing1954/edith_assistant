@@ -16,6 +16,7 @@ from tqdm import tqdm
 from modules.jenny_tts import text_to_speech
 from modules.ghostnet_protocol import override, enable_protocol
 from modules.data_extraction import extract_file_contents
+from modules.speech_to_text import record_audio, transcribe_audio
 
 # Suppress specific warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning, module='networkx')
@@ -56,6 +57,7 @@ class EdithMainframe:
         self.json_file = "scripts/data/dialogue/dialogue_history.json"
         self.protection_password = 'henry'
         self.load_settings()
+
 
     def get_system_info(self) -> dict:
         logging.info("Gathering system information.")
@@ -233,37 +235,6 @@ class EdithMainframe:
         except Exception as e:
             logging.error(f"Failed to create default settings: {e}")
     
-    # def save_settings(self) -> None:
-    #     """Saves the current settings to a JSON file."""
-    #     settings = {
-    #         'conversation_timeout': self.conversation_timeout,
-    #         'logging_level': logging.getLevelName(logging.root.level),
-    #         'protection': self.protection_password
-    #     }
-    #     try:
-    #         with open('settings.json', 'w') as f:
-    #             json.dump(settings, f, indent=4)
-    #         logging.info("Settings saved successfully to 'settings.json'.")
-    #     except Exception as e:
-    #         logging.error(f"Failed to save settings: {e}")
-    def save_settings(self):
-        settings = {
-            'conversation_timeout': self.conversation_timeout,
-            'logging_level': logging.getLevelName(logging.root.level),
-            'protection': self.protection_password
-        }
-        try:
-            with open('settings.json', 'w') as f:
-                json.dump(settings, f, indent=4)
-            logging.info("Settings saved successfully to 'settings.json'.")
-            with tqdm(total=100, desc="Saving Settings") as pbar:
-                for _ in range(100):
-                    time.sleep(0.01)  # Simulate a delay
-                    pbar.update(1)
-            print(" ➤ Settings saved successfully.")
-        except Exception as e:
-            logging.error(f"Failed to save settings: {e}")
-
     def settings_menu(self) -> None:
         """Display a sci-fi inspired BIOS settings menu."""
         while True:
@@ -298,37 +269,6 @@ class EdithMainframe:
                 logging.warning("Invalid choice in settings menu.")
                 print(" ❌ Invalid choice. Please select a valid option.")
 
-    # def change_conversation_timeout(self):
-    #     new_timeout = input(" Enter new conversation timeout in seconds: ")
-    #     if new_timeout.isdigit():
-    #         self.conversation_timeout = int(new_timeout)
-    #         logging.info(f"Updated conversation timeout to {self.conversation_timeout}s.")
-    #         print(f" ➤ Updated to {self.conversation_timeout} seconds.")
-    #     else:
-    #         logging.warning("Invalid input for conversation timeout.")
-    #         print(" ❌ Invalid input. Please enter a valid integer.")
-
-    # def change_logging_level(self):
-    #     new_logging_level = input(" Enter new logging level (DEBUG, INFO, WARNING, ERROR): ").upper()
-    #     levels = {
-    #         'DEBUG': logging.DEBUG,
-    #         'INFO': logging.INFO,
-    #         'WARNING': logging.WARNING,
-    #         'ERROR': logging.ERROR
-    #     }
-    #     if new_logging_level in levels:
-    #         logging.getLogger().setLevel(levels[new_logging_level])
-    #         logging.info(f"Updated logging level to {new_logging_level}.")
-    #         print(f" ➤ Updated to {new_logging_level}.")
-    #     else:
-    #         logging.warning("Invalid logging level input.")
-    #         print(" ❌ Invalid logging level.")
-
-    # def set_protection_password(self):
-    #     new_password = input(" Enter new protection password: ")
-    #     self.protection_password = new_password
-    #     logging.info("Command password has been set.")
-    #     print(" ➤ Command password has been set.")
     def change_conversation_timeout(self):
         new_timeout = input(" Enter new conversation timeout in seconds: ")
         if new_timeout.isdigit():
@@ -408,6 +348,8 @@ class EdithMainframe:
     def speak(self, input: str) -> None:
         self.stop_audio()
         self.play_obj, self.output_path = text_to_speech(input)
+        os.remove(self.output_path)
+
 
     def stop_audio(self) -> None:
         """Stop current audio playback and remove the output file if exists."""
@@ -464,24 +406,51 @@ class EdithMainframe:
         logging.info("Launching Edith...")
         try:
             while True:
-                transcription = input("Type: ")
-                
-                if "access bios" in self.clean_text(transcription).lower():
-                    self.settings_menu()
-                    continue
-                
-                if self.detect_wake_word(transcription):
-                    self.start_conversation()
+                if self.play_obj and self.play_obj.is_playing():
+                    continue  # Wait while audio is playing
 
-                if self.is_in_conversation and self.is_within_timeout():
-                    self.handle_transcription(transcription)
-                else:
-                    self.is_in_conversation = False
+                # Capture audio and get transcription
+                audio_file = record_audio()
+                transcription = transcribe_audio(audio_file)
+
+                if transcription:
+                    transcription = self.clean_text(transcription).lower()
+                    print("Transcription:", transcription)  # Debugging output
+
+                    # Process commands or questions
+                    self.process_transcription(transcription)
+
         except Exception as e:
             logging.error("An error occurred: %s", e)
 
+    def process_transcription(self, transcription: str):
+        """Check and handle the transcription for commands or questions."""
+        if "access bios" in transcription:
+            self.settings_menu()
+            return
+
+        if self.detect_wake_word(transcription):
+            self.start_conversation()
+
+        if self.is_in_conversation and self.is_within_timeout():
+            self.handle_transcription(transcription)
+        else:
+            self.is_in_conversation = False
+
     def handle_transcription(self, transcription: str):
         """Process the transcription for commands or questions."""
+        if self.check_ghost_net_protocol(transcription):
+            return
+
+        if self.check_document_analysis(transcription):
+            return
+
+        # Fallback response
+        response = self.convert_decimal_to_verbal(self.handle_conversation(transcription))
+        self.speak(response)
+
+    def check_ghost_net_protocol(self, transcription: str) -> bool:
+        """Check for Ghost Net Protocol commands."""
         ghost_net_bundles = [
             ['enable', 'ghost', 'net', 'protocol'],
             ['activate', 'ghost', 'net', 'protocol'],
@@ -492,31 +461,29 @@ class EdithMainframe:
             ['stop', 'ghost', 'net', 'protocol'],
         ]
 
+        for bundle in ghost_net_bundles:
+            if all(keyword in transcription for keyword in bundle):
+                self.handle_ghost_net_protocol(bundle, transcription)
+                return True
+        return False
+
+    def check_document_analysis(self, transcription: str) -> bool:
+        """Check for Document Analysis commands."""
         document_analysis_bundles = [
             ['perform', 'document', 'analysis'],
             ['conduct', 'document', 'analysis'],
             ['analyze', 'document'],
         ]
 
-        # Check for Ghost Net Protocol commands
-        for bundle in ghost_net_bundles:
+        for bundle in document_analysis_bundles:
             if all(keyword in transcription for keyword in bundle):
-                self.handle_ghost_net_protocol(bundle, transcription)
-                break
-        else:
-            # Check for Document Analysis commands
-            for bundle in document_analysis_bundles:
-                if all(keyword in transcription for keyword in bundle):
-                    self.perform_document_analysis()
-                    break
-            else:
-                # Fallback response
-                response = self.convert_decimal_to_verbal(self.handle_conversation(transcription))
-                self.speak(response)
+                self.perform_document_analysis()
+                return True
+        return False
 
     def handle_ghost_net_protocol(self, bundle: list, transcription: str):
         """Handle Ghost Net Protocol commands."""
-        if 'disable' in bundle or 'deactivate' in bundle or 'override' in bundle:
+        if any(command in bundle for command in ['disable', 'deactivate', 'override']):
             password = self.get_text_after_keyword(transcription, 'password')
             keyword = self.get_text_after_keyword(transcription, 'keyword')
             if password or keyword:
@@ -532,7 +499,9 @@ class EdithMainframe:
         logging.info("Document analysis triggered.")
         try:
             contents = extract_file_contents()
-            response = self.convert_decimal_to_verbal(self.handle_conversation(f'Analyze this document and give me a brief explanation and further information regarding the document: "{contents}"'))
+            response = self.convert_decimal_to_verbal(
+                self.handle_conversation(f'Analyze this document and give me a brief explanation and further information regarding the document: "{contents}"')
+            )
             self.speak(response)
         except Exception as e:
             logging.error(f"Error during document analysis: {e}")
@@ -540,3 +509,5 @@ class EdithMainframe:
 if __name__ == "__main__":
     edith = EdithMainframe()
     edith.launch()
+
+

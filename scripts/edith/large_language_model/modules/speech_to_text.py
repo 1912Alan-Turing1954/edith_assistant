@@ -1,72 +1,114 @@
-import torch
 import pyaudio
+import wave
 import numpy as np
-from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
+import time
+import torch, torchaudio
+from transformers import Wav2Vec2Tokenizer, Wav2Vec2ForCTC
 
-# Check if CUDA is available
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+def record_audio(output_filename="output.wav", start_threshold=3000, silence_threshold=2500, silence_duration=2.5, warmup_samples=5):
+    """Record audio from the microphone until silence is detected.
 
-# Load the model and tokenizer
-model_path = "scripts/data/models/wav2vec2-base-960h"
-tokenizer = Wav2Vec2Processor.from_pretrained(model_path)
-model = Wav2Vec2ForCTC.from_pretrained(model_path).to(device)
-
-# Define constants
-# Define constants with lower thresholds
-NOISE_THRESHOLD = 300  # Adjust this threshold as needed (lower value)
-SILENCE_THRESHOLD = 1.5  # Silence duration in seconds to stop listening (lower value)
-
-CHUNK = 1024
-FORMAT = pyaudio.paInt16
-CHANNELS = 1
-RATE = 16000
-
-def speech_to_text(audio):
-    """Transcribe speech from audio input."""
-    audio = audio.astype(np.float32)
-    input_values = tokenizer(audio, return_tensors="pt", sampling_rate=RATE).input_values.to(device)
+    Args:
+        output_filename (str): Name of the output WAV file.
+        start_threshold (int): Volume level to start recording.
+        silence_threshold (int): Volume level to consider as silence.
+        silence_duration (int): Duration in seconds to consider as silence.
+        warmup_samples (int): Number of initial samples to ignore.
+    """
     
-    with torch.no_grad():
-        logits = model(input_values).logits
+    # Set up audio recording parameters
+    FORMAT = pyaudio.paInt16
+    CHANNELS = 1
+    RATE = 16000
+    CHUNK = 4096
+
+    audio = pyaudio.PyAudio()
     
-    predicted_ids = torch.argmax(logits, dim=-1)
-    transcription = tokenizer.batch_decode(predicted_ids)[0]
-    return transcription
+    # Start recording
+    stream = audio.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK)
+    print("Listening... Speak to start recording.")
 
-def capture_audio():
-    """Capture audio from the microphone, focusing on direct noise."""
-    p = pyaudio.PyAudio()
-    stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK)
-
-    print("Listening...")
     frames = []
-    silence_timer = 0
+    recording = False
+    silence_start_time = None
+    warmup_count = 0  # Counter for warm-up period
 
     while True:
-        data = stream.read(CHUNK)
-        audio_chunk = np.frombuffer(data, dtype=np.int16)
+        data = stream.read(CHUNK, exception_on_overflow=False)
+        audio_data = np.frombuffer(data, dtype=np.int16)
+        volume_level = np.abs(audio_data).mean()
 
-        if np.max(np.abs(audio_chunk)) > NOISE_THRESHOLD:
-            frames.append(audio_chunk)
-            silence_timer = 0  # Reset silence timer
-        else:
-            silence_timer += CHUNK / RATE  # Increment silence timer
+        # Ignore initial readings during warm-up
+        if warmup_count < warmup_samples:
+            warmup_count += 1
+            continue
 
-        # Stop listening if silence exceeds threshold
-        if silence_timer > SILENCE_THRESHOLD:
-            break
+        # Print the current volume level
+        print(f"Current volume level: {volume_level}")
 
+        if volume_level >= start_threshold:  # Start recording at a lower threshold
+            if not recording:
+                print("Recording started.")
+                recording = True
+            frames.append(data)  # Append audio data while recording
+            silence_start_time = None  # Reset silence timer
+        elif recording:  # Only check silence if currently recording
+            frames.append(data)  # Continue appending audio data
+            if volume_level < silence_threshold:
+                if silence_start_time is None:
+                    silence_start_time = time.time()  # Start silence timer
+                elif time.time() - silence_start_time > silence_duration:
+                    print("Silence detected for more than 2 seconds. Stopping recording.")
+                    break
+            else:
+                silence_start_time = None  # Reset silence timer if volume is above threshold
+
+    # Stop and close the stream
     stream.stop_stream()
     stream.close()
-    p.terminate()
+    audio.terminate()
 
-    return np.concatenate(frames, axis=0) if frames else None
+    # Save the recorded data as a WAV file
+    with wave.open(output_filename, 'wb') as wf:
+        wf.setnchannels(CHANNELS)
+        wf.setsampwidth(audio.get_sample_size(FORMAT))
+        wf.setframerate(RATE)
+        wf.writeframes(b''.join(frames))
 
-if __name__ == "__main__":
-    while True:
-        audio = capture_audio()
-        if audio is not None:
-            transcription = speech_to_text(audio)
-            print(transcription)
-        else:
-            print("No audio captured.")
+    print("Finished recording and saved to " + output_filename)
+    return output_filename
+
+
+def transcribe_audio(filename):
+    """Transcribe audio using Wav2Vec 2.0."""
+    
+    # Load the pre-trained model and tokenizer
+    tokenizer = Wav2Vec2Tokenizer.from_pretrained("scripts/data/models/wav2vec2-base-960h")
+    model = Wav2Vec2ForCTC.from_pretrained("scripts/data/models/wav2vec2-base-960h")
+
+    # Load audio file
+    waveform, sample_rate = torchaudio.load(filename)
+    waveform = waveform.squeeze().numpy()
+
+    # Resample if necessary
+    if sample_rate != 16000:
+        resampler = torchaudio.transforms.Resample(orig_freq=sample_rate, new_freq=16000)
+        waveform = resampler(waveform)
+
+    # Prepare input for the model
+    input_values = tokenizer(waveform, return_tensors="pt").input_values
+
+    # Perform inference
+    with torch.no_grad():
+        logits = model(input_values).logits
+
+    # Decode the predicted ids to text
+    predicted_ids = torch.argmax(logits, dim=-1)
+    transcription = tokenizer.decode(predicted_ids[0])
+
+    return transcription
+
+# if __name__ == "__main__":
+#     audio_file = record_audio()
+#     transcription = transcribe_audio(audio_file)
+#     print("Transcription:", transcription)
