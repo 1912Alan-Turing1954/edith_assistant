@@ -17,6 +17,7 @@ from modules.jenny_tts import text_to_speech
 from modules.ghostnet_protocol import override, enable_protocol
 from modules.data_extraction import extract_file_contents
 from modules.speech_to_text import record_audio, transcribe_audio
+from modules.file_system_module import explore_directory, process_fs_command
 
 
 # Suppress specific warnings
@@ -38,12 +39,14 @@ Here is the conversation history: {context}
 
 System Information: {system} (Memory reference only)(Do not mention in conversation)
 
+
 Date/Time: {timestamp} (for reference only)(12 hour clock format)
 
 Question: {question}
 
 Answer:
 """
+# File System Structure: {fs} (for reference only)
 prompt = ChatPromptTemplate.from_template(template)
 chain = prompt | model
 
@@ -159,6 +162,17 @@ class EdithMainframe:
         self.stop_audio()
         print("Forwarding request to LLM...")
 
+        home_directory = os.path.expanduser("~")
+
+        directory_map = explore_directory(home_directory)
+
+            # Create a context string for the LLaMA model
+        directory_info = "\n".join(
+            f"{key}: {', '.join(os.path.join(key, file) for file in files)}"
+            for key, files in directory_map.items()
+        )
+
+
         if not user_input or not isinstance(user_input, str):
             logging.warning("Invalid user input received.")
             return "I'm sorry, I didn't understand that."
@@ -173,6 +187,7 @@ class EdithMainframe:
         result = chain.invoke({
             "context": context,
             "system": self.get_system_info(),
+            # 'fs': directory_info,
             "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %I:%M %p"), 
             "question": user_input
         })
@@ -437,15 +452,71 @@ class EdithMainframe:
 
     def handle_transcription(self, transcription: str):
         """Process the transcription for commands or questions."""
+        logging.info(f"Received transcription: {transcription}")
+
         if self.check_ghost_net_protocol(transcription):
+            print('-------------------------------------------------------------------------------------------------------')
+            logging.info("Ghost Net Protocol command detected.")
             return
 
         if self.check_document_analysis(transcription):
+            print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+            logging.info("Document analysis command detected.")
             return
 
+        if self.check_file_system_m(transcription):
+            print('????????????????????????????????????????????????????????????????????????????????????')
+            logging.info("File system command processed successfully.")
+            return
+        
         # Fallback response
+        logging.info("Generating fallback response.")
         response = self.convert_decimal_to_verbal(self.handle_conversation(transcription))
         self.speak(response)
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+
+    
+    def file_system(self, user_input: str) -> bool:
+        """
+        Processes user input to manage files based on the current directory structure.
+
+        Args:
+            user_input (str): The input command from the user describing the desired file operation.
+
+        Returns:
+            bool: Returns True after processing the command successfully.
+        """
+        try:
+            # Define the home directory and explore its structure
+            home_directory = os.path.expanduser("~")
+            directory_map = explore_directory(home_directory)
+
+            # Define keywords to enhance command recognition
+            # Define keywords to enhance command recognition
+            keywords = [
+                'list', 'move', 'delete', 'write', 'read',
+                'where is'
+            ]
+            # Create context for command generation
+            context = (
+                f"User input: {user_input}\n"
+                f"Generate a command or set of instructions for managing files. "
+                f"Keywords include: {', '.join(keywords)}"
+            )
+            
+            # Generate command based on user input and directory context
+            command = self.handle_conversation(context)
+            
+            # Process the generated command
+            result = process_fs_command(command)
+            
+            # Convert result to speech
+            return result
+            
+
+        except Exception as e:
+            logging.error(f"Error processing user input '{user_input}': {e}")
+
 
     def check_ghost_net_protocol(self, transcription: str) -> bool:
         """Check for Ghost Net Protocol commands."""
@@ -465,6 +536,44 @@ class EdithMainframe:
                 return True
         return False
 
+    def check_file_system_m(self, transcription: str) -> bool:
+        """Check for file system management commands in the transcription."""
+        file_system_bundles = [
+            ['open', 'file'],
+            ['create', 'file'],
+            ['copy', 'file'],
+            ['rename', 'file'],
+            ['move', 'file'],
+            ['list', 'files'],
+            ['search', 'files'],
+            ['delete', 'file'],
+            ['remove', 'file'],
+            ['view', 'file'],
+            ['modify', 'file'],
+            ['read', 'file'],
+            ['write', 'file'],
+            ['where is', 'file'],
+            ['show me', 'files', 'in'],
+            ['find', 'file', 'in'],
+            ['look for', 'file'],
+            ['list all', 'files'],
+            ['show all', 'files'],
+            ['show me the files in', 'directory'],
+            ['list in', 'directory'],
+            
+            # Additional keywords
+            ['archive', 'file'],      # Command to archive a file
+            ['extract', 'file'],      # Command to extract files from an archive
+            ['compress', 'file'],     # Command to compress files
+        ]
+
+        for bundle in file_system_bundles:
+            if all(keyword in transcription for keyword in bundle):
+                self.process_file_system_command(bundle, transcription)
+                return True
+        return False
+
+
     def check_document_analysis(self, transcription: str) -> bool:
         """Check for Document Analysis commands."""
         document_analysis_bundles = [
@@ -478,6 +587,15 @@ class EdithMainframe:
                 self.perform_document_analysis()
                 return True
         return False
+    
+    def process_file_system_command(self, bundle: str, transcription: str):
+        logging.info("File System Manager triggered.")
+        try:
+            response = self.file_system(transcription)
+            self.speak(response)
+        except Exception as e:
+            logging.error(f"Error during document analysis: {e}")
+        
 
     def handle_ghost_net_protocol(self, bundle: list, transcription: str):
         """Handle Ghost Net Protocol commands."""
