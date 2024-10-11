@@ -31,37 +31,42 @@ def get_size(file_path):
     return "0MB"
 
 modules = {
-    "🔊 Text-to-Speech Model": {
+    " Text-to-Speech Model -": {
         "loaded": False,
         "progress": 0,
-        "file_path": "edith/data/models/jenny_model/.model.pt",
+        "file_path": "edith/data/models/jenny_model/model.pt",
     },
-    "🗣 Speech Recognition": {
+    " Text-to-Speech Configuration File -": {
+        "loaded": False,
+        "progress": 0,
+        "file_path": "edith/data/models/jenny_model/model.pt",
+    },
+    " Speech Recognition -": {
         "loaded": False,
         "progress": 0,
         "file_path": "edith/modules/speech_to_text.py",
     },
-    "🎤 Audio Processing": {
+    " Audio Processing -": {
         "loaded": False,
         "progress": 0,
         "file_path": "edith/modules/speech_to_text.py",
     },
-    "🧠 Large Language Model": {
+    " Large Language Model -": {
         "loaded": False,
         "progress": 0,
         "file_path": "edith/large_language_model/llm_main.py",
     },
-    "⚙️ Hardware Diagnostics": {
+    " Hardware Diagnostics -": {
         "loaded": False,
         "progress": 0,
         "file_path": "edith/large_language_model/llm_main.py",
     },
-    "🔒 Security Modules": {
+    " Security Modules -": {
         "loaded": False,
         "progress": 0,
         "file_path": "edith/modules/ghostnet_protocol.py",
     },
-    "🤖 Virtual Assistant": {
+    " Virtual Assistant -": {
         "loaded": False,
         "progress": 0,
         "file_path": "edith/large_language_model/llm_main.py",

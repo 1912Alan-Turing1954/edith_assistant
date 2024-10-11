@@ -1,3 +1,4 @@
+import shutil
 import os
 import threading
 import sys
@@ -17,27 +18,30 @@ model_manager = ModelManager('edith/TTS/TTS/.models.json')
 
 model_path, config_path, model_item = model_manager.download_model("tts_models/en/jenny/jenny")
 
-# # Global variables for model paths
-# MODEL_NAME = "tts_models/en/jenny/jenny"
-# SAVE_PATH = "scripts/data/models/jenny_model/"
-# CHECKPOINT_PATH = os.path.join(SAVE_PATH, "model.pt")
-# CONFIG_PATH = os.path.join(SAVE_PATH, "config.json")
+# Global variables for model paths
+MODEL_NAME = "tts_models/en/jenny/jenny"
+SAVE_PATH = "edith/models/jenny_model/"
+CHECKPOINT_PATH = os.path.join(SAVE_PATH, "model.pt")
+CONFIG_PATH = os.path.join(SAVE_PATH, "config.json")
 
-# print(CHECKPOINT_PATH)
-# print(CONFIG_PATH)
-# # Initialize or load the TTS model on script start
-# if os.path.exists(CHECKPOINT_PATH) and os.path.exists(CONFIG_PATH):
-#     # If the model files exist locally, load them
-#     print("Loading jenny model: success")
-# else:
-#     # If the model files do not exist, download the model
-#     model_path, config_path, model_item = model_manager.download_model(MODEL_NAME)
-#     print("Downloading model: success")
+print(CHECKPOINT_PATH)
+print(CONFIG_PATH)
 
-#     # Save the downloaded model to the local directory
-#     os.makedirs(SAVE_PATH, exist_ok=True)
-#     os.rename(model_path, CHECKPOINT_PATH)
-#     os.rename(config_path, CONFIG_PATH)
+
+# Initialize or load the TTS model on script start
+if os.path.exists(CHECKPOINT_PATH) and os.path.exists(CONFIG_PATH):
+    # If the model files exist locally, load them
+    print("Loading jenny model: success")
+else:
+    # If the model files do not exist, download the model
+    model_path, config_path, model_item = model_manager.download_model(MODEL_NAME)
+    print("Downloading model: success")
+
+    # Save the downloaded model to the local directory
+    os.makedirs(SAVE_PATH, exist_ok=True)
+    shutil.copy(model_path, CHECKPOINT_PATH)  # Copy model file
+    shutil.copy(config_path, CONFIG_PATH)  # Copy config file
+
 
 # Initialize the TTS synthesizer
 syn = Synthesizer(

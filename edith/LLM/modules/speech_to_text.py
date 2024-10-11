@@ -68,7 +68,7 @@ def record_audio(output_filename="recorded_output.wav", start_threshold=3000, si
     stream.close()
     audio.terminate()
 
-    output_filename = "scripts/data/dialogue/"+output_filename
+    output_filename = "edith/data/dialogue/"+output_filename
     # Save the recorded data as a WAV file
     with wave.open(output_filename, 'wb') as wf:
         wf.setnchannels(CHANNELS)
@@ -84,8 +84,8 @@ def transcribe_audio(filename):
     """Transcribe audio using Wav2Vec 2.0."""
     
     # Load the pre-trained model and tokenizer
-    tokenizer = Wav2Vec2Tokenizer.from_pretrained("scripts/data/models/wav2vec2-base-960h")
-    model = Wav2Vec2ForCTC.from_pretrained("scripts/data/models/wav2vec2-base-960h")
+    tokenizer = Wav2Vec2Tokenizer.from_pretrained("edith/models/wav2vec2-base-960h")
+    model = Wav2Vec2ForCTC.from_pretrained("edith/models/wav2vec2-base-960h")
 
     # Load audio file
     waveform, sample_rate = torchaudio.load(filename)
