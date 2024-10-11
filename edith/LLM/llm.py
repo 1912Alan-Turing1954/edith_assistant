@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import platform
+import random
 import re
 import socket
 import time
@@ -13,12 +14,14 @@ import enchant
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
 import tqdm
+from modules.chat_history import ChatHistory
+from modules.system_info import SystemInfo
+from modules.text_processing import TextProcessing
 from modules.jenny_tts import text_to_speech
 from modules.ghostnet_protocol import override, enable_protocol
 from modules.data_extraction import extract_file_contents
 from modules.speech_to_text import record_audio, transcribe_audio
 
-# Suppress specific warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning, module='networkx')
 
 # Setup logging
@@ -45,104 +48,11 @@ class EdithMainframe:
         self.is_in_conversation = False
         self.conversation_timeout = 90
         self.last_interaction_time = datetime.datetime.now()
-        self.json_file = "scripts/data/dialogue/dialogue_history.json"
         self.protection_password = 'henry'
         self.load_settings()
-
-
-    def get_system_info(self) -> dict:
-        logging.info("Gathering system information.")
-        system_info = {
-            "Operating System": f"{platform.system()} {platform.release()}",
-            "Computer Name": platform.node(),
-            "CPU Info": self.get_cpu_info(),
-            "Memory Info": self.get_memory_info(),
-            "Disk Info": self.get_disk_info(),
-            "Network Info": self.get_network_info(),
-            "Uptime": self.get_uptime(),
-            "Python Version": platform.python_version(),
-        }
-        if platform.system() == "Linux":
-            system_info["Kernel Version"] = platform.uname().release
-        system_info["Battery Status"] = self.get_battery_status()
-        system_info["GPU Info"] = self.get_gpu_info()
-        return system_info
-
-    def get_cpu_info(self) -> dict:
-        cpu_count_logical = psutil.cpu_count(logical=True)
-        cpu_count_physical = psutil.cpu_count(logical=False)
-        cpu_usage = psutil.cpu_percent(interval=1, percpu=True)
-        return {
-            "Physical Cores": cpu_count_physical,
-            "Total Cores": cpu_count_logical,
-            "CPU Usage": cpu_usage,
-        }
-
-    def get_memory_info(self) -> dict:
-        memory = psutil.virtual_memory()
-        return {
-            "Total Memory": f"{memory.total / (1024 ** 3):.2f} GB",
-            "Available Memory": f"{memory.available / (1024 ** 3):.2f} GB",
-            "Used Memory": f"{memory.used / (1024 ** 3):.2f} GB",
-            "Memory Usage": f"{memory.percent}%",
-        }
-
-    def get_disk_info(self) -> list:
-        disk_info = []
-        for partition in psutil.disk_partitions(all=False):
-            partition_usage = psutil.disk_usage(partition.mountpoint)
-            disk_info.append({
-                "Drive": partition.device,
-                "Mount Point": partition.mountpoint,
-                "File System": partition.fstype,
-                "Total Space": f"{partition_usage.total / (1024 ** 3):.2f} GB",
-                "Used Space": f"{partition_usage.used / (1024 ** 3):.2f} GB",
-                "Free Space": f"{partition_usage.free / (1024 ** 3):.2f} GB",
-                "Disk Usage": f"{partition_usage.percent}%",
-            })
-        return disk_info
-
-    def get_network_info(self) -> list:
-        network_info = []
-        for interface, addresses in psutil.net_if_addrs().items():
-            for address in addresses:
-                if address.family == socket.AF_INET:
-                    network_info.append({
-                        "Interface": interface,
-                        "IP Address": address.address,
-                        "Netmask": address.netmask,
-                    })
-                    break
-        return network_info
-
-    def get_uptime(self) -> str:
-        uptime_seconds = time.time() - psutil.boot_time()
-        return f"{uptime_seconds // 3600} hours {uptime_seconds % 3600 // 60} minutes"
-
-    def get_battery_status(self) -> dict:
-        battery = psutil.sensors_battery()
-        if battery:
-            return {
-                "Percentage": f"{battery.percent}%",
-                "Plugged In": battery.power_plugged,
-                "Time Left": f"{battery.secsleft // 60} minutes" if battery.secsleft != psutil.POWER_TIME_UNLIMITED else "Charging"
-            }
-        return {}
-
-    def get_gpu_info(self) -> list:
-        try:
-            gpus = GPUtil.getGPUs()
-            return [{
-                "GPU ID": gpu.id,
-                "Name": gpu.name,
-                "Load": f"{gpu.load * 100}%",
-                "Memory Total": f"{gpu.memoryTotal} MB",
-                "Memory Free": f"{gpu.memoryFree} MB",
-                "Memory Used": f"{gpu.memoryUsed} MB",
-            } for gpu in gpus]
-        except Exception as e:
-            logging.error(f"Unable to retrieve GPU info: {str(e)}")
-            return "Unable to retrieve GPU info."
+        self.chat_history = ChatHistory("edith/data/dialogue/dialogue_history.json")
+        self.text_processing = TextProcessing()
+        self.system_info = SystemInfo()
 
     def handle_conversation(self, user_input: str) -> str:
         logging.info(f"Handling conversation input: {user_input}")
@@ -153,7 +63,7 @@ class EdithMainframe:
             logging.warning("Invalid user input received.")
             return "I'm sorry, I didn't understand that."
 
-        chat_history = self.load_chat_history()
+        chat_history = self.chat_history.load_chat_history()
 
         context_entries = chat_history[-2:] if len(chat_history) >= 2 else []
         context = "\n".join([f"{entry['User']}: {entry['AI']}" for entry in context_entries])
@@ -167,34 +77,26 @@ class EdithMainframe:
             "question": user_input
         })
         
-        self.update_chat_history(user_input, result)
+        self.chat_history.update_chat_history(user_input, result)
         return result
-
-    def load_chat_history(self) -> list:
-        try:
-            with open(self.json_file, 'r') as file:
-                return json.load(file)
-        except (FileNotFoundError, json.JSONDecodeError) as e:
-            logging.warning(f"Error reading dialogue history: {e}. Starting with empty chat history.")
-            return []
-
-    def update_chat_history(self, user_input: str, result: str) -> None:
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
-        new_entry = {
-            "timestamp": timestamp,
-            "User": user_input,
-            "AI": result
+    
+    def save_settings(self):
+        settings = {
+            'conversation_timeout': self.conversation_timeout,
+            'logging_level': logging.getLevelName(logging.root.level),
+            'protection': self.protection_password
         }
-
-        chat_history = self.load_chat_history()
-        chat_history.append(new_entry)
-
         try:
-            with open(self.json_file, 'w') as file:
-                json.dump(chat_history, file, indent=4)
-            logging.info("Dialogue history updated successfully.")
+            with open('docs/settings.json', 'w') as f:
+                json.dump(settings, f, indent=4)
+            logging.info("Settings saved successfully to 'settings.json'.")
+            with tqdm(total=100, desc="Saving Settings") as pbar:
+                for _ in range(100):
+                    time.sleep(0.01)  # Simulate a delay
+                    pbar.update(1)
+            print(" ➤ Settings saved successfully.")
         except Exception as e:
-            logging.error(f"Failed to write to dialogue history: {e}")
+            logging.error(f"Failed to save settings: {e}")
 
     def load_settings(self) -> None:
         """Loads settings from a JSON file if it exists."""
@@ -249,7 +151,7 @@ class EdithMainframe:
             elif choice == "3":
                 self.set_protection_password()
             elif choice == "4":
-                self.clear_dialogue_history()
+                self.chat_history.clear_dialogue_history()
             elif choice == "5":
                 self.save_settings()
             elif choice == "6":
@@ -303,39 +205,7 @@ class EdithMainframe:
                 time.sleep(0.01)  # Simulate a delay
                 pbar.update(1)
         print(" ➤ Command password has been set.")
-
-    def clear_dialogue_history(self):
-        with open(self.json_file, 'w') as file:
-            file.write('')
-        logging.info("Dialogue history cleared.")
-        with tqdm(total=100, desc="Clearing Dialogue History") as pbar:
-            for _ in range(100):
-                time.sleep(0.01)  # Simulate a delay
-                pbar.update(1)
-
-    def save_settings(self):
-        settings = {
-            'conversation_timeout': self.conversation_timeout,
-            'logging_level': logging.getLevelName(logging.root.level),
-            'protection': self.protection_password
-        }
-        try:
-            with open('docs/settings.json', 'w') as f:
-                json.dump(settings, f, indent=4)
-            logging.info("Settings saved successfully to 'settings.json'.")
-            with tqdm(total=100, desc="Saving Settings") as pbar:
-                for _ in range(100):
-                    time.sleep(0.01)  # Simulate a delay
-                    pbar.update(1)
-            print(" ➤ Settings saved successfully.")
-        except Exception as e:
-            logging.error(f"Failed to save settings: {e}")
-
-    def clear_dialogue_history(self):
-        with open(self.json_file, 'w') as file:
-            file.write('')
-        logging.info("Dialogue history cleared.")
-
+        
     def speak(self, input_: str) -> None:
         self.stop_audio()
         self.play_obj, self.output_path = text_to_speech(input_)
@@ -352,36 +222,6 @@ class EdithMainframe:
                     logging.info("Stopped audio playback and removed output file.")
                 except Exception as e:
                     logging.error(f"Failed to remove output file: {e}")
-
-    def clean_text(self, text: str) -> str:
-        """Clean text by correcting misspelled words."""
-        d = enchant.Dict("en_US")
-        cleaned_words = []
-        for word in text.split():
-            if d.check(word):
-                cleaned_words.append(word)
-            else:
-                suggestions = d.suggest(word)
-                cleaned_words.append(suggestions[0] if suggestions else word)
-        return " ".join(cleaned_words).lower()
-    
-    def convert_decimal_to_verbal(self, sentence: str) -> str:
-        """Convert decimal numbers in a sentence to verbal form."""
-        return re.sub(r'\b\d+\.\d+\b', self._replace_decimal, sentence)
-
-    def _replace_decimal(self, match) -> str:
-        """Helper method to replace decimal match with verbal representation."""
-        number = match.group(0)
-        integer_part, decimal_part = number.split('.')
-        return f"{integer_part} point {decimal_part}"
-
-    def get_text_after_keyword(self, input_string: str, keyword: str) -> str:
-        parts = input_string.split(keyword, 1)
-        return parts[1].strip() if len(parts) > 1 else None
-    
-    def detect_wake_word(self, transcription: str) -> bool:
-        """Detect if the wake word 'edith' is present in the transcription."""
-        return "edith" in transcription.lower()
 
     def start_conversation(self) -> None:
         """Initialize conversation state."""
@@ -404,7 +244,7 @@ class EdithMainframe:
                 transcription = transcribe_audio(audio_file)
 
                 if transcription:
-                    transcription = self.clean_text(transcription).lower()
+                    transcription = self.text_processing.clean_text(transcription).lower()
                     print("Transcription:", transcription)  # Debugging output
                     # Process commands or questions
                     self.process_transcription(transcription)
@@ -433,13 +273,14 @@ class EdithMainframe:
             logging.info("Ghost Net Protocol command detected.")
             return
 
-        if self.check_document_analysis(transcription):
-            logging.info("Document analysis command detected.")
+        # Check for document analysis intent
+        if self.check_document_analysis_intent(transcription):
+            logging.info("Document Analysis command detected.")
             return
-        
+            
         # Fallback response
         logging.info("Generating fallback response.")
-        response = self.convert_decimal_to_verbal(self.handle_conversation(transcription))
+        response = self.text_processing.convert_decimal_to_verbal(self.handle_conversation(transcription))
         self.speak(response)
 
 
@@ -492,18 +333,18 @@ class EdithMainframe:
         """Handle document analysis requests."""
         logging.info("Document analysis triggered.")
         try:
-            contents = extract_file_contents()
-            response = self.convert_decimal_to_verbal(
-                self.handle_conversation(f'Analyze this document and give me a brief explanation and further information regarding the document: "{contents}"')
+            # Here you might extract the specific document reference from the input
+            contents = extract_file_contents()  # or use a specific document based on user input
+            response = self.text_processing.convert_decimal_to_verbal(
+                self.handle_conversation(f'Analyze this document and give me a brief explanation: "{contents}"')
             )
             self.speak(response)
         except Exception as e:
             logging.error(f"Error during document analysis: {e}")
 
 
+
 if __name__ == "__main__":
-# def main() -> None:
     edith = EdithMainframe()
-# while True:
     edith.launch()
 
