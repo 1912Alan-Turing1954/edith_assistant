@@ -34,37 +34,37 @@ modules = {
     "🔊 Text-to-Speech Model": {
         "loaded": False,
         "progress": 0,
-        "file_path": "scripts/data/models/jenny_model/.model.pt",
+        "file_path": "edith/data/models/jenny_model/.model.pt",
     },
     "🗣 Speech Recognition": {
         "loaded": False,
         "progress": 0,
-        "file_path": "scripts/edith/large_language_model/modules/speech_to_text.py",
+        "file_path": "edith/modules/speech_to_text.py",
     },
     "🎤 Audio Processing": {
         "loaded": False,
         "progress": 0,
-        "file_path": "scripts/edith/large_language_model/modules/speech_to_text.py",
+        "file_path": "edith/modules/speech_to_text.py",
     },
     "🧠 Large Language Model": {
         "loaded": False,
         "progress": 0,
-        "file_path": "scripts/edith/large_language_model/llm_main.py",
+        "file_path": "edith/large_language_model/llm_main.py",
     },
     "⚙️ Hardware Diagnostics": {
         "loaded": False,
         "progress": 0,
-        "file_path": "scripts/edith/large_language_model/llm_main.py",
+        "file_path": "edith/large_language_model/llm_main.py",
     },
     "🔒 Security Modules": {
         "loaded": False,
         "progress": 0,
-        "file_path": "scripts/edith/large_language_model/modules/ghostnet_protocol.py",
+        "file_path": "edith/modules/ghostnet_protocol.py",
     },
     "🤖 Virtual Assistant": {
         "loaded": False,
         "progress": 0,
-        "file_path": "scripts/edith/large_language_model/llm_main.py",
+        "file_path": "edith/large_language_model/llm_main.py",
     },
 }
 
@@ -153,7 +153,7 @@ def run_script():
     for attempt in range(max_retries):
         logging.info("Booting up virtual assistant...")
         try:
-            script_path = "scripts/edith/large_language_model/llm_main.py"
+            script_path = "edith/large_language_model/llm_main.py"
             subprocess.run(["python", script_path], check=True)
             logging.info("Script execution completed successfully.")
             break  # Exit loop if successful
