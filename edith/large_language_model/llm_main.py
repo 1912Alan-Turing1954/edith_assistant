@@ -17,7 +17,6 @@ from modules.jenny_tts import text_to_speech
 from modules.ghostnet_protocol import override, enable_protocol
 from modules.data_extraction import extract_file_contents
 from modules.speech_to_text import record_audio, transcribe_audio
-# from modules.file_system_module import explore_directory, process_fs_command
 
 # Suppress specific warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning, module='networkx')
@@ -232,7 +231,7 @@ class EdithMainframe:
             'logging_level': logging.getLevelName(20)
         }
         try:
-            with open('settings.json', 'w') as f:
+            with open('docs/settings.json', 'w') as f:
                 json.dump(default_settings, f, indent=4)
             logging.info("Default settings created successfully in 'settings.json'.")
         except Exception as e:
@@ -332,7 +331,7 @@ class EdithMainframe:
             'protection': self.protection_password
         }
         try:
-            with open('settings.json', 'w') as f:
+            with open('docs/settings.json', 'w') as f:
                 json.dump(settings, f, indent=4)
             logging.info("Settings saved successfully to 'settings.json'.")
             with tqdm(total=100, desc="Saving Settings") as pbar:
