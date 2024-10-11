@@ -1,19 +1,10 @@
 import datetime
-import json
 import logging
 import os
-import platform
-import random
-import re
-import socket
-import time
 import warnings
-import psutil
-import GPUtil
-import enchant
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
-import tqdm
+from modules.settings_manager import SettingsManager
 from modules.chat_history import ChatHistory
 from modules.system_info import SystemInfo
 from modules.text_processing import TextProcessing
@@ -39,21 +30,101 @@ with open('edith/LLM/llm_template.txt', 'r') as file:
 # File System Structure: {fs} (for reference only)
 prompt = ChatPromptTemplate.from_template(template)
 chain = prompt | model
-
 class EdithMainframe:
     def __init__(self):
         logging.info("Initializing Edith Mainframe.")
-        self.play_obj = None
-        self.output_path = None
-        self.is_in_conversation = False
-        self.conversation_timeout = 90
-        self.last_interaction_time = datetime.datetime.now()
-        self.protection_password = 'henry'
-        self.load_settings()
         self.chat_history = ChatHistory("edith/data/dialogue/dialogue_history.json")
         self.text_processing = TextProcessing()
         self.system_info = SystemInfo()
+        self.settings_manager = SettingsManager()
+        self.settings_manager.load_settings()
+        self.play_obj = None
+        self.output_path = None
+        self.is_in_conversation = False
+        self.last_interaction_time = datetime.datetime.now()
 
+    # Public Methods
+    def launch(self):
+        logging.info("Launching Edith...")
+        try:
+            while True:
+                if self.play_obj and self.play_obj.is_playing():
+                    # Wait while audio is playing
+                    continue  # Skip to the next iteration of the loop
+                
+                # Capture audio and get transcription only if not playing
+                audio_file = record_audio()
+                transcription = transcribe_audio(audio_file)
+
+                if transcription:
+                    transcription = self.text_processing.clean_text(transcription).lower()
+                    print("Transcription:", transcription)  # Debugging output
+                    # Process commands or questions
+                    self.process_transcription(transcription)
+        except Exception as e:
+            logging.error("An error occurred: %s", e)
+
+
+    def process_transcription(self, transcription: str):
+        """Check and handle the transcription for commands or questions."""
+        if "access bios" in transcription:
+            self.settings_menu()
+            return
+
+        if self.text_processing.detect_wake_word(transcription):
+            self.start_conversation()
+
+        if self.is_in_conversation and self.is_within_timeout():
+            self.handle_transcription(transcription)
+        else:
+            self.is_in_conversation = False
+
+    def handle_transcription(self, transcription: str):
+        """Process the transcription for commands or questions."""
+        logging.info(f"Received transcription: {transcription}")
+
+        if self.check_ghost_net_protocol(transcription):
+            logging.info("Ghost Net Protocol command detected.")
+            return
+
+        if self.check_document_analysis(transcription):
+            logging.info("Document Analysis command detected.")
+            return
+            
+        # Fallback response
+        logging.info("Generating fallback response.")
+        response = self.text_processing.convert_decimal_to_verbal(self.handle_conversation(transcription))
+        self.speak(response)
+
+    # Audio Management
+    def speak(self, input_: str) -> None:
+        self.stop_audio()
+        self.play_obj, self.output_path = text_to_speech(input_)
+        os.remove(self.output_path)
+
+    def stop_audio(self) -> None:
+        """Stop current audio playback and remove the output file if exists."""
+        if self.play_obj and self.play_obj.is_playing():
+            self.play_obj.stop()
+            if self.output_path and os.path.exists(self.output_path):
+                try:
+                    os.remove(self.output_path)
+                    logging.info("Stopped audio playback and removed output file.")
+                except Exception as e:
+                    logging.error(f"Failed to remove output file: {e}")
+
+    # Conversation Management
+    def start_conversation(self) -> None:
+        """Initialize conversation state."""
+        logging.info("Wake word detected...")
+        self.is_in_conversation = True
+        self.last_interaction_time = datetime.datetime.now()
+
+    def is_within_timeout(self) -> bool:
+        """Check if the conversation is still within timeout."""
+        return (datetime.datetime.now() - self.last_interaction_time).total_seconds() < self.settings_manager.conversation_timeout
+
+    # Conversation Handling
     def handle_conversation(self, user_input: str) -> str:
         logging.info(f"Handling conversation input: {user_input}")
         self.stop_audio()
@@ -72,218 +143,15 @@ class EdithMainframe:
 
         result = chain.invoke({
             "context": context,
-            "system": self.get_system_info(),
+            "system": self.system_info.get_system_info(),
             "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %I:%M %p"), 
             "question": user_input
         })
         
         self.chat_history.update_chat_history(user_input, result)
         return result
-    
-    def save_settings(self):
-        settings = {
-            'conversation_timeout': self.conversation_timeout,
-            'logging_level': logging.getLevelName(logging.root.level),
-            'protection': self.protection_password
-        }
-        try:
-            with open('docs/settings.json', 'w') as f:
-                json.dump(settings, f, indent=4)
-            logging.info("Settings saved successfully to 'settings.json'.")
-            with tqdm(total=100, desc="Saving Settings") as pbar:
-                for _ in range(100):
-                    time.sleep(0.01)  # Simulate a delay
-                    pbar.update(1)
-            print(" ➤ Settings saved successfully.")
-        except Exception as e:
-            logging.error(f"Failed to save settings: {e}")
 
-    def load_settings(self) -> None:
-        """Loads settings from a JSON file if it exists."""
-        if os.path.exists('settings.json'):
-            try:
-                with open('settings.json', 'r') as f:
-                    settings = json.load(f)
-                    
-                self.conversation_timeout = settings.get('conversation_timeout', self.conversation_timeout)
-                logging_level = settings.get('logging_level', logging.getLevelName(logging.root.level))
-                logging.getLogger().setLevel(logging.getLevelName(logging_level))
-
-                logging.info("Settings loaded successfully from 'settings.json'.")
-            except Exception as e:
-                logging.error(f"Failed to load settings: {e}")
-        else:
-            self.create_default_settings()
-
-    def create_default_settings(self) -> None:
-        """Creates a default settings JSON file."""
-        default_settings = {
-            'conversation_timeout': self.conversation_timeout,
-            'logging_level': logging.getLevelName(20)
-        }
-        try:
-            with open('docs/settings.json', 'w') as f:
-                json.dump(default_settings, f, indent=4)
-            logging.info("Default settings created successfully in 'settings.json'.")
-        except Exception as e:
-            logging.error(f"Failed to create default settings: {e}")
-    
-    def settings_menu(self) -> None:
-        """Display a sci-fi inspired BIOS settings menu."""
-        while True:
-            print("\n" + "=" * 70)
-            print("           ██████████ BIOS Settings Interface ██████████")
-            print("=" * 70)
-            print(f" [1] Change Conversation Timeout (Current: {self.conversation_timeout}s)")
-            print(f" [2] Change Logging Level (Current: {logging.getLevelName(logging.root.level)})")
-            print(f" [3] Set Protection Password (Current: {'Set' if self.protection_password else 'Not Set'})")
-            print(" [4] Clear Dialogue History")
-            print(" [5] Save current settings to file")
-            print(" [6] Exit Settings")
-            print("=" * 70)
-
-            choice = input(" Select an option [1-6]: ")
-
-            if choice == "1":
-                self.change_conversation_timeout()
-            elif choice == "2":
-                self.change_logging_level()
-            elif choice == "3":
-                self.set_protection_password()
-            elif choice == "4":
-                self.chat_history.clear_dialogue_history()
-            elif choice == "5":
-                self.save_settings()
-            elif choice == "6":
-                logging.info("Exiting settings menu.")
-                print(" Exiting settings menu.")
-                break
-            else:
-                logging.warning("Invalid choice in settings menu.")
-                print(" ❌ Invalid choice. Please select a valid option.")
-
-    def change_conversation_timeout(self):
-        new_timeout = input(" Enter new conversation timeout in seconds: ")
-        if new_timeout.isdigit():
-            self.conversation_timeout = int(new_timeout)
-            logging.info(f"Updated conversation timeout to {self.conversation_timeout}s.")
-            with tqdm(total=100, desc="Updating Conversation Timeout") as pbar:
-                for _ in range(100):
-                    time.sleep(0.01)  # Simulate a delay
-                    pbar.update(1)
-            print(f" ➤ Updated to {self.conversation_timeout} seconds.")
-        else:
-            logging.warning("Invalid input for conversation timeout.")
-            print(" ❌ Invalid input. Please enter a valid integer.")
-
-    def change_logging_level(self):
-        new_logging_level = input(" Enter new logging level (DEBUG, INFO, WARNING, ERROR): ").upper()
-        levels = {
-            'DEBUG': logging.DEBUG,
-            'INFO': logging.INFO,
-            'WARNING': logging.WARNING,
-            'ERROR': logging.ERROR
-        }
-        if new_logging_level in levels:
-            logging.getLogger().setLevel(levels[new_logging_level])
-            logging.info(f"Updated logging level to {new_logging_level}.")
-            with tqdm(total=100, desc="Updating Logging Level") as pbar:
-                for _ in range(100):
-                    time.sleep(0.01)  # Simulate a delay
-                    pbar.update(1)
-            print(f" ➤ Updated to {new_logging_level}.")
-        else:
-            logging.warning("Invalid logging level input.")
-            print(" ❌ Invalid logging level.")
-
-    def set_protection_password(self):
-        new_password = input(" Enter new protection password: ")
-        self.protection_password = new_password
-        logging.info("Command password has been set.")
-        with tqdm(total=100, desc="Setting Protection Password") as pbar:
-            for _ in range(100):
-                time.sleep(0.01)  # Simulate a delay
-                pbar.update(1)
-        print(" ➤ Command password has been set.")
-        
-    def speak(self, input_: str) -> None:
-        self.stop_audio()
-        self.play_obj, self.output_path = text_to_speech(input_)
-        os.remove(self.output_path)
-
-
-    def stop_audio(self) -> None:
-        """Stop current audio playback and remove the output file if exists."""
-        if self.play_obj and self.play_obj.is_playing():
-            self.play_obj.stop()
-            if self.output_path and os.path.exists(self.output_path):
-                try:
-                    os.remove(self.output_path)
-                    logging.info("Stopped audio playback and removed output file.")
-                except Exception as e:
-                    logging.error(f"Failed to remove output file: {e}")
-
-    def start_conversation(self) -> None:
-        """Initialize conversation state."""
-        logging.info("Wake word detected...")
-        self.is_in_conversation = True
-        self.last_interaction_time = datetime.datetime.now()
-
-    def is_within_timeout(self) -> bool:
-        """Check if the conversation is still within timeout."""
-        return (datetime.datetime.now() - self.last_interaction_time).total_seconds() < self.conversation_timeout
-
-    def launch(self):
-        logging.info("Launching Edith...")
-        try:
-            while True:
-                if self.play_obj and self.play_obj.is_playing():
-                    pass  # Wait while audio is playing
-                # Capture audio and get transcription
-                audio_file = record_audio()
-                transcription = transcribe_audio(audio_file)
-
-                if transcription:
-                    transcription = self.text_processing.clean_text(transcription).lower()
-                    print("Transcription:", transcription)  # Debugging output
-                    # Process commands or questions
-                    self.process_transcription(transcription)
-        except Exception as e:
-            logging.error("An error occurred: %s", e)
-
-    def process_transcription(self, transcription: str):
-        """Check and handle the transcription for commands or questions."""
-        if "access bios" in transcription:
-            self.settings_menu()
-            return
-
-        if self.detect_wake_word(transcription):
-            self.start_conversation()
-
-        if self.is_in_conversation and self.is_within_timeout():
-            self.handle_transcription(transcription)
-        else:
-            self.is_in_conversation = False
-
-    def handle_transcription(self, transcription: str):
-        """Process the transcription for commands or questions."""
-        logging.info(f"Received transcription: {transcription}")
-
-        if self.check_ghost_net_protocol(transcription):
-            logging.info("Ghost Net Protocol command detected.")
-            return
-
-        # Check for document analysis intent
-        if self.check_document_analysis_intent(transcription):
-            logging.info("Document Analysis command detected.")
-            return
-            
-        # Fallback response
-        logging.info("Generating fallback response.")
-        response = self.text_processing.convert_decimal_to_verbal(self.handle_conversation(transcription))
-        self.speak(response)
-
-
+    # Command Processing
     def check_ghost_net_protocol(self, transcription: str) -> bool:
         """Check for Ghost Net Protocol commands."""
         ghost_net_bundles = [
@@ -333,7 +201,6 @@ class EdithMainframe:
         """Handle document analysis requests."""
         logging.info("Document analysis triggered.")
         try:
-            # Here you might extract the specific document reference from the input
             contents = extract_file_contents()  # or use a specific document based on user input
             response = self.text_processing.convert_decimal_to_verbal(
                 self.handle_conversation(f'Analyze this document and give me a brief explanation: "{contents}"')
