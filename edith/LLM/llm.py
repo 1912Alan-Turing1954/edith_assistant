@@ -19,14 +19,37 @@ warnings.filterwarnings("ignore", category=RuntimeWarning, module='networkx')
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+system_info = SystemInfo()
+
+gpu = system_info.get_gpu_info()
+mem = system_info.get_memory_info()
+# Assuming `mem` is the dictionary for memory details
+# Extract and convert memory values
+total_memory = int(float(mem['Total Memory'].replace('GB', '').strip()))
+gpu_memory = gpu[0]['Memory Total']  # Accessing the first GPU's memory
+gpu_memory = int(float(gpu_memory.replace('MB', '').strip()))  # Convert to int
+
+# Print the memory values for verification
+print(f"Total Memory: {total_memory} GB")
+print(f"GPU Memory: {gpu_memory} MB")
+
+# Condition check
+if (gpu_memory < 3000 and total_memory < 16) or gpu_memory < 3000 or total_memory < 16:
+    print("Conditions not met: either GPU memory is low or total memory is low.")
+    model = "tinyllama"
+    template = ""
+else:
+    print("Conditions met - Using llama3.1 with system features")
+    model = 'llama3.1'
+    with open('edith/LLM/llm_template.txt', 'r') as file:
+        contents = file.read()
+        template = f"""{contents}"""
+    
+
+
+print(model)
 # Initialize language model
-model = OllamaLLM(model="llama3.1")
-
-with open('edith/LLM/llm_template.txt', 'r') as file:
-    contents = file.read()
-    template = f"""{contents}"""
-
-# Define the chat prompt template
+model = OllamaLLM(model=model)
 
 # File System Structure: {fs} (for reference only)
 prompt = ChatPromptTemplate.from_template(template)
