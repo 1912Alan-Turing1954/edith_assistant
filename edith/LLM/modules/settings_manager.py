@@ -1,7 +1,7 @@
 import json
 import logging
 import os
-import tqdm
+from tqdm import tqdm
 import time
 
 class SettingsManager:
@@ -9,6 +9,84 @@ class SettingsManager:
         self.conversation_timeout = default_timeout
         self.protection_password = 'henry'
     
+    def settings_menu(self) -> None:
+        """Display a sci-fi inspired BIOS settings menu."""
+        while True:
+            print("\n" + "=" * 70)
+            print("           ██████████ BIOS Settings Interface ██████████")
+            print("=" * 70)
+            print(f" [1] Change Conversation Timeout (Current: {self.conversation_timeout}s)")
+            print(f" [2] Change Logging Level (Current: {logging.getLevelName(logging.root.level)})")
+            print(f" [3] Set Protection Password (Current: {'Set' if self.protection_password else 'Not Set'})")
+            print(" [4] Clear Dialogue History")
+            print(" [5] Save current settings to file")
+            print(" [6] Exit Settings")
+            print("=" * 70)
+
+            choice = input(" Select an option [1-6]: ")
+
+            if choice == "1":
+                self.change_conversation_timeout()
+            elif choice == "2":
+                self.change_logging_level()
+            elif choice == "3":
+                self.set_protection_password()
+            elif choice == "4":
+                self.clear_dialogue_history()
+            elif choice == "5":
+                self.save_settings()
+            elif choice == "6":
+                logging.info("Exiting settings menu.")
+                print(" Exiting settings menu.")
+                break
+            else:
+                logging.warning("Invalid choice in settings menu.")
+                print(" ❌ Invalid choice. Please select a valid option.")
+
+    def change_conversation_timeout(self):
+        new_timeout = input(" Enter new conversation timeout in seconds: ")
+        if new_timeout.isdigit():
+            self.conversation_timeout = int(new_timeout)
+            logging.info(f"Updated conversation timeout to {self.conversation_timeout}s.")
+            with tqdm(total=100, desc="Updating Conversation Timeout") as pbar:
+                for _ in range(100):
+                    time.sleep(0.01)  # Simulate a delay
+                    pbar.update(1)
+            print(f" ➤ Updated to {self.conversation_timeout} seconds.")
+        else:
+            logging.warning("Invalid input for conversation timeout.")
+            print(" ❌ Invalid input. Please enter a valid integer.")
+
+    def change_logging_level(self):
+        new_logging_level = input(" Enter new logging level (DEBUG, INFO, WARNING, ERROR): ").upper()
+        levels = {
+            'DEBUG': logging.DEBUG,
+            'INFO': logging.INFO,
+            'WARNING': logging.WARNING,
+            'ERROR': logging.ERROR
+        }
+        if new_logging_level in levels:
+            logging.getLogger().setLevel(levels[new_logging_level])
+            logging.info(f"Updated logging level to {new_logging_level}.")
+            with tqdm(total=100, desc="Updating Logging Level") as pbar:
+                for _ in range(100):
+                    time.sleep(0.01)  # Simulate a delay
+                    pbar.update(1)
+            print(f" ➤ Updated to {new_logging_level}.")
+        else:
+            logging.warning("Invalid logging level input.")
+            print(" ❌ Invalid logging level.")
+
+    def set_protection_password(self):
+        new_password = input(" Enter new protection password: ")
+        self.protection_password = new_password
+        logging.info("Command password has been set.")
+        with tqdm(total=100, desc="Setting Protection Password") as pbar:
+            for _ in range(100):
+                time.sleep(0.01)  # Simulate a delay
+                pbar.update(1)
+        print(" ➤ Command password has been set.")
+
     def save_settings(self):
         settings = {
             'conversation_timeout': self.conversation_timeout,

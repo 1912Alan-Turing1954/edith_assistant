@@ -12,6 +12,7 @@ from modules.jenny_tts import text_to_speech
 from modules.ghostnet_protocol import override, enable_protocol
 from modules.data_extraction import extract_file_contents
 from modules.speech_to_text import record_audio, transcribe_audio
+from modules.load_modules import get_size, modules, load_modules
 
 warnings.filterwarnings("ignore", category=RuntimeWarning, module='networkx')
 
@@ -33,6 +34,7 @@ chain = prompt | model
 class EdithMainframe:
     def __init__(self):
         logging.info("Initializing Edith Mainframe.")
+        load_modules()
         self.chat_history = ChatHistory("edith/data/dialogue/dialogue_history.json")
         self.text_processing = TextProcessing()
         self.system_info = SystemInfo()
@@ -50,8 +52,8 @@ class EdithMainframe:
             while True:
                 if self.play_obj and self.play_obj.is_playing():
                     # Wait while audio is playing
-                    continue  # Skip to the next iteration of the loop
-                
+                    # continue  # Skip to the next iteration of the loop
+                    continue
                 # Capture audio and get transcription only if not playing
                 audio_file = record_audio()
                 transcription = transcribe_audio(audio_file)
@@ -68,7 +70,7 @@ class EdithMainframe:
     def process_transcription(self, transcription: str):
         """Check and handle the transcription for commands or questions."""
         if "access bios" in transcription:
-            self.settings_menu()
+            self.settings_manager.settings_menu()
             return
 
         if self.text_processing.detect_wake_word(transcription):
@@ -214,4 +216,3 @@ class EdithMainframe:
 if __name__ == "__main__":
     edith = EdithMainframe()
     edith.launch()
-
