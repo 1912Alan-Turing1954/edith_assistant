@@ -94,17 +94,35 @@ class SettingsManager:
             'protection': self.protection_password
         }
         try:
-            with open('docs/settings.json', 'w') as f:
+            home_dir = os.path.expanduser("~")
+    
+            # Define the directory path
+            settings_dir = os.path.join(home_dir, 'edith_config')
+            
+            # Create the directory if it doesn't exist
+            os.makedirs(settings_dir, exist_ok=True)
+            
+            # Define the full path for the settings file
+            settings_file_path = os.path.join(settings_dir, 'settings.json')
+            
+            # Save the settings to the file
+            with open(settings_file_path, 'w') as f:
                 json.dump(settings, f, indent=4)
-            logging.info("Settings saved successfully to 'settings.json'.")
+        
+            logging.info("Settings saved successfully to '~/edith_config/settings.json'.")
             self._simulate_delay("Saving Settings")
         except Exception as e:
             logging.error(f"Failed to save settings: {e}")
 
     def load_settings(self):
-        if os.path.exists('docs/settings.json'):
+        home_dir = os.path.expanduser("~")
+    
+            # Define the directory path
+        settings_dir = os.path.join(home_dir, 'edith_config')
+            
+        if os.path.exists(settings_dir + 'settings.json'):
             try:
-                with open('docs/settings.json', 'r') as f:
+                with open(settings_dir, 'settings.json', 'r') as f:
                     settings = json.load(f)
                 self.conversation_timeout = settings.get('conversation_timeout', self.conversation_timeout)
                 logging_level = settings.get('logging_level', logging.getLevelName(logging.root.level))
@@ -121,7 +139,16 @@ class SettingsManager:
             'logging_level': logging.getLevelName(logging.INFO)
         }
         try:
-            with open('docs/settings.json', 'w') as f:
+            home_dir = os.path.expanduser("~")
+    
+            # Define the directory path
+            settings_dir = os.path.join(home_dir, 'edith_config')
+            
+            # Create the directory if it doesn't exist
+            os.makedirs(settings_dir, exist_ok=True)
+            
+            # Save the set
+            with open(settings_dir + "/settings.json", 'w') as f:
                 json.dump(default_settings, f, indent=4)
             logging.info("Default settings created successfully in 'settings.json'.")
         except Exception as e:

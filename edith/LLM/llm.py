@@ -125,10 +125,18 @@ class EdithMainframe:
                     last_entry = chat_history[-1]  # Get the last chat entry
                     log_entry = f"{last_entry['timestamp']} | User: {last_entry['User']} | AI: {last_entry['AI']}"
 
-                    # Get the home directory for logging
                     home_dir = os.path.expanduser("~")
-                    log_file_path = os.path.join(home_dir, "log_requests.txt")
-
+    
+                    # Define the directory path
+                    settings_dir = os.path.join(home_dir, 'edith_config')
+                    
+                    # Create the directory if it doesn't exist
+                    os.makedirs(settings_dir, exist_ok=True)
+                    
+                    # Define the full path for the settings file
+                    log_file_path = os.path.join(settings_dir, 'log_requests.json')
+                    
+            # Save the set
                     # Append the log entry to the file
                     with open(log_file_path, "a") as log_file:
                         log_file.write("Log Request:" + "\n" +log_entry + "\n")  # Ensure log_entry is a string
