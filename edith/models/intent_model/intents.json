@@ -56,6 +56,26 @@
           "responses": [
               "document_analysis_run"
           ]
-      }
+      },
+      { 
+        "tag": "log_request",
+        "patterns": [ 
+            "log that",
+            "please log that",
+            "log this",
+            "save that",
+            "record this",
+            "add to log",
+            "note this",
+            "write that down",
+            "capture this",
+            "document this entry",
+            "log the last entry",
+            "log my last input"
+        ],
+        "responses": [
+          "log_request"
+      ]
+    }
   ]
 }

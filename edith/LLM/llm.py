@@ -18,7 +18,6 @@ from modules.intent_nlp import classify_intent
 
 warnings.filterwarnings("ignore", category=RuntimeWarning, module='networkx')
 
-print(classify_intent("activate ghostnet protocol?"))
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -60,7 +59,7 @@ chain = prompt | model
 class EdithMainframe:
     def __init__(self):
         logging.info("Initializing Edith Mainframe.")
-        load_modules()
+        # load_modules()
         self.chat_history = ChatHistory("edith/data/dialogue/dialogue_history.json")
         self.text_processing = TextProcessing()
         self.system_info = SystemInfo()
@@ -118,6 +117,26 @@ class EdithMainframe:
                 self.perform_document_analysis()
             elif response=="ghostnet_protocol":
                 logging.info("Ghost Net Protocol response detected.")
+            elif response=="log_request":
+                logging.info("Log request detected.")
+                chat_history = self.chat_history.load_chat_history()
+                
+                if chat_history:
+                    last_entry = chat_history[-1]  # Get the last chat entry
+                    log_entry = f"{last_entry['timestamp']} | User: {last_entry['User']} | AI: {last_entry['AI']}"
+
+                    # Get the home directory for logging
+                    home_dir = os.path.expanduser("~")
+                    log_file_path = os.path.join(home_dir, "log_requests.txt")
+
+                    # Append the log entry to the file
+                    with open(log_file_path, "a") as log_file:
+                        log_file.write("Log Request:" + "\n" +log_entry + "\n")  # Ensure log_entry is a string
+
+                    logging.info(f"Chat entry logged to {log_file_path}")
+                else:
+                    logging.warning("No chat history found to log.")
+
         else:
             # Fallback response
             logging.info("Generating fallback response.")
