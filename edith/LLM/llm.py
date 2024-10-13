@@ -134,7 +134,7 @@ class EdithMainframe:
                     os.makedirs(settings_dir, exist_ok=True)
                     
                     # Define the full path for the settings file
-                    log_file_path = os.path.join(settings_dir, 'log_requests.json')
+                    log_file_path = os.path.join(settings_dir, '/log_requests.json')
                     
             # Save the set
                     # Append the log entry to the file
