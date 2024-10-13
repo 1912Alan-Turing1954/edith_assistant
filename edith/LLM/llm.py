@@ -1,6 +1,7 @@
 import datetime
 import logging
 import os
+import sys
 import warnings
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
@@ -13,9 +14,11 @@ from modules.ghostnet_protocol import override, enable_protocol
 from modules.data_extraction import extract_file_contents
 from modules.speech_to_text import record_audio, transcribe_audio
 from modules.load_modules import get_size, modules, load_modules
+from modules.intent_nlp import classify_intent
 
 warnings.filterwarnings("ignore", category=RuntimeWarning, module='networkx')
 
+print(classify_intent("activate ghostnet protocol?"))
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -107,19 +110,19 @@ class EdithMainframe:
     def handle_transcription(self, transcription: str):
         """Process the transcription for commands or questions."""
         logging.info(f"Received transcription: {transcription}")
-
-        if self.check_ghost_net_protocol(transcription):
-            logging.info("Ghost Net Protocol command detected.")
-            return
-
-        if self.check_document_analysis(transcription):
-            logging.info("Document Analysis command detected.")
-            return
-            
-        # Fallback response
-        logging.info("Generating fallback response.")
-        response = self.text_processing.convert_decimal_to_verbal(self.handle_conversation(transcription))
-        self.speak(response)
+        response, result = classify_intent(transcription)
+        print(response)
+        if result==True:
+            if response=='document_analysis_run':
+                logging.info("Document Analysis response detected.")
+                self.perform_document_analysis()
+            elif response=="ghostnet_protocol":
+                logging.info("Ghost Net Protocol response detected.")
+        else:
+            # Fallback response
+            logging.info("Generating fallback response.")
+            response = self.text_processing.convert_decimal_to_verbal(self.handle_conversation(transcription))
+            self.speak(response)
 
     # Audio Management
     def speak(self, input_: str) -> None:
@@ -176,51 +179,39 @@ class EdithMainframe:
         self.chat_history.update_chat_history(user_input, result)
         return result
 
-    # Command Processing
-    def check_ghost_net_protocol(self, transcription: str) -> bool:
-        """Check for Ghost Net Protocol commands."""
-        ghost_net_bundles = [
-            ['enable', 'ghost', 'net', 'protocol'],
-            ['activate', 'ghost', 'net', 'protocol'],
-            ['disable', 'ghost', 'net', 'protocol'],
-            ['deactivate', 'ghost', 'net', 'protocol'],
-            ['override', 'ghost', 'net', 'protocol'],
-            ['start', 'ghost', 'net', 'protocol'],
-            ['stop', 'ghost', 'net', 'protocol'],
-        ]
-
-        for bundle in ghost_net_bundles:
-            if all(keyword in transcription for keyword in bundle):
-                self.handle_ghost_net_protocol(bundle, transcription)
-                return True
-        return False
-
-    def check_document_analysis(self, transcription: str) -> bool:
-        """Check for Document Analysis commands."""
-        document_analysis_bundles = [
-            ['perform', 'document', 'analysis'],
-            ['conduct', 'document', 'analysis'],
-            ['analyze', 'document'],
-        ]
-
-        for bundle in document_analysis_bundles:
-            if all(keyword in transcription for keyword in bundle):
-                self.perform_document_analysis()
-                return True
-        return False
-    
     def handle_ghost_net_protocol(self, bundle: list, transcription: str):
         """Handle Ghost Net Protocol commands."""
-        if any(command in bundle for command in ['disable', 'deactivate', 'override']):
+        
+        # Keywords for disabling the protocol
+        disable_keywords = [
+            "disable",
+            "deactivate",
+            "stop",
+            "override",
+            "turn off",
+            "halt",
+            "shut down",
+            "cease",
+            "terminate",
+            "suspend"
+        ]
+        
+        # Check if any disable command is in the transcription
+        if any(command in transcription.lower() for command in disable_keywords):
             password = self.get_text_after_keyword(transcription, 'password')
             keyword = self.get_text_after_keyword(transcription, 'keyword')
+            
             if password or keyword:
                 text_to_speech("Disabling ghost net protocol")
                 override(True, password or keyword)
             else:
-                print("No valid keyword found to extract text.")
+                print("No valid keyword found to extract text for disabling the protocol.")
+        
         else:
-            enable_protocol()  # Enable or activate the protocol
+            # Enable or activate the protocol
+            text_to_speech("Enabling ghost net protocol")
+            enable_protocol()
+
 
     def perform_document_analysis(self):
         """Handle document analysis requests."""

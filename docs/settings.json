@@ -1,5 +1,5 @@
 {
-    "conversation_timeout": 30,
+    "conversation_timeout": 120,
     "logging_level": "INFO",
     "protection": "henry"
 }

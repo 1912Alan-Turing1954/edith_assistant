@@ -88,7 +88,6 @@ def check_disk_space(min_required_space_mb):
 
 def load_modules():
     """Loads each module with enhanced loading animations."""
-    logging.info("Initializing Quantum Operating System... Please wait...")
     time.sleep(1.5)
 
     min_required_space_mb = 100  # Set a minimum required disk space in MB

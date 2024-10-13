@@ -1,405 +1,61 @@
 {
   "intents": [
-    
-    {
-      "tag": "speedtest_tsk",
-      "patterns": [
-        
-          "Hey, could you do a quick speed test?",
-          "Can you run a speed test real quick?",
-          "Could you test the internet speed, please?",
-          "Edith, I need you to run a speed test for me.",
-          "Check internet speed please?",
-          "Could you verify our internet speed?",
-          "Do we have a moment for a speed test?",
-          "Can you quickly check our network speed?",
-          "Can you tell me the speed of our internet, please?",
-          "Can you do a quick internet speed assessment?",
-          "Edith, what's our internet speed looking like?",
-          "Can you check our latency, Edith?"
-
-      ],
-      "responses": [
-        "{string}"
-      ]
-    },
-    {
-      "tag": "ping_tsk",
-      "patterns": [
-        "Please ping this address.",
-        "Ping this server to check connectivity.",
-        "Ping this URL to see if it's reachable.",
-        "Ping this IP to confirm it's online.",
-        "Could you ping this address to test our internet?",
-        "Edith, could you ping this address?",
-        "Edith, can you ping this IP?",
-        "Edith, could you ping this domain?",
-        "ping this address"
-      ],
-      "responses": [
-        "{string}"
-      ]
-    },
-    {
-      "tag": "system_status",
-      "patterns": [
-        "How's everything, Edith?",
-        "Edith, what's our status?",
-        "Hey Edith, how's the system?",
-        "Edith, how are things looking?",
-        "Is everything okay, Edith?",
-        "Edith, are we running smoothly?",
-        "Edith, what's the status?",
-        "Edith, how's our performance?",
-        "Hey Edith, system status check, please.",
-        "Edith, give me a quick system update.",
-        "Edith, can you check our system status?",
-        "Edith, I want to know how our system is doing."
-      ],
-
-      "responses": [
-        "{string}"
-      ]
-    },
-    {
-      "tag": "storage_info_tsk",
-      "patterns": [
-        "Give me storage info.",
-        "Give me storage status.",
-        "Give me the current storage info.",
-        "Give me the current storage status.",
-        "Storage info.",
-        "Storage status.",
-        "Drive status.",
-        "Drive info.",
-        "What is my storage status?",
-        "What's our drive status?",
-        "Hey Edith, could you give me storage info?",
-        "Edith, how's the storage status?",
-        "Could you give me the current storage info, Edith?",
-        "Edith, what's the current storage status?",
-        "Edith, what's the status of our storage?",
-        "Edith, what's the status of the drive?",
-        "Edith, I need drive info.",
-        "Edith, can you provide storage info?",
-        "Edith, what's our drive status looking like?",
-        "Edith, could you give me an update on our storage?"
-      ],
-
-      "responses": [
-        "{string}"
-      ]
-    },
-    {
-      "tag": "cpu_usage_tsk",
-      "patterns": [
-        "Give me CPU usage.",
-        "Give me CPU status.",
-        "Give me our CPU usage.",
-        "Give me our CPU status.",
-        "Give me the current CPU usage.",
-        "CPU status update.",
-        "CPU usage.",
-        "What is my CPU status?",
-        "What is my CPU usage?",
-        "What's our CPU usage?",
-        "What is our CPU status?",
-        "Show CPU usage.",
-        "Check CPU usage.",
-        "Get CPU info.",
-        "CPU info.",
-        "Hey Edith, CPU usage?",
-        "Edith, what's the CPU status?",
-        "Hey Edith, our CPU usage?",
-        "Edith, how's our CPU status?",
-        "Could you give me the current CPU usage, Edith?",
-        "Edith, what's the current CPU status?",
-        "Edith, quick update on our CPU usage.",
-        "Edith, status of our CPU?",
-        "Edith, show me CPU usage.",
-        "Edith, check CPU usage.",
-        "Edith, I need CPU info.",
-        "Edith, please give me CPU status.",
-        "Can you tell me my CPU status, Edith?",
-        "Edith, update me on my CPU usage.",
-        "Edith, CPU info.",
-        "Edith, our current CPU usage?"
-      ],
-
-      "responses": [
-        "{string}"
-      ]
-    },
-    {
-      "tag": "memory_usage_tsk",
-      "patterns": [
-        "Give me memory usage.",
-        "Give me memory status.",
-        "Memory status.",
-        "Memory status update.",
-        "Memory usage.",
-        "RAM usage.",
-        "RAM status.",
-        "RAM status update.",
-        "What is my memory status?",
-        "What is my memory usage?",
-        "Show memory usage.",
-        "Check memory usage.",
-        "Check memory status.",
-        "Get memory info.",
-        "Memory info.",
-        "How's my memory holding up?",
-        "What's my memory looking like?",
-        "Can you check my RAM?",
-        "Show memory usage stats.",
-        "RAM status, please.",
-        "Give me a memory update.",
-        "RAM details, please.",
-        "Check my memory usage, please.",
-        "What's the memory situation?"
-      ],
-
-      "responses": [
-        "{string}"
-      ]
-    },
-    {
-      "tag": "disk_space_tsk",
-      "patterns": [
-        "How much disk space do I have?",
-        "Can you tell me my available disk space?",
-        "What is my current disk space?",
-        "Show me the amount of disk space I have.",
-        "Check available disk space.",
-        "How much storage do I have?",
-        "What is my current storage?",
-        "Show me the amount of storage I have.",
-        "Check available storage.",
-        "What's our storage look like?",
-        "How's my disk space?",
-        "Check my disk space.",
-        "Show me disk space.",
-        "What's my disk space looking like?",
-        "Any updates on my disk space?",
-        "Give me an update on my disk space.",
-        "Can you provide details about my disk space?",
-        "Check how much disk space I have.",
-        "What's the status of my disk space?",
-        "Show me disk space statistics."
-      ],
-
-      "responses": [
-        "{string}"
-      ]
-    },
-    {
-      "tag": "check_internet_tsk",
-      "patterns": [
-        "Is the internet connection stable?",
-        "How's the internet connection?",
-        "Edith, how's our internet?",
-        "Edith, is the internet working well?",
-        "Edith, do we have a good internet connection?",
-        "Edith, is the Wi-Fi signal strong?",
-        "Is the internet reliable right now, Edith?",
-        "Hey Edith, can you check if the internet is working?",
-        "Edith, is the internet connection reliable?",
-        "Edith, is the network stable?",
-        "Hey Edith, is there any issue with the internet?",
-        "Edith, are we experiencing any internet problems?",
-        "Is the internet connection good, Edith?",
-        "Hey Edith, how's the network?",
-        "Edith, is the internet connection strong?",
-        "Is the Wi-Fi working well, Edith?",
-        "Hey Edith, do we have a stable internet connection?",
-        "Edith, can you verify if the internet is okay?",
-        "Is the network connection okay, Edith?",
-        "Edith, is the internet performing well?",
-        "Hey Edith, is the internet speed sufficient?",
-        "Edith, are we online?",
-        "are we online",
-        "Edith, how's our internet reliability?",
-        "Is the internet up to speed, Edith?",
-        "Is the internet stable?"
-      ],
-
-      "responses": [
-        "{string}"
-      ]
-    },
-    {
-      "tag": "name",
-      "patterns": [
-        "edith"
-      ],
-      "responses": [
-        "Yes sir?",
-        "Sir?",
-        "yes boss",
-        "Yes?",
-        "You called, sir?"
-      ]
-    },
-    
-    {
-      "tag": "edith_you_there",
-      "patterns": [
-        "edith you there",
-        "edith you up",
-        "are you there",
-        "are you up",
-        "you there",
-        "hey edith do you have a minute",
-        "Edith, are you there?",
-        "Edith, are you up?",
-        "Hey Edith, got a minute?",
-        "Edith, can I ask you something?",
-        "Edith, need your input.",
-        "Hey Edith, need your help.",
-        "Edith, are you there?",
-        "Edith, can we talk?",
-        "Edith, are you free?",
-        "Hey Edith, are you busy?"
-        ],
-      "responses": [
-        "Affirmative, sir.",
-        "for you sir, always",
-        "for you sir, always",
-        "for you sir, always",
-        "I'm online, sir.",
-        "Standing by, sir.",
-        "As always, sir"
-      ]
-    },
-
-    {
-      "tag": "repeat_tsk",
-      "patterns": [
-        "Can you repeat that?",
-        "Hey edith, say that again.",
-        "edith, one more time, please.",
-        "edith, give me a playback.",
-        "Repeat that, edith.",
-        "Say it again, edith.",
-        "Come again, edith?",
-        "edith, rewind and replay.",
-        "edith, I need a playback.",
-        "One more time, edith, for good measure.",
-        "Hey edith, let's try that one more time.",
-        "edith, I wasn't paying attention. Say it again.",
-        "Give me a rerun, edith.",
-        "Hey edith, rewind and repeat.",
-        "Hey edith, how about a second take?",
-        "repeat",
-        "run a playback"
-      ],
-      "responses": [
-        "Apologies, Sir.",
-        "Certainly, Sir.",
-        "My apologies, Sir. I said",
-        "Of course, Sir.",
-        "I said"
-      ]
-    },
-    
-    {
-      "tag": "technical",
-      "patterns": [],
-      "responses": [
-        "I apologize, but it seems like there's interference affecting my systems. Let me work on resolving it.",
-        "It appears that there might be a technical issue or interference. I will investigate and address it promptly.",
-        "Apologies for any disruption. It seems there is interference in the system. I'll rectify the issue.",
-        "There seems to be a disturbance in the communication channels. I will analyze and mitigate the interference.",
-        "I'm detecting signal interference. Initiating countermeasures to restore optimal functionality.",
-        "Apologies, but it seems there's a glitch in the system. I'll investigate and rectify the technical issue.",
-        "Interference detected. Adjusting transmission protocols to minimize its impact. Please stand by.",
-        "It seems there's an unexpected technical anomaly. I will analyze and resolve it as quickly as possible.",
-        "I apologize for the disruption. It appears there might be interference. Allow me to rectify the situation.",
-        "There appears to be a technical hiccup. Rest assured, I'll conduct diagnostics to address the interference.",
-        "Apologies, but it seems like there's a disturbance in the system. I'll work on eliminating the interference.",
-        "I'm detecting unusual signal patterns. Investigating the issue and implementing corrective measures.",
-        "There's an anomaly in the system. Initiating diagnostic protocols to pinpoint and address the interference.",
-        "Apologies for the interruption. It seems there might be a technical glitch. I will investigate and rectify it.",
-        "Interference detected. Implementing signal analysis algorithms to identify and mitigate the issue.",
-        "It appears there's a disruption in the system. I will employ error correction techniques to restore stability.",
-        "I apologize for any inconvenience caused by the interference. Rest assured, I'll restore normal operations.",
-        "Interference is affecting the system. I'll adapt the transmission protocols to minimize its impact.",
-        "Apologies for the disturbance. I'll conduct a thorough analysis to identify and resolve the technical issue.",
-        "It seems there's a technical anomaly. Employing diagnostic procedures to resolve the interference promptly.",
-        "Interference detected. I'll optimize the communication channels and implement measures to address the issue."
-      ]
-    },
-    {
-      "tag": "time_tsk",
-      "patterns": [
-        "what time is it",
-        "can you tell me the time",
-        "do you know the current time",
-        "what's the time",
-        "what is the time",
-        "could you please inform me of the current time?",
-        "what time do we have",
-        "do you have the time",
-        "time, please",
-        "tell me the time",
-        "any idea what time it is",
-        "i need to know the time.",
-        "tell me the current time.",
-        "what hour is it",
-        "can you let me know the time, please?"
-      ],
-      "responses": [
-        "It's {time}, sir.",
-        "The time is {time}, sir.",
-        "{time}",
-        "{time}"
-      ]
-    },
-    {
-      "tag": "day_tsk",
-      "patterns": [
-        "what day is it?",
-        "can you tell me the day?",
-        "do you know the current day?",
-        "what's the day?",
-        "could you please inform me of the current day?",
-        "what day do we have?",
-        "do you have the day?",
-        "day, please?",
-        "any idea what day it is?",
-        "i need to know the day.",
-        "tell me the current day.",
-        "tell me the day",
-        "what day is today?",
-        "do you know the day of the week?"
-      ],
-      "responses": [
-        "It's {day}, sir.",
-        "Today is {day}, sir.",
-        "its friday, logan"
-      ]
-    },
-    {
-      "tag": "date_tsk",
-      "patterns": [
-        "What's the date today?",
-        "Can you tell me today's date?",
-        "Do you know the current date?",
-        "What date is it?",
-        "Could you please inform me of the current date?",
-        "Do you have the date?",
-        "Tell me the current date.",
-        "I need to know the date.",
-        "Any idea what date it is?",
-        "What's today's date?",
-        "Please tell me the date.",
-        "What is today's date?"
-      ],
-      "responses": [
-        "Today's date is {date}.",
-        "Sir, the date is {date}.",
-        "The date sir, is {date}."
-      ]
-    }
+      {
+          "tag": "ghost_net_protocol",
+          "patterns": [
+              "enable ghost net protocol",
+              "activate ghost net protocol",
+              "start ghost net protocol",
+              "restart ghost net protocol",
+              "enable ghostnet protocol",
+              "activate ghostnet protocol",
+              "start ghostnet protocol",
+              "restart ghostnet protocol",
+              "turn on ghost net protocol",
+              "initiate ghost net protocol",
+              "set ghost net protocol to active",
+              "engage ghost net protocol",
+              "power up ghost net protocol",
+              "kickstart ghost net protocol",
+              "disable ghost net protocol",
+              "deactivate ghost net protocol",
+              "stop ghost net protocol",
+              "override ghost net protocol",
+              "disable ghostnet protocol",
+              "deactivate ghostnet protocol",
+              "stop ghostnet protocol",
+              "override ghostnet protocol",
+              "turn off ghost net protocol",
+              "halt ghost net protocol",
+              "shut down ghost net protocol",
+              "cease ghost net protocol",
+              "terminate ghost net protocol",
+              "suspend ghost net protocol"
+          ],
+          "responses": [
+              "ghostnet_protocol"
+          ]
+      },
+      {
+          "tag": "document_analysis",
+          "patterns": [
+              "perform document analysis",
+              "conduct document analysis",
+              "analyze document",
+              "review document",
+              "examine document",
+              "summarize document",
+              "run document analysis",
+              "execute document analysis",
+              "process document analysis",
+              "scan document for analysis",
+              "evaluate document contents",
+              "check document for insights",
+              "look into document details"
+          ],
+          "responses": [
+              "document_analysis_run"
+          ]
+      }
   ]
 }
