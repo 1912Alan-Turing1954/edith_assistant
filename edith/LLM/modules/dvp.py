@@ -1,144 +1,157 @@
+import sys
 import pandas as pd
-import plotly.express as px
-import os
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from PyQt5.QtWidgets import (
+    QApplication, QFileDialog, QMessageBox, QMainWindow, QVBoxLayout,
+    QWidget, QComboBox, QPushButton, QCheckBox
+)
+import random
 
-def load_data(file_path):
-    """Load data from various file types."""
-    try:
-        if file_path.endswith('.csv'):
-            return pd.read_csv(file_path)
-        elif file_path.endswith('.txt'):
-            return pd.read_csv(file_path, sep='\t')  # Assuming tab-separated values
-        elif file_path.endswith('.xlsx') or file_path.endswith('.xls'):
-            return pd.read_excel(file_path)
-        elif file_path.endswith('.json'):
-            return pd.read_json(file_path)
-        elif file_path.endswith('.parquet'):
-            return pd.read_parquet(file_path)
-        elif file_path.endswith('.feather'):
-            return pd.read_feather(file_path)
-        elif file_path.endswith('.html'):
-            return pd.read_html(file_path)[0]  # Read first table found in HTML
-        elif file_path.endswith('.sqlite') or file_path.endswith('.db'):
-            import sqlite3
-            conn = sqlite3.connect(file_path)
-            return pd.read_sql_query("SELECT * FROM sqlite_master WHERE type='table';", conn)  # Replace with actual query
-        elif file_path.endswith('.h5'):
-            return pd.read_hdf(file_path)
-        elif file_path.endswith('.sas7bdat'):
-            from sas7bdat import SAS7BDAT
-            with SAS7BDAT(file_path) as file:
-                return file.to_data_frame()
-        elif file_path.endswith('.dta'):
-            return pd.read_stata(file_path)
-        else:
-            raise ValueError("Unsupported file type.")
-    except Exception as e:
-        raise RuntimeError(f"Error loading data: {e}")
+class PlotViewer(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Data Visualization")
+        self.setGeometry(100, 100, 800, 600)
 
-def filter_data(df):
-    """Filter data based on user input."""
-    print("Available columns for filtering:")
-    print(df.columns.tolist())
-    
-    filter_column = input("Enter the column name to filter by: ")
-    if filter_column not in df.columns:
-        print("Invalid column name. No filtering applied.")
-        return df
-    
-    filter_value = input(f"Enter the value to filter {filter_column} by: ")
-    
-    filtered_df = df[df[filter_column] == filter_value]
-    print(f"Filtered data shape: {filtered_df.shape}")
-    return filtered_df
+        # Create a central widget and layout
+        self.central_widget = QWidget()
+        self.setCentralWidget(self.central_widget)
+        self.layout = QVBoxLayout(self.central_widget)
 
-def visualize_data(df, x_column, y_column, plot_type, z_column=None):
-    """Create interactive visualizations based on the user's choice."""
-    if plot_type == 'scatter':
-        fig = px.scatter(df, x=x_column, y=y_column, title=f'Scatter Plot: {y_column} vs {x_column}')
-    elif plot_type == 'bar':
-        fig = px.bar(df, x=x_column, y=y_column, title=f'Bar Plot: {y_column} vs {x_column}')
-    elif plot_type == 'line':
-        fig = px.line(df, x=x_column, y=y_column, title=f'Line Plot: {y_column} vs {x_column}')
-    elif plot_type == 'hist':
-        fig = px.histogram(df, x=y_column, title=f'Histogram of {y_column}')
-    elif plot_type == 'box':
-        fig = px.box(df, x=x_column, y=y_column, title=f'Box Plot: {y_column} by {x_column}')
-    elif plot_type == '3dscatter':
-        if z_column is None:
-            print("3D Scatter plot requires a z-axis.")
+        # Set dark theme for the application
+        self.setStyleSheet("background-color: #2e2e2e; color: #ffffff;")
+
+        # Create a FigureCanvas to display Matplotlib plots
+        self.canvas = FigureCanvas(plt.Figure())
+        self.layout.addWidget(self.canvas)
+
+        # Combo box for graph type selection
+        self.graph_type_combo = QComboBox()
+        self.graph_type_combo.addItems(["Scatter Plot", "Line Plot", "Bar Plot", "Histogram", "Box Plot"])
+        self.layout.addWidget(self.graph_type_combo)
+
+        # Checkbox for 3D plotting option
+        self.three_d_checkbox = QCheckBox("Enable 3D Plot")
+        self.layout.addWidget(self.three_d_checkbox)
+
+        # Button to select file
+        self.file_button = QPushButton("Select Data File")
+        self.file_button.clicked.connect(self.load_data_file)
+        self.layout.addWidget(self.file_button)
+
+        # Button to generate plot
+        self.plot_button = QPushButton("Generate Plot")
+        self.plot_button.clicked.connect(self.generate_plot)
+        self.layout.addWidget(self.plot_button)
+
+        # Define a color scheme
+        self.color_scheme = ['#FF5733', '#33FF57', '#3357FF', '#FF33A6', '#FFC300']
+
+    def load_data_file(self):
+        options = QFileDialog.Options()
+        file_path, _ = QFileDialog.getOpenFileName(self, "Select a file", "", 
+            "CSV files (*.csv);;Text files (*.txt);;"
+            "Excel files (*.xlsx *.xls);;"
+            "JSON files (*.json);;"
+            "Parquet files (*.parquet);;"
+            "Feather files (*.feather);;"
+            "All Files (*)",
+            options=options)
+
+        if file_path:
+            self.load_file(file_path)
+
+    def load_data(self, file_path):
+        """Load data from various file types."""
+        try:
+            if file_path.endswith('.csv'):
+                return pd.read_csv(file_path)
+            elif file_path.endswith('.txt'):
+                return pd.read_csv(file_path, sep='\t')
+            elif file_path.endswith('.xlsx') or file_path.endswith('.xls'):
+                return pd.read_excel(file_path)
+            elif file_path.endswith('.json'):
+                return pd.read_json(file_path)
+            elif file_path.endswith('.parquet'):
+                return pd.read_parquet(file_path)
+            elif file_path.endswith('.feather'):
+                return pd.read_feather(file_path)
+            else:
+                raise ValueError("Unsupported file type.")
+        except Exception as e:
+            raise RuntimeError(f"Error loading data: {e}")
+
+    def generate_plot(self):
+        """Generate a plot based on the selected type."""
+        if not hasattr(self, 'df'):
+            QMessageBox.warning(self, "Warning", "No data loaded. Please select a file first.")
             return
-        fig = px.scatter_3d(df, x=x_column, y=y_column, z=z_column,
-                            title=f'3D Scatter Plot: {y_column} vs {x_column} and {z_column}')
+        
+        plot_type = self.graph_type_combo.currentText()
+        numeric_cols = self.df.select_dtypes(include='number').columns.tolist()
 
-    fig.show()
+        if len(numeric_cols) < 2:
+            QMessageBox.critical(self, "Error", "Not enough numerical columns to create a plot.")
+            return
+        
+        x_column, y_column = numeric_cols[0], numeric_cols[1]
 
-    # Export option
-    export_choice = input("Do you want to export this plot as an image? (yes/no): ")
-    if export_choice.lower() == 'yes':
-        file_format = input("Enter the file format (png/jpeg/pdf): ")
-        fig.write_image(f'plot.{file_format}')
-        print(f"Plot exported as plot.{file_format}")
+        self.canvas.figure.clear()  # Clear the canvas for the new plot
+        ax = self.canvas.figure.add_subplot(111, projection='3d' if self.three_d_checkbox.isChecked() else None)
+
+        # Set dark background for the plot
+        ax.set_facecolor('#2e2e2e')
+        self.canvas.figure.patch.set_facecolor('#2e2e2e')
+
+        # Select a random color from the color scheme
+        color = random.choice(self.color_scheme)
+
+        if plot_type == "Scatter Plot":
+            ax.scatter(self.df[x_column], self.df[y_column], color=color)
+            ax.set_title(f'Scatter Plot: {y_column} vs {x_column}', color='white')
+        elif plot_type == "Line Plot":
+            ax.plot(self.df[x_column], self.df[y_column], color=color)
+            ax.set_title(f'Line Plot: {y_column} vs {x_column}', color='white')
+        elif plot_type == "Bar Plot":
+            ax.bar(self.df[x_column], self.df[y_column], color=color)
+            ax.set_title(f'Bar Plot: {y_column} vs {x_column}', color='white')
+        elif plot_type == "Histogram":
+            ax.hist(self.df[x_column], bins=30, color=color)
+            ax.set_title(f'Histogram of {x_column}', color='white')
+        elif plot_type == "Box Plot":
+            ax.boxplot([self.df[y_column][self.df[x_column] == x] for x in self.df[x_column].unique()],
+                       labels=self.df[x_column].unique())
+            ax.set_title(f'Box Plot: {y_column} by {x_column}', color='white')
+
+        # Set labels and colors
+        ax.set_xlabel(x_column, color='white')
+        ax.set_ylabel(y_column, color='white')
+        ax.tick_params(colors='white')  # Change tick color to white
+        
+        # Add grid lines
+        ax.grid(True, color='grey', linestyle='--', linewidth=0.5)
+
+        # Set the viewing angle for 3D plots
+        if self.three_d_checkbox.isChecked():
+            ax.view_init(elev=20, azim=30)  # Adjust these values as needed
+
+        self.canvas.draw()  # Render the new plot
+
+    def load_file(self, file_path):
+        """Load data and prepare for plotting."""
+        try:
+            self.df = self.load_data(file_path)
+            print(f"Data loaded successfully. Shape: {self.df.shape}")
+            QMessageBox.information(self, "Success", "Data loaded successfully!")
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"An error occurred: {e}")
 
 def main():
-    file_path = input("Enter the path to your file (.csv, .txt, .xlsx, .json, .parquet, .feather, .html, .sqlite, .h5, .sas7bdat, .dta): ")
-
-    if not os.path.exists(file_path):
-        print("File not found. Please check the path.")
-        return
-
-    try:
-        df = load_data(file_path)
-        print(f"Data loaded successfully. Shape: {df.shape}")
-        
-        # Filtering the data
-        df = filter_data(df)
-
-        print("Available columns after filtering:")
-        print(df.columns.tolist())
-
-        # Selecting x and y columns based on user input
-        x_column = input("Enter the column name for the x-axis: ")
-        y_column = input("Enter the column name for the y-axis: ")
-
-        if x_column not in df.columns or y_column not in df.columns:
-            print("Invalid column names. Please check your input.")
-            return
-
-        print("Choose a type of visualization:")
-        print("1. Line Plot")
-        print("2. Bar Plot")
-        print("3. Scatter Plot")
-        print("4. Histogram")
-        print("5. Box Plot")
-        print("6. 3D Scatter Plot")
-        choice = input("Enter the number corresponding to your choice: ")
-
-        plot_type_map = {
-            '1': 'line',
-            '2': 'bar',
-            '3': 'scatter',
-            '4': 'hist',
-            '5': 'box',
-            '6': '3dscatter'
-        }
-
-        plot_type = plot_type_map.get(choice)
-        if not plot_type:
-            print("Invalid choice.")
-            return
-
-        z_column = None
-        if plot_type == '3dscatter':
-            z_column = input("Enter the column name for the z-axis: ")
-            if z_column not in df.columns:
-                print("Invalid column name for z-axis.")
-                return
-
-        visualize_data(df, x_column, y_column, plot_type, z_column)
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    app = QApplication(sys.argv)
+    viewer = PlotViewer()
+    viewer.show()
+    sys.exit(app.exec_())
 
 if __name__ == "__main__":
     main()
