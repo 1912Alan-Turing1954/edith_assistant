@@ -129,7 +129,7 @@ class EdithMainframe:
                     home_dir = os.path.expanduser("~")
     
                     # Define the directory path
-                    settings_dir = os.path.join(home_dir, 'edith_config')
+                    settings_dir = os.path.join(home_dir, '.edith_config')
                     
                     # Create the directory if it doesn't exist
                     os.makedirs(settings_dir, exist_ok=True)

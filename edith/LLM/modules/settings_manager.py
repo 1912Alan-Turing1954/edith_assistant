@@ -97,7 +97,7 @@ class SettingsManager:
             home_dir = os.path.expanduser("~")
     
             # Define the directory path
-            settings_dir = os.path.join(home_dir, 'edith_config')
+            settings_dir = os.path.join(home_dir, '.edith_config')
             
             # Create the directory if it doesn't exist
             os.makedirs(settings_dir, exist_ok=True)
@@ -109,7 +109,7 @@ class SettingsManager:
             with open(settings_file_path, 'w') as f:
                 json.dump(settings, f, indent=4)
         
-            logging.info("Settings saved successfully to '~/edith_config/settings.json'.")
+            logging.info("Settings saved successfully to '~/.edith_config/settings.json'.")
             self._simulate_delay("Saving Settings")
         except Exception as e:
             logging.error(f"Failed to save settings: {e}")
@@ -118,7 +118,7 @@ class SettingsManager:
         home_dir = os.path.expanduser("~")
     
             # Define the directory path
-        settings_dir = os.path.join(home_dir, 'edith_config')
+        settings_dir = os.path.join(home_dir, '.edith_config')
             
         if os.path.exists(settings_dir + 'settings.json'):
             try:
@@ -142,7 +142,7 @@ class SettingsManager:
             home_dir = os.path.expanduser("~")
     
             # Define the directory path
-            settings_dir = os.path.join(home_dir, 'edith_config')
+            settings_dir = os.path.join(home_dir, '.edith_config')
             
             # Create the directory if it doesn't exist
             os.makedirs(settings_dir, exist_ok=True)
