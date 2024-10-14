@@ -76,6 +76,27 @@
         "responses": [
           "log_request"
       ]
-    }
+    },
+    {
+        "tag": "commence_data_visualization",
+        "patterns": [
+            "start data visualization",
+            "commence the data visualization",
+            "begin visualizing the data",
+            "please show the data visualization",
+            "launch the data visualization now",
+            "start visualizing the data for me",
+            "initiate data visualization",
+            "let's open the data visualization",
+            "can we start the data visualization?",
+            "please display the data visualization",
+            "start dvp",
+            "dvp data",
+            "intitate dvp protocol"
+        ],
+        "responses": [
+            "data_visualization_started"
+        ]
+    }    
   ]
 }

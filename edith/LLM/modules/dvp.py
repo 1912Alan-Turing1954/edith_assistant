@@ -147,11 +147,9 @@ class PlotViewer(QMainWindow):
         except Exception as e:
             QMessageBox.critical(self, "Error", f"An error occurred: {e}")
 
-def main():
+def dvp():
     app = QApplication(sys.argv)
     viewer = PlotViewer()
     viewer.show()
     sys.exit(app.exec_())
 
-if __name__ == "__main__":
-    main()

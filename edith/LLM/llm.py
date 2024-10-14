@@ -15,6 +15,7 @@ from modules.data_extraction import extract_file_contents
 from modules.speech_to_text import record_audio, transcribe_audio
 from modules.load_modules import get_size, modules, load_modules
 from modules.intent_nlp import classify_intent
+from modules.dvp import dvp
 
 warnings.filterwarnings("ignore", category=RuntimeWarning, module='networkx')
 
@@ -135,15 +136,16 @@ class EdithMainframe:
                     
                     # Define the full path for the settings file
                     log_file_path = os.path.join(settings_dir, '/log_requests.json')
-                    
-            # Save the set
-                    # Append the log entry to the file
-                    with open(log_file_path, "a") as log_file:
-                        log_file.write("Log Request:" + "\n" +log_entry + "\n")  # Ensure log_entry is a string
+            elif response=="data_visualization_started":
+                try:
+                    # Perform data visualization
+                    logging.info("Data visualization started.")
+                    self.speak("Will do, sir")
+                    dvp()
+                except Exception as e:
+                    logging.error("Failed to perform data visualization: {e}")
+                    pass
 
-                    logging.info(f"Chat entry logged to {log_file_path}")
-                else:
-                    logging.warning("No chat history found to log.")
 
         else:
             # Fallback response
