@@ -145,7 +145,9 @@ class EdithMainframe:
                 except Exception as e:
                     logging.error("Failed to perform data visualization: {e}")
                     pass
-
+            else:
+                logging.warning(f"Unexpected response detected: {response}")
+                self.speak("I'm not sure how to respond to that.")
 
         else:
             # Fallback response
