@@ -26,6 +26,15 @@ class PlotViewer(QMainWindow):
         self.canvas = FigureCanvas(plt.Figure())
         self.layout.addWidget(self.canvas)
 
+        # Create a placeholder text for the graph
+        self.placeholder_text = self.canvas.figure.text(
+            0.5, 0.5, "Graph will be displayed here..",
+            fontsize=16, ha='center', va='center', color='white'
+        )
+
+        # Set dark background for the canvas
+        self.canvas.figure.patch.set_facecolor('#2e2e2e')
+
         # Combo box for graph type selection
         self.graph_type_combo = QComboBox()
         self.graph_type_combo.addItems(["Scatter Plot", "Line Plot", "Bar Plot", "Histogram", "Box Plot"])
@@ -153,3 +162,4 @@ def dvp():
     viewer.show()
     sys.exit(app.exec_())
 
+dvp()
