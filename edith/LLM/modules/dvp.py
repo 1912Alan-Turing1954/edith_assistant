@@ -161,5 +161,3 @@ def dvp():
     viewer = PlotViewer()
     viewer.show()
     sys.exit(app.exec_())
-
-dvp()
