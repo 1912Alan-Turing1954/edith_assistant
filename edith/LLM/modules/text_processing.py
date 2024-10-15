@@ -1,9 +1,24 @@
-import re
-import enchant
-
+from fuzzywuzzy import fuzz
+import re, enchant
 class TextProcessing:
     def __init__(self):
+        self.wake_word_variations = [
+            'edith', 'edit', 'editt', 'edithh', 'e-dith',
+            'e dit', 'edithh', 'edth', 'eddith', 'edithh',
+            'ediths', 'eedith', 'edth', 'e-dith'
+        ]
         self.dictionary = enchant.Dict("en_US")
+
+
+    def detect_wake_word(self, transcription: str) -> bool:
+        """Detect if the wake word 'edith' or similar variations are present in the transcription."""
+        transcription_lower = transcription.lower()
+        
+        for variation in self.wake_word_variations:
+            if fuzz.ratio(transcription_lower, variation) >= 80:  # Adjust threshold as needed
+                return True
+        
+        return False
 
     def clean_text(self, text: str) -> str:
         """Clean text by correcting misspelled words."""

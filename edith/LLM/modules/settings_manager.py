@@ -1,161 +1,151 @@
+import sys
 import json
 import logging
 import os
-from tqdm import tqdm
-import time
+import threading
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QLabel, QLineEdit, 
+                             QVBoxLayout, QWidget, QMessageBox, QHBoxLayout, QComboBox)
 
 class SettingsManager:
-    def __init__(self, default_timeout=90):
+    def __init__(self, default_timeout=30):
         self.conversation_timeout = default_timeout
         self.protection_password = 'henry'
-    
-    def settings_menu(self) -> None:
-        """Display a sci-fi inspired BIOS settings menu."""
-        while True:
-            print("\n" + "=" * 70)
-            print("           ██████████ BIOS Settings Interface ██████████")
-            print("=" * 70)
-            print(f" [1] Change Conversation Timeout (Current: {self.conversation_timeout}s)")
-            print(f" [2] Change Logging Level (Current: {logging.getLevelName(logging.root.level)})")
-            print(f" [3] Set Protection Password (Current: {'Set' if self.protection_password else 'Not Set'})")
-            print(" [4] Clear Dialogue History")
-            print(" [5] Save current settings to file")
-            print(" [6] Exit Settings")
-            print("=" * 70)
-
-            choice = input(" Select an option [1-6]: ")
-
-            if choice == "1":
-                self.change_conversation_timeout()
-            elif choice == "2":
-                self.change_logging_level()
-            elif choice == "3":
-                self.set_protection_password()
-            elif choice == "4":
-                self.clear_dialogue_history()
-            elif choice == "5":
-                self.save_settings()
-            elif choice == "6":
-                logging.info("Exiting settings menu.")
-                print(" Exiting settings menu.")
-                break
-            else:
-                logging.warning("Invalid choice in settings menu.")
-                print(" ❌ Invalid choice. Please select a valid option.")
-
-    def change_conversation_timeout(self):
-        new_timeout = input(" Enter new conversation timeout in seconds: ")
-        if new_timeout.isdigit():
-            self.conversation_timeout = int(new_timeout)
-            logging.info(f"Updated conversation timeout to {self.conversation_timeout}s.")
-            with tqdm(total=100, desc="Updating Conversation Timeout") as pbar:
-                for _ in range(100):
-                    time.sleep(0.01)  # Simulate a delay
-                    pbar.update(1)
-            print(f" ➤ Updated to {self.conversation_timeout} seconds.")
-        else:
-            logging.warning("Invalid input for conversation timeout.")
-            print(" ❌ Invalid input. Please enter a valid integer.")
-
-    def change_logging_level(self):
-        new_logging_level = input(" Enter new logging level (DEBUG, INFO, WARNING, ERROR): ").upper()
-        levels = {
-            'DEBUG': logging.DEBUG,
-            'INFO': logging.INFO,
-            'WARNING': logging.WARNING,
-            'ERROR': logging.ERROR
-        }
-        if new_logging_level in levels:
-            logging.getLogger().setLevel(levels[new_logging_level])
-            logging.info(f"Updated logging level to {new_logging_level}.")
-            with tqdm(total=100, desc="Updating Logging Level") as pbar:
-                for _ in range(100):
-                    time.sleep(0.01)  # Simulate a delay
-                    pbar.update(1)
-            print(f" ➤ Updated to {new_logging_level}.")
-        else:
-            logging.warning("Invalid logging level input.")
-            print(" ❌ Invalid logging level.")
-
-    def set_protection_password(self):
-        new_password = input(" Enter new protection password: ")
-        self.protection_password = new_password
-        logging.info("Command password has been set.")
-        with tqdm(total=100, desc="Setting Protection Password") as pbar:
-            for _ in range(100):
-                time.sleep(0.01)  # Simulate a delay
-                pbar.update(1)
-        print(" ➤ Command password has been set.")
+        self.logging_level = logging.getLevelName(logging.root.level)
 
     def save_settings(self):
         settings = {
             'conversation_timeout': self.conversation_timeout,
-            'logging_level': logging.getLevelName(logging.root.level),
+            'logging_level': self.logging_level,
             'protection': self.protection_password
         }
         try:
             home_dir = os.path.expanduser("~")
-    
-            # Define the directory path
             settings_dir = os.path.join(home_dir, '.edith_config')
-            
-            # Create the directory if it doesn't exist
             os.makedirs(settings_dir, exist_ok=True)
-            
-            # Define the full path for the settings file
             settings_file_path = os.path.join(settings_dir, 'settings.json')
-            
-            # Save the settings to the file
             with open(settings_file_path, 'w') as f:
                 json.dump(settings, f, indent=4)
-        
-            logging.info("Settings saved successfully to '~/.edith_config/settings.json'.")
-            self._simulate_delay("Saving Settings")
+            logging.info("Settings saved successfully.")
+            return True
         except Exception as e:
             logging.error(f"Failed to save settings: {e}")
+            return False
 
     def load_settings(self):
         home_dir = os.path.expanduser("~")
-    
-            # Define the directory path
         settings_dir = os.path.join(home_dir, '.edith_config')
-            
-        if os.path.exists(settings_dir + 'settings.json'):
+        settings_file_path = os.path.join(settings_dir, 'settings.json')
+        
+        if os.path.exists(settings_file_path):
             try:
-                with open(settings_dir, 'settings.json', 'r') as f:
+                with open(settings_file_path, 'r') as f:
                     settings = json.load(f)
                 self.conversation_timeout = settings.get('conversation_timeout', self.conversation_timeout)
-                logging_level = settings.get('logging_level', logging.getLevelName(logging.root.level))
-                logging.getLogger().setLevel(logging.getLevelName(logging_level))
-                logging.info("Settings loaded successfully from 'settings.json'.")
+                self.logging_level = settings.get('logging_level', logging.getLevelName(logging.root.level))
+                self.protection_password = settings.get('protection', self.protection_password)
+                logging.info("Settings loaded successfully.")
             except Exception as e:
                 logging.error(f"Failed to load settings: {e}")
-        else:
-            self.create_default_settings()
 
-    def create_default_settings(self):
-        default_settings = {
-            'conversation_timeout': self.conversation_timeout,
-            'logging_level': logging.getLevelName(logging.INFO)
-        }
+class SettingsGUI(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.settings_manager = SettingsManager()
+        self.initUI()
+        self.load_settings()
+
+    def initUI(self):
+        self.setWindowTitle('BIOS Settings Interface')
+        self.setGeometry(100, 100, 400, 300)
+
+        # Set dark style
+        self.setStyleSheet("""
+            QMainWindow {
+                background-color: #2E2E2E; /* Dark background */
+            }
+            QLabel {
+                color: #FFFFFF; /* White text */
+            }
+            QLineEdit {
+                background-color: #4A4A4A; /* Dark input background */
+                color: #FFFFFF; /* White text */
+                border: 1px solid #AAAAAA; /* Light border */
+            }
+            QComboBox {
+                background-color: #4A4A4A; /* Dark combo box background */
+                color: #FFFFFF; /* White text */
+                border: 1px solid #AAAAAA; /* Light border */
+            }
+            QPushButton {
+                background-color: #5A5A5A; /* Dark button background */
+                color: #FFFFFF; /* White text */
+                border: 1px solid #AAAAAA; /* Light border */
+            }
+            QPushButton:hover {
+                background-color: #6A6A6A; /* Lighter button on hover */
+            }
+        """)
+
+        layout = QVBoxLayout()
+
+        # Conversation Timeout
+        self.timeout_label = QLabel(f'Conversation Timeout (Current: {self.settings_manager.conversation_timeout}s)')
+        layout.addWidget(self.timeout_label)
+        self.timeout_input = QLineEdit()
+        layout.addWidget(self.timeout_input)
+
+        # Logging Level
+        self.logging_label = QLabel(f'Logging Level (Current: {self.settings_manager.logging_level})')
+        layout.addWidget(self.logging_label)
+        self.logging_combo = QComboBox()
+        self.logging_combo.addItems(['DEBUG', 'INFO', 'WARNING', 'ERROR'])
+        layout.addWidget(self.logging_combo)
+
+        # Protection Password
+        self.password_label = QLabel('Protection Password:')
+        layout.addWidget(self.password_label)
+        self.password_input = QLineEdit()
+        layout.addWidget(self.password_input)
+
+        # Buttons
+        self.save_button = QPushButton('Save Settings')
+        self.save_button.clicked.connect(self.save_settings)
+        layout.addWidget(self.save_button)
+
+        self.load_button = QPushButton('Load Settings')
+        self.load_button.clicked.connect(self.load_settings)
+        layout.addWidget(self.load_button)
+
+        self.clear_button = QPushButton('Clear Dialogue History (not implemented)')
+        layout.addWidget(self.clear_button)
+
+        container = QWidget()
+        container.setLayout(layout)
+        self.setCentralWidget(container)
+
+    def load_settings(self):
+        self.settings_manager.load_settings()
+        self.timeout_label.setText(f'Conversation Timeout (Current: {self.settings_manager.conversation_timeout}s)')
+        self.logging_label.setText(f'Logging Level (Current: {self.settings_manager.logging_level})')
+        self.password_input.setText(self.settings_manager.protection_password)
+
+    def save_settings(self):
         try:
-            home_dir = os.path.expanduser("~")
-    
-            # Define the directory path
-            settings_dir = os.path.join(home_dir, '.edith_config')
-            
-            # Create the directory if it doesn't exist
-            os.makedirs(settings_dir, exist_ok=True)
-            
-            # Save the set
-            with open(settings_dir + "/settings.json", 'w') as f:
-                json.dump(default_settings, f, indent=4)
-            logging.info("Default settings created successfully in 'settings.json'.")
-        except Exception as e:
-            logging.error(f"Failed to create default settings: {e}")
+            new_timeout = int(self.timeout_input.text())
+            self.settings_manager.conversation_timeout = new_timeout
+            self.settings_manager.logging_level = self.logging_combo.currentText()
+            self.settings_manager.protection_password = self.password_input.text()
 
-    def _simulate_delay(self, message):
-        with tqdm(total=100, desc=message) as pbar:
-            for _ in range(100):
-                time.sleep(0.01)
-                pbar.update(1)
+            if self.settings_manager.save_settings():
+                QMessageBox.information(self, 'Success', 'Settings saved successfully.')
+            else:
+                QMessageBox.critical(self, 'Error', 'Failed to save settings.')
+        except ValueError:
+            QMessageBox.warning(self, 'Input Error', 'Please enter a valid integer for timeout.')
+
+def settings_gui():
+    app = QApplication(sys.argv)
+    logging.basicConfig(level=logging.INFO)
+    window = SettingsGUI()
+    window.show()
+    app.exec_()  # This will not terminate the script

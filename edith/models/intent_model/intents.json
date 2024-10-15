@@ -97,6 +97,27 @@
         "responses": [
             "data_visualization_started"
         ]
-    }    
+    },
+    {
+        "tag": "start_task_manager",
+        "patterns": [
+            "start task manager",
+            "initiate task manager",
+            "launch the task manager",
+            "please open the task manager",
+            "begin task manager",
+            "can we start the task manager?",
+            "let's open the task manager",
+            "start managing tasks",
+            "please display the task manager",
+            "open task manager now",
+            "activate task manager",
+            "task manager on",
+            "initiate task management"
+        ],
+        "responses": [
+            "task_manager_started"
+        ]
+    }
   ]
 }

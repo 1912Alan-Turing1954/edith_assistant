@@ -5,7 +5,7 @@ import sys
 import warnings
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
-from modules.settings_manager import SettingsManager
+from modules.settings_manager import SettingsManager, settings_gui
 from modules.chat_history import ChatHistory
 from modules.system_info import SystemInfo
 from modules.text_processing import TextProcessing
@@ -16,6 +16,7 @@ from modules.speech_to_text import record_audio, transcribe_audio
 from modules.load_modules import get_size, modules, load_modules
 from modules.intent_nlp import classify_intent
 from modules.dvp import dvp
+from modules.task_manegment import task_manager
 
 warnings.filterwarnings("ignore", category=RuntimeWarning, module='networkx')
 
@@ -24,43 +25,39 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 system_info = SystemInfo()
 
-gpu = system_info.get_gpu_info()
-mem = system_info.get_memory_info()
-# Assuming `mem` is the dictionary for memory details
-# Extract and convert memory values
-total_memory = int(float(mem['Total Memory'].replace('GB', '').strip()))
-gpu_memory = gpu[0]['Memory Total']  # Accessing the first GPU's memory
-gpu_memory = int(float(gpu_memory.replace('MB', '').strip()))  # Convert to int
+# Get GPU and memory information
+try:
+    gpu = system_info.get_gpu_info()
+    mem = system_info.get_memory_info()
 
-# Print the memory values for verification
-print(f"Total Memory: {total_memory} GB")
-print(f"GPU Memory: {gpu_memory} MB")
+    total_memory = int(float(mem['Total Memory'].replace('GB', '').strip()))
+    gpu_memory = int(float(gpu[0]['Memory Total'].replace('MB', '').strip()))
 
-# Condition check
-if (gpu_memory < 3000 and total_memory < 16) or gpu_memory < 3000 or total_memory < 16:
-    print("Conditions not met: either GPU memory is low or total memory is low.")
-    model = "tinyllama"
-    template = ""
-else:
-    print("Conditions met - Using llama3.1 with system features")
-    model = 'llama3.1'
-    with open('edith/LLM/llm_template.txt', 'r') as file:
-        contents = file.read()
-        template = f"""{contents}"""
-    
+    logging.info(f"Total Memory: {total_memory} GB")
+    logging.info(f"GPU Memory: {gpu_memory} MB")
 
+    if (gpu_memory < 3000 and total_memory < 16) or gpu_memory < 3000 or total_memory < 16:
+        logging.warning("Conditions not met: either GPU memory or total memory is low.")
+        model = "tinyllama"
+        template = ""
+    else:
+        logging.info("Conditions met - Using llama3.1 with system features")
+        model = 'llama3.1'
+        with open('edith/LLM/llm_template.txt', 'r') as file:
+            contents = file.read()
+            template = f"""{contents}"""
+except Exception as e:
+    logging.error("Failed to retrieve system information: %s", e)
+    sys.exit(1)
 
-print(model)
 # Initialize language model
 model = OllamaLLM(model=model)
-
-# File System Structure: {fs} (for reference only)
 prompt = ChatPromptTemplate.from_template(template)
 chain = prompt | model
+
 class EdithMainframe:
     def __init__(self):
         logging.info("Initializing Edith Mainframe.")
-        # load_modules()
         self.chat_history = ChatHistory("edith/data/dialogue/dialogue_history.json")
         self.text_processing = TextProcessing()
         self.system_info = SystemInfo()
@@ -71,108 +68,139 @@ class EdithMainframe:
         self.is_in_conversation = False
         self.last_interaction_time = datetime.datetime.now()
 
-    # Public Methods
     def launch(self):
         logging.info("Launching Edith...")
         try:
             while True:
                 if self.play_obj and self.play_obj.is_playing():
-                    # Wait while audio is playing
-                    # continue  # Skip to the next iteration of the loop
                     continue
-                # Capture audio and get transcription only if not playing
+                
                 audio_file = record_audio()
                 transcription = transcribe_audio(audio_file)
-
+                
+                if transcription and self.is_text_input_command(transcription):
+                    print("Switched to text input mode.")
+                    transcription = input('You: ')
+                
                 if transcription:
                     transcription = self.text_processing.clean_text(transcription).lower()
-                    print("Transcription:", transcription)  # Debugging output
-                    # Process commands or questions
+                    logging.info("Transcription: %s", transcription)
                     self.process_transcription(transcription)
         except Exception as e:
-            logging.error("An error occurred: %s", e)
+            logging.error("An error occurred in launch: %s", e)
 
+    def is_text_input_command(self, transcription: str) -> bool:
+        """Check if the transcription is a command to switch to text input."""
+        return any(command in transcription.lower() for command in ["text input", "text mode"])
 
     def process_transcription(self, transcription: str):
         """Check and handle the transcription for commands or questions."""
-        if "access bios" in transcription:
-            self.settings_manager.settings_menu()
-            return
+        try:
+            if "access bios" in transcription:
+                settings_gui()
+                return
 
-        if self.text_processing.detect_wake_word(transcription):
-            self.start_conversation()
+            if self.text_processing.detect_wake_word(transcription):
+                self.start_conversation()
 
-        if self.is_in_conversation and self.is_within_timeout():
-            self.handle_transcription(transcription)
-        else:
-            self.is_in_conversation = False
+            if self.is_in_conversation and self.is_within_timeout():
+                self.handle_transcription(transcription)
+            else:
+                self.is_in_conversation = False
+        except Exception as e:
+            logging.error("Error processing transcription: %s", e)
 
     def handle_transcription(self, transcription: str):
         """Process the transcription for commands or questions."""
-        logging.info(f"Received transcription: {transcription}")
-        response, result = classify_intent(transcription)
-        print(response)
-        if result==True:
-            if response=='document_analysis_run':
-                logging.info("Document Analysis response detected.")
-                self.perform_document_analysis()
-            elif response=="ghostnet_protocol":
-                logging.info("Ghost Net Protocol response detected.")
-            elif response=="log_request":
-                logging.info("Log request detected.")
-                chat_history = self.chat_history.load_chat_history()
-                
-                if chat_history:
-                    last_entry = chat_history[-1]  # Get the last chat entry
-                    log_entry = f"{last_entry['timestamp']} | User: {last_entry['User']} | AI: {last_entry['AI']}"
-
-                    home_dir = os.path.expanduser("~")
-    
-                    # Define the directory path
-                    settings_dir = os.path.join(home_dir, '.edith_config')
-                    
-                    # Create the directory if it doesn't exist
-                    os.makedirs(settings_dir, exist_ok=True)
-                    
-                    # Define the full path for the settings file
-                    log_file_path = os.path.join(settings_dir, '/log_requests.json')
-            elif response=="data_visualization_started":
-                try:
-                    # Perform data visualization
-                    logging.info("Data visualization started.")
-                    self.speak("Will do, sir")
-                    dvp()
-                except Exception as e:
-                    logging.error("Failed to perform data visualization: {e}")
-                    pass
+        try:
+            logging.info("Received transcription: %s", transcription)
+            response, res, result = classify_intent(transcription)
+            print(result)
+            if result:
+                self.handle_intent_response(response, res)
             else:
-                logging.warning(f"Unexpected response detected: {response}")
-                self.speak("I'm not sure how to respond to that.")
+                logging.info("Generating fallback response.")
+                response = self.text_processing.convert_decimal_to_verbal(self.handle_conversation(transcription))
+                self.speak(response)
+        except Exception as e:
+            logging.error("Error handling transcription: %s", e)
 
+    def handle_intent_response(self, response: str, res: str):
+        """Handle different responses based on classified intent."""
+        if response == 'document_analysis_run':
+            logging.info("Document Analysis response detected.")
+            self.speak(res)
+            self.perform_document_analysis()
+        elif response == "ghostnet_protocol":
+            logging.info("Ghost Net Protocol response detected.")
+            self.speak(res)
+
+            # Additional handling logic can be added here
+        elif response == "log_request":
+            self.speak(res)
+            self.handle_log_request()
+        elif response == "data_visualization_started":
+            self.speak(res)
+            self.start_data_visualization()
+        elif response=="task_manager_started":
+            self.speak(res)
+            task_manager()
         else:
-            # Fallback response
-            logging.info("Generating fallback response.")
-            response = self.text_processing.convert_decimal_to_verbal(self.handle_conversation(transcription))
-            self.speak(response)
+            logging.warning(f"Unexpected response detected: {response}")
+            self.speak("I'm not sure how to respond to that.")
 
-    # Audio Management
+    def handle_log_request(self):
+        """Handle logging of the last chat entry."""
+        try:
+            logging.info("Log request detected.")
+            chat_history = self.chat_history.load_chat_history()
+            if chat_history:
+                last_entry = chat_history[-1]  # Get the last chat entry
+                log_entry = f"{last_entry['timestamp']} | User: {last_entry['User']} | AI: {last_entry['AI']}"
+                self.save_log_entry(log_entry)
+        except Exception as e:
+            logging.error("Error handling log request: %s", e)
+
+    def save_log_entry(self, log_entry: str):
+        """Save log entry to a file."""
+        home_dir = os.path.expanduser("~")
+        settings_dir = os.path.join(home_dir, '.edith_config')
+        os.makedirs(settings_dir, exist_ok=True)
+        log_file_path = os.path.join(settings_dir, 'log_requests.json')
+
+        try:
+            with open(log_file_path, 'a') as log_file:
+                log_file.write(log_entry + "\n")
+            logging.info("Log entry saved successfully.")
+        except Exception as e:
+            logging.error("Failed to save log entry: %s", e)
+
+    def start_data_visualization(self):
+        """Start data visualization process."""
+        try:
+            logging.info("Data visualization started.")
+            dvp()
+        except Exception as e:
+            logging.error("Failed to perform data visualization: %s", e)
+
     def speak(self, input_: str) -> None:
+        """Convert text to speech and manage audio playback."""
         self.stop_audio()
         self.play_obj, self.output_path = text_to_speech(input_)
-        os.remove(self.output_path)
+        if self.output_path and os.path.exists(self.output_path):
+            os.remove(self.output_path)
 
     def stop_audio(self) -> None:
         """Stop current audio playback and remove the output file if exists."""
         if self.play_obj and self.play_obj.is_playing():
-            self.play_obj.stop()
-            if self.output_path and os.path.exists(self.output_path):
-                try:
+            try:
+                self.play_obj.stop()
+                if self.output_path and os.path.exists(self.output_path):
                     os.remove(self.output_path)
                     logging.info("Stopped audio playback and removed output file.")
-                except Exception as e:
-                    logging.error(f"Failed to remove output file: {e}")
+            except Exception as e:
+                logging.error("Failed to stop audio or remove output file: %s", e)
 
-    # Conversation Management
     def start_conversation(self) -> None:
         """Initialize conversation state."""
         logging.info("Wake word detected...")
@@ -183,66 +211,34 @@ class EdithMainframe:
         """Check if the conversation is still within timeout."""
         return (datetime.datetime.now() - self.last_interaction_time).total_seconds() < self.settings_manager.conversation_timeout
 
-    # Conversation Handling
     def handle_conversation(self, user_input: str) -> str:
-        logging.info(f"Handling conversation input: {user_input}")
-        self.stop_audio()
-        print("Forwarding request to LLM...")
+        """Handle the user's input in a conversation."""
+        try:
+            logging.info(f"Handling conversation input: {user_input}")
+            self.stop_audio()
+            print("Forwarding request to LLM...")
 
-        if not user_input or not isinstance(user_input, str):
-            logging.warning("Invalid user input received.")
-            return "I'm sorry, I didn't understand that."
+            if not user_input or not isinstance(user_input, str):
+                logging.warning("Invalid user input received.")
+                return "I'm sorry, I didn't understand that."
 
-        chat_history = self.chat_history.load_chat_history()
+            chat_history = self.chat_history.load_chat_history()
+            context_entries = chat_history[-2:] if len(chat_history) >= 2 else []
+            context = "\n".join([f"{entry['User']}: {entry['AI']}" for entry in context_entries])
+            logging.debug(f"Context for LLM: {context}")
 
-        context_entries = chat_history[-2:] if len(chat_history) >= 2 else []
-        context = "\n".join([f"{entry['User']}: {entry['AI']}" for entry in context_entries])
-        
-        logging.debug(f"Context for LLM: {context}")
+            result = chain.invoke({
+                "context": context,
+                "system": self.system_info.get_system_info(),
+                "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %I:%M %p"),
+                "question": user_input
+            })
 
-        result = chain.invoke({
-            "context": context,
-            "system": self.system_info.get_system_info(),
-            "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %I:%M %p"), 
-            "question": user_input
-        })
-        
-        self.chat_history.update_chat_history(user_input, result)
-        return result
-
-    def handle_ghost_net_protocol(self, bundle: list, transcription: str):
-        """Handle Ghost Net Protocol commands."""
-        
-        # Keywords for disabling the protocol
-        disable_keywords = [
-            "disable",
-            "deactivate",
-            "stop",
-            "override",
-            "turn off",
-            "halt",
-            "shut down",
-            "cease",
-            "terminate",
-            "suspend"
-        ]
-        
-        # Check if any disable command is in the transcription
-        if any(command in transcription.lower() for command in disable_keywords):
-            password = self.get_text_after_keyword(transcription, 'password')
-            keyword = self.get_text_after_keyword(transcription, 'keyword')
-            
-            if password or keyword:
-                text_to_speech("Disabling ghost net protocol")
-                override(True, password or keyword)
-            else:
-                print("No valid keyword found to extract text for disabling the protocol.")
-        
-        else:
-            # Enable or activate the protocol
-            text_to_speech("Enabling ghost net protocol")
-            enable_protocol()
-
+            self.chat_history.update_chat_history(user_input, result)
+            return result
+        except Exception as e:
+            logging.error("Error in handle_conversation: %s", e)
+            return "I'm sorry, there was an error processing your request."
 
     def perform_document_analysis(self):
         """Handle document analysis requests."""
@@ -254,10 +250,9 @@ class EdithMainframe:
             )
             self.speak(response)
         except Exception as e:
-            logging.error(f"Error during document analysis: {e}")
-
-
+            logging.error("Error during document analysis: %s", e)
 
 if __name__ == "__main__":
     edith = EdithMainframe()
     edith.launch()
+

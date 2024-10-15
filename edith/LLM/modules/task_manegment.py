@@ -157,8 +157,8 @@ class TaskManager(QWidget):
         except (FileNotFoundError, json.JSONDecodeError):
             pass
 
-if __name__ == "__main__":
+def task_manager():
     app = QApplication(sys.argv)
     window = TaskManager()
     window.show()
-    sys.exit(app.exec_())
+    app.exec_()

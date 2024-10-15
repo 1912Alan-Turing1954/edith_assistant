@@ -160,4 +160,4 @@ def dvp():
     app = QApplication(sys.argv)
     viewer = PlotViewer()
     viewer.show()
-    sys.exit(app.exec_())
+    app.exec_()

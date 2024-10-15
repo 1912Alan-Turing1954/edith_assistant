@@ -9,37 +9,60 @@ from typing import Tuple, List
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 
+# Responses for different intents
 off_response = [
-    "The Ghost Net Protocol has been disabled.",
-    "The Ghost Net Protocol is currently deactivated.",
-    "The Ghost Net Protocol has been stopped.",
+    "Will do, sir. The Ghost Net Protocol has been disabled.",
+    "On it! The Ghost Net Protocol is deactivated.",
+    "Will do! The Ghost Net Protocol has been stopped.",
     "The Ghost Net Protocol override has been initiated.",
     "Ghost Net Protocol has been successfully turned off.",
     "Ghost Net Protocol is now inactive.",
-    "Deactivating Ghost Net Protocol. Please hold on...",
-    "Ghost Net Protocol has been halted."
+    "Deactivating Ghost Net Protocol. Please hold on.",
+    "Will do, sir. Ghost Net Protocol has been halted."
 ]
 
 on_response = [
-    "The Ghost Net Protocol has been activated.",
-    "The Ghost Net Protocol is now enabled.",
-    "The Ghost Net Protocol is starting.",
+    "Will do, sir. The Ghost Net Protocol has been activated.",
+    "On it! The Ghost Net Protocol is now enabled.",
+    "Will do! The Ghost Net Protocol is starting.",
     "The Ghost Net Protocol is restarting.",
     "Ghost Net Protocol has been successfully turned on.",
     "Ghost Net Protocol is now fully operational.",
-    "Activating Ghost Net Protocol. Please wait...",
-    "Ghost Net Protocol is up and running."
+    "Activating Ghost Net Protocol. Please wait.",
+    "Will do, sir. Ghost Net Protocol is up and running."
 ]
 
 document_analysis_response = [
-    "Document analysis is now being performed.",
-    "The document analysis has commenced.",
-    "I am analyzing the document as requested.",
-    "Reviewing the document for insights.",
+    "Will do, sir. Document analysis is underway.",
+    "On it! Commencing document analysis now.",
+    "Got it! Analyzing the document as you requested.",
+    "Reviewing the document for valuable insights.",
     "Examining the document for key points.",
-    "Summarizing the document for you.",
-    "The document is being processed for analysis.",
-    "I am running a detailed analysis on the document."
+    "Will do! Summarizing the document for you.",
+    "The document is currently being processed for analysis.",
+    "Sure thing! Running a detailed analysis on the document."
+]
+
+data_visualization_response = [
+    "Will do, sir. Starting data visualization now.",
+    "On it! Data visualization is in progress.",
+    "Got it! Visualizing the data right away.",
+    "Creating data visuals for you.",
+    "Analyzing insights from the data.",
+    "Will do! Generating the visualizations now.",
+    "Processing data for visualization, please hold on.",
+    "Absolutely! Running the data visualization."
+]
+
+task_manager_response = [
+    "Will do, sir. Starting the task manager.",
+    "Task manager is now active.",
+    "Will do! Opening task manager.",
+    "Initializing task management.",
+    "On it! Activating task manager.",
+    "Task management is underway.",
+    "Will do, sir. Launching the task manager.",
+    "Task manager is ready."
 ]
 
 def load_intents(file_path: str) -> dict:
@@ -67,9 +90,9 @@ def bag_of_words(tokenized_sentence: List[str], all_words: List[str]) -> np.ndar
     
     return np.array(bag)
 
-def classify_input(user_input: str, intents: dict, confidence_threshold: float) -> Tuple[str, float]:
+def classify_input(user_input: str, intents: dict, confidence_threshold: float) -> Tuple[str, float, bool, str]:
     """Classify user input and return a response with confidence score."""
-    tokens = word_tokenize(user_input)
+    tokens = word_tokenize(user_input.lower())  # Tokenize and lowercase the input
     
     all_words = []
     tags = []
@@ -97,25 +120,46 @@ def classify_input(user_input: str, intents: dict, confidence_threshold: float) 
     
     # Get the best score
     best_score, best_intent = scores[0]
-    
+
     if best_score > confidence_threshold:
-        result = True
-        return np.random.choice(best_intent["responses"]), best_score, result
+        intent_tag = best_intent['tag']
+        
+        # Select response based on the intent
+        response_1 = np.random.choice(best_intent["responses"])  # General response from the intent's response list
+        if intent_tag == "ghost_net_protocol":
+            if "disable" in user_input or "deactivate" in user_input:
+                response_2 = "Ghost Net Protocol status change initiated."
+            else:
+                response_2 = "Ghost Net Protocol activation initiated."
+        elif intent_tag == "document_analysis":
+            response_2 = "Document analysis process initiated."
+        elif intent_tag == "commence_data_visualization":
+            response_2 = "Data visualization process started."
+        elif intent_tag == "start_task_manager":
+            response_2 = "Task manager is being activated."
+        else:
+            response_2 = "I'm not sure how to respond to that."
+        
+        result = True  # Intent recognized
     else:
-        result = False
-        return "I didn't understand that. Do you mind repeating that?", 0.0, result
+        response_1 = "I didn't understand that. Do you mind repeating that?"
+        response_2 = ""
+        result = False  # Intent not recognized
+
+    return response_1, best_score, result, response_2
 
 def classify_intent(user_input: str) -> None:
     """Main function to run the command interface."""
     logging.info("Starting Command Interface...")
     
     intents_file = "edith/models/intent_model/intents.json"
-    confidence_threshold = 0.1  # Adjustable threshold
+    confidence_threshold = 0.8  # Adjustable threshold
     
     intents = load_intents(intents_file)
         
-    response, confidence, result = classify_input(user_input, intents, confidence_threshold)
-    logging.info(f"User Input: {user_input} | Response: {response} | Confidence: {confidence:.2f}")
-    return response, result
+    response_1, confidence, result, response_2 = classify_input(user_input, intents, confidence_threshold)
+    logging.info(f"User Input: {user_input} | Response 1: {response_1} | Response 2: {response_2} | Confidence: {confidence:.2f} | Result: {result}")
+    return response_1, response_2, result
 
-
+# # Example usage
+# print(classify_intent('perform document analysis'))
