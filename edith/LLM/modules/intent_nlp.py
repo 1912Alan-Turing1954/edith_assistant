@@ -55,15 +55,16 @@ data_visualization_response = [
 ]
 
 task_manager_response = [
-    "Will do, sir. Starting the task manager.",
-    "Task manager is now active.",
-    "Will do! Opening task manager.",
-    "Initializing task management.",
+    "Will do, sir. Starting task manager.",
+    "On it! Task manager active.",
+    "Absolutely! Opening task manager.",
+    "Got it! Initializing task management.",
     "On it! Activating task manager.",
-    "Task management is underway.",
-    "Will do, sir. Launching the task manager.",
-    "Task manager is ready."
+    "Will do! Task management underway.",
+    "Launching task manager, sir.",
+    "Task manager ready to go!"
 ]
+
 
 def load_intents(file_path: str) -> dict:
     """Load intents from a JSON file."""

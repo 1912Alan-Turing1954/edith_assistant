@@ -161,4 +161,4 @@ def task_manager():
     app = QApplication(sys.argv)
     window = TaskManager()
     window.show()
-    app.exec_()
+    app.exec_()  # Ensure proper exit
