@@ -95,7 +95,14 @@
             "launch world map",
             "launch map",
             "view world map",
-            "view map"
+            "view map",
+            "zoom in on the map",
+            "navigate to the world map",
+            "bring up the geographical map",
+            "display the current map",
+            "open a map view",
+            "show me the map",
+            "provide a map overview"
         ],
         "responses": [
             "map_opened"

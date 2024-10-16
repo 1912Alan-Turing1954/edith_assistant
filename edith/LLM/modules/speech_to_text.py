@@ -5,7 +5,7 @@ import time
 import torch, torchaudio
 from transformers import Wav2Vec2Tokenizer, Wav2Vec2ForCTC
 
-def record_audio(output_filename="recorded_output.wav", start_threshold=3500, silence_threshold=2500, silence_duration=2, warmup_samples=5):
+def record_audio(output_filename="recorded_output.wav", start_threshold=3800, silence_threshold=2500, silence_duration=2, warmup_samples=5):
     """Record audio from the microphone until silence is detected.
 
     Args:

@@ -2,6 +2,7 @@ import datetime
 import logging
 import os
 import sys
+import threading
 import warnings
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
@@ -125,27 +126,25 @@ class EdithMainframe:
         except Exception as e:
             logging.error("Error handling transcription: %s", e)
 
+    import threading
+
     def handle_intent_response(self, response: str, res: str):
         """Handle different responses based on classified intent."""
-        if response == 'document_analysis_run':
-            logging.info("Document Analysis response detected.")
-            self.speak(res)
-            self.perform_document_analysis()
-        elif response == "log_request":
-            self.speak(res)
-            self.handle_log_request()
-        elif response == "data_visualization_started":
-            self.speak(res)
-            self.start_data_visualization()
-        elif response=="task_manager_started":
-            self.speak(res)
-            task_manager()
-        elif response == "open_map":
-            self.speak(res)
-            map_main()
-        else:
-            logging.warning(f"Unexpected response detected: {response}")
-            self.speak("I'm not sure how to respond to that.")
+        try:
+            if response == "log_request":
+                self.speak(res)
+                self.handle_log_request()
+        except Exception as e:
+            logging.error(f"Error handling unexpected response: {e}")
+
+        # Start map_main in a new thread
+        try:
+            if response not in ["log_request"]:
+                logging.warning(f"Unexpected response detected: {response}")
+                self.speak("I'm not sure how to respond to that.")
+        except Exception as e:
+            logging.error(f"Error handling unexpected response: {e}")
+
 
     def handle_log_request(self):
         """Handle logging of the last chat entry."""
@@ -172,15 +171,6 @@ class EdithMainframe:
             logging.info("Log entry saved successfully.")
         except Exception as e:
             logging.error("Failed to save log entry: %s", e)
-
-    def start_data_visualization(self):
-        """Start data visualization process."""
-        try:
-            logging.info("Data visualization started.")
-            dvp()
-        except Exception as e:
-            logging.error("Failed to perform data visualization: %s", e)
-
     def speak(self, input_: str) -> None:
         """Convert text to speech and manage audio playback."""
         self.stop_audio()
@@ -237,18 +227,6 @@ class EdithMainframe:
         except Exception as e:
             logging.error("Error in handle_conversation: %s", e)
             return "I'm sorry, there was an error processing your request."
-
-    def perform_document_analysis(self):
-        """Handle document analysis requests."""
-        logging.info("Document analysis triggered.")
-        try:
-            contents = extract_file_contents()  # or use a specific document based on user input
-            response = self.text_processing.convert_decimal_to_verbal(
-                self.handle_conversation(f'Analyze this document and give me a brief explanation: "{contents}"')
-            )
-            self.speak(response)
-        except Exception as e:
-            logging.error("Error during document analysis: %s", e)
 
 if __name__ == "__main__":
     edith = EdithMainframe()

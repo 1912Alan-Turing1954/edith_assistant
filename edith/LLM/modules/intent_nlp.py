@@ -58,13 +58,11 @@ task_manager_response = [
 ]
 
 map_response = [
-    "Will do, sir. Opening the map.",
+    "Will do, sir. Opening map.",
     "On it! Map is now active.",
-    "Absolutely! Launching the map.",
-    "Got it! Initializing the map display.",
-    "On it! Activating the world map.",
-    "Will do! Map is underway.",
-    "Launching the world map, sir.",
+    "Got it! Initializing map display.",
+    "On it! Activating world map.",
+    "Launching world map, sir.",
     "Map is ready to go!",
     "yes, boss",
     "yes, sir",
@@ -137,15 +135,17 @@ def classify_input(user_input: str, intents: dict, confidence_threshold: float) 
         response_1 = np.random.choice(best_intent["responses"])  # General response from the intent's response list
         if intent_tag == "ghost_net_protocol":
             if "disable" in user_input or "deactivate" in user_input:
-                response_2 = "Ghost Net Protocol status change initiated."
+                response_2 = np.random.choice(document_analysis_response)  # Random choice from document_analysis_response
             else:
-                response_2 = "Ghost Net Protocol activation initiated."
+                response_2 = np.random.choice(data_visualization_response)  # Random choice from data_visualization_response
         elif intent_tag == "document_analysis":
-            response_2 = "Document analysis process initiated."
+            response_2 = np.random.choice(document_analysis_response)  # Random choice from document_analysis_response
         elif intent_tag == "commence_data_visualization":
-            response_2 = "Data visualization process started."
+            response_2 = np.random.choice(data_visualization_response)  # Random choice from data_visualization_response
         elif intent_tag == "start_task_manager":
-            response_2 = "Task manager is being activated."
+            response_2 = np.random.choice(task_manager_response)  # Random choice from task_manager_response
+        elif intent_tag == "open_map":
+            response_2 = np.random.choice(map_response)  # Random choice from map_response
         else:
             response_2 = "I'm not sure how to respond to that."
         
@@ -170,5 +170,5 @@ def classify_intent(user_input: str) -> None:
     logging.info(f"User Input: {user_input} | Response 1: {response_1} | Response 2: {response_2} | Confidence: {confidence:.2f} | Result: {result}")
     return response_1, response_2, result
 
-# # Example usage
+# # Example usageremove
 # print(classify_intent('perform document analysis'))
