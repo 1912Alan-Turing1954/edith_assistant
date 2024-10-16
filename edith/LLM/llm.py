@@ -10,11 +10,11 @@ from modules.chat_history import ChatHistory
 from modules.system_info import SystemInfo
 from modules.text_processing import TextProcessing
 from modules.jenny_tts import text_to_speech
-from modules.ghostnet_protocol import override, enable_protocol
 from modules.data_extraction import extract_file_contents
 from modules.speech_to_text import record_audio, transcribe_audio
 from modules.load_modules import get_size, modules, load_modules
 from modules.intent_nlp import classify_intent
+from modules.map.map import map_main
 from modules.dvp import dvp
 from modules.task_manegment import task_manager
 
@@ -131,11 +131,6 @@ class EdithMainframe:
             logging.info("Document Analysis response detected.")
             self.speak(res)
             self.perform_document_analysis()
-        elif response == "ghostnet_protocol":
-            logging.info("Ghost Net Protocol response detected.")
-            self.speak(res)
-
-            # Additional handling logic can be added here
         elif response == "log_request":
             self.speak(res)
             self.handle_log_request()
@@ -145,6 +140,9 @@ class EdithMainframe:
         elif response=="task_manager_started":
             self.speak(res)
             task_manager()
+        elif response == "open_map":
+            self.speak(res)
+            map_main()
         else:
             logging.warning(f"Unexpected response detected: {response}")
             self.speak("I'm not sure how to respond to that.")

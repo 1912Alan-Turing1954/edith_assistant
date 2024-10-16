@@ -1,42 +1,6 @@
 {
   "intents": [
       {
-          "tag": "ghost_net_protocol",
-          "patterns": [
-              "enable ghost net protocol",
-              "activate ghost net protocol",
-              "start ghost net protocol",
-              "restart ghost net protocol",
-              "enable ghostnet protocol",
-              "activate ghostnet protocol",
-              "start ghostnet protocol",
-              "restart ghostnet protocol",
-              "turn on ghost net protocol",
-              "initiate ghost net protocol",
-              "set ghost net protocol to active",
-              "engage ghost net protocol",
-              "power up ghost net protocol",
-              "kickstart ghost net protocol",
-              "disable ghost net protocol",
-              "deactivate ghost net protocol",
-              "stop ghost net protocol",
-              "override ghost net protocol",
-              "disable ghostnet protocol",
-              "deactivate ghostnet protocol",
-              "stop ghostnet protocol",
-              "override ghostnet protocol",
-              "turn off ghost net protocol",
-              "halt ghost net protocol",
-              "shut down ghost net protocol",
-              "cease ghost net protocol",
-              "terminate ghost net protocol",
-              "suspend ghost net protocol"
-          ],
-          "responses": [
-              "ghostnet_protocol"
-          ]
-      },
-      {
           "tag": "document_analysis",
           "patterns": [
               "perform document analysis",
@@ -118,6 +82,24 @@
         "responses": [
             "task_manager_started"
         ]
-    }
+    },
+    {
+        "tag": "open_map",
+        "patterns": [
+            "open world map",
+            "show world map",
+            "display world map",
+            "open map",
+            "show map",
+            "display map",
+            "launch world map",
+            "launch map",
+            "view world map",
+            "view map"
+        ],
+        "responses": [
+            "map_opened"
+        ]
+    }    
   ]
 }

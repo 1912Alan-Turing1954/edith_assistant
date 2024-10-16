@@ -9,29 +9,6 @@ from typing import Tuple, List
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 
-# Responses for different intents
-off_response = [
-    "Will do, sir. The Ghost Net Protocol has been disabled.",
-    "On it! The Ghost Net Protocol is deactivated.",
-    "Will do! The Ghost Net Protocol has been stopped.",
-    "The Ghost Net Protocol override has been initiated.",
-    "Ghost Net Protocol has been successfully turned off.",
-    "Ghost Net Protocol is now inactive.",
-    "Deactivating Ghost Net Protocol. Please hold on.",
-    "Will do, sir. Ghost Net Protocol has been halted."
-]
-
-on_response = [
-    "Will do, sir. The Ghost Net Protocol has been activated.",
-    "On it! The Ghost Net Protocol is now enabled.",
-    "Will do! The Ghost Net Protocol is starting.",
-    "The Ghost Net Protocol is restarting.",
-    "Ghost Net Protocol has been successfully turned on.",
-    "Ghost Net Protocol is now fully operational.",
-    "Activating Ghost Net Protocol. Please wait.",
-    "Will do, sir. Ghost Net Protocol is up and running."
-]
-
 document_analysis_response = [
     "Will do, sir. Document analysis is underway.",
     "On it! Commencing document analysis now.",
@@ -41,6 +18,11 @@ document_analysis_response = [
     "Will do! Summarizing the document for you.",
     "The document is currently being processed for analysis.",
     "Sure thing! Running a detailed analysis on the document."
+    "yes, boss",
+    "yes, sir",
+    "on it",
+    "will do",
+    'will do sir'
 ]
 
 data_visualization_response = [
@@ -52,6 +34,11 @@ data_visualization_response = [
     "Will do! Generating the visualizations now.",
     "Processing data for visualization, please hold on.",
     "Absolutely! Running the data visualization."
+    "yes, boss",
+    "yes, sir",
+    "on it",
+    "will do",
+    'will do sir'
 ]
 
 task_manager_response = [
@@ -63,6 +50,27 @@ task_manager_response = [
     "Will do! Task management underway.",
     "Launching task manager, sir.",
     "Task manager ready to go!"
+    "yes, boss",
+    "yes, sir",
+    "on it",
+    "will do",
+    'will do sir'
+]
+
+map_response = [
+    "Will do, sir. Opening the map.",
+    "On it! Map is now active.",
+    "Absolutely! Launching the map.",
+    "Got it! Initializing the map display.",
+    "On it! Activating the world map.",
+    "Will do! Map is underway.",
+    "Launching the world map, sir.",
+    "Map is ready to go!",
+    "yes, boss",
+    "yes, sir",
+    "on it",
+    "will do",
+    'will do sir'
 ]
 
 
