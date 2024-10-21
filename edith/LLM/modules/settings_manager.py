@@ -2,7 +2,6 @@ import sys
 import json
 import logging
 import os
-import threading
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QPushButton, QLabel, QLineEdit, 
                              QVBoxLayout, QWidget, QMessageBox, QHBoxLayout, QComboBox)
 
