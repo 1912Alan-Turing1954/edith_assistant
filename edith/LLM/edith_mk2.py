@@ -1,6 +1,7 @@
 import datetime
 import logging
 import os
+import subprocess
 import sys
 import threading
 import warnings
@@ -26,8 +27,25 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 system_info = SystemInfo()
 
+def check_and_download_ollama():
+    try:
+        # Check if ollama is installed
+        result = subprocess.run(['ollama', '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if result.returncode != 0:
+            logging.warning("ollama is not installed. Downloading...")
+            subprocess.run(['bash', '-c', 'curl -fsSL https://ollama.com/install.sh | sh'], check=True)
+            logging.info("ollama installed successfully.")
+        else:
+            logging.info("ollama is already installed.")
+    except Exception as e:
+        logging.error("Failed to check or download ollama: %s", e)
+        sys.exit(1)
+
+
+
 # Get GPU and memory information
 try:
+    check_and_download_ollama()
     gpu = system_info.get_gpu_info()
     mem = system_info.get_memory_info()
 
