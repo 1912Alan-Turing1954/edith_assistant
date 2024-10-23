@@ -84,8 +84,8 @@ def transcribe_audio(filename):
     """Transcribe audio using Wav2Vec 2.0."""
     
     # Load the pre-trained model and tokenizer
-    tokenizer = Wav2Vec2Tokenizer.from_pretrained("edith/models/wav2vec2-base-960h")
-    model = Wav2Vec2ForCTC.from_pretrained("edith/models/wav2vec2-base-960h")
+    tokenizer = Wav2Vec2Tokenizer.from_pretrained("edith/models/wav2vec2")
+    model = Wav2Vec2ForCTC.from_pretrained("edith/models/wav2vec2")
 
     # Load audio file
     waveform, sample_rate = torchaudio.load(filename)
